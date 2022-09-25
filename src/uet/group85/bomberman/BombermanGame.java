@@ -5,9 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
-public class HelloApplication extends Application {
+public class BombermanGame extends Application {
     @Override
     public void start(Stage stage) {
         VBox layout = new VBox();

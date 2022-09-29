@@ -1,12 +1,12 @@
-package uet.group85.bomberman.entities.block;
+package uet.group85.bomberman.entities.bomb;
 
 import javafx.scene.image.Image;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.entities.Entity;
 
-public class Wall extends Entity {
+public class Flame extends Entity {
 
-    public Wall(Coordinate pos, Image img) {
+    public Flame(Coordinate pos, Image img) {
         super(pos, img);
     }
 

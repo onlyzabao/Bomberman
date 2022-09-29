@@ -1,13 +1,12 @@
-package uet.group85.bomberman.entities.block;
+package uet.group85.bomberman.entities.blocks;
 
 import javafx.scene.image.Image;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.entities.Entity;
-import uet.group85.bomberman.graphics.Sprite;
 
-public class Brick extends Entity {
+public class Portal extends Entity {
 
-    public Brick(Coordinate pos, Image img) {
+    public Portal(Coordinate pos, Image img) {
         super(pos, img);
     }
 

@@ -7,7 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
+import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.entities.*;
+import uet.group85.bomberman.entities.block.Grass;
+import uet.group85.bomberman.entities.block.Wall;
+import uet.group85.bomberman.entities.characters.Bomber;
+import uet.group85.bomberman.entities.characters.Character;
 import uet.group85.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
@@ -56,7 +61,8 @@ public class BombermanGame extends Application {
 
         createMap();
 
-        Entity bomberman = new Bomber(new Coordinate(2, 2), Sprite.player_right.getFxImage());
+        Entity bomberman = new Bomber(new Coordinate(2, 2), Sprite.player_right.getFxImage(), 2,
+                new Coordinate(0, 0), Character.State.ALIVE);
         entities.add(bomberman);
     }
 

@@ -6,10 +6,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-public class Bomber extends Entity {
+public class Bomber extends Character {
 
-    public Bomber(int x, int y, Image img) {
-        super( x, y, img);
+    public Bomber(Coordinate pos, Image img) {
+        super(pos, img, 2, new Coordinate(1,1));
     }
 
     @Override

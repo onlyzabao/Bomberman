@@ -8,23 +8,16 @@ import javafx.scene.paint.Color;
 import uet.group85.bomberman.graphics.Sprite;
 
 public abstract class Entity {
-    //Tọa độ X tính từ góc trái trên trong Canvas
-    protected int x;
-
-    //Tọa độ Y tính từ góc trái trên trong Canvas
-    protected int y;
-
+    protected Coordinate pos;
     protected Image img;
 
-    //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
-    public Entity( int xUnit, int yUnit, Image img) {
-        this.x = xUnit * Sprite.SCALED_SIZE;
-        this.y = yUnit * Sprite.SCALED_SIZE;
+    public Entity(Coordinate pos, Image img) {
+        this.pos = pos.multiply(Sprite.SCALED_SIZE); // TODO: Should I multiply with SCALED SIZE or not?
         this.img = img;
     }
 
     public void render(GraphicsContext gc) {
-        gc.drawImage(img, x, y);
+        gc.drawImage(img, pos.getX(), pos.getY());
     }
-    public abstract void update();
+    public abstract void update(); // TODO: Do I need another update method with parameters is input array?
 }

@@ -117,6 +117,10 @@ public class BombermanGame extends Application {
     }
 
     public void createMap() {
+        // TODO: Read map from a file
+        // TODO: Make a map contains wall
+        // TODO: Make a map contains brick
+            // TODO: Config brick class so it can break, contains items, etc.
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 Entity object;

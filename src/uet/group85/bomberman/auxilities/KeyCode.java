@@ -7,4 +7,6 @@ public final class KeyCode {
     public static final int RIGHT = 3;
     // Add more key code here and change value of total key
     public static final int TOTAL = 4;
+
+    private KeyCode() {}
 }

@@ -113,8 +113,7 @@ public class BombermanGame extends Application {
         // Add game components
         createMap();
 
-        bomberman = new Bomber(new Coordinate(2, 2), Sprite.player_right.getFxImage(), 1,
-                new Coordinate(0, 0), Character.State.ALIVE);
+        bomberman = new Bomber(new Coordinate(2, 2), Sprite.player_right.getFxImage(), Character.State.ALIVE);
     }
 
     public void createMap() {

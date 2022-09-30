@@ -9,31 +9,43 @@ public abstract class Character extends Entity {
         ALIVE, DYING, DEAD
     }
 
-    protected int speed;
-    protected Coordinate vel;
+    protected int stepLength;
+    protected int stepDuration;
+    protected int stepCount;
+    protected Coordinate stepDirection;
     protected State state;
 
-    public Character(Coordinate pos, Image img, int speed, Coordinate vel, State state) {
+    public Character(Coordinate pos, Image img, State state, int stepLength, int stepDuration) {
         super(pos, img);
-        this.speed = speed;
-        this.vel = vel;
         this.state = state;
+        this.stepLength = stepLength;
+        this.stepDuration = stepDuration;
+        this.stepCount = 0;
+        this.stepDirection = new Coordinate(0, 0);
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public int getStepLength() {
+        return stepLength;
     }
 
-    public int getSpeed() {
-        return speed;
+    public void setStepLength(int stepLength) {
+        this.stepLength = stepLength;
     }
 
-    public void setVel(Coordinate vel) {
-        this.vel = vel;
+    public int getStepDuration() {
+        return stepDuration;
     }
 
-    public Coordinate getVel() {
-        return vel;
+    public void setStepDuration(int stepDuration) {
+        this.stepDuration = stepDuration;
+    }
+
+    public Coordinate getStepDirection() {
+        return stepDirection;
+    }
+
+    public void setStepDirection(Coordinate stepDirection) {
+        this.stepDirection = stepDirection;
     }
 
     public State getState() {

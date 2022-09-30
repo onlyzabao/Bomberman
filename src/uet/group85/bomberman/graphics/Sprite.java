@@ -4,10 +4,8 @@ import javafx.scene.image.*;
 
 import java.awt.image.BufferedImage;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
-/**
- * Lưu trữ thông tin các pixel của 1 sprite (hình ảnh game)
- */
 public class Sprite {
 
     public static final int DEFAULT_SIZE = 16;
@@ -47,7 +45,7 @@ public class Sprite {
     public static Sprite player_down_2 = new Sprite(DEFAULT_SIZE, 2, 2, SpriteSheet.tiles, 12, 16);
 
     public static Sprite player_left_1 = new Sprite(DEFAULT_SIZE, 3, 1, SpriteSheet.tiles, 11, 16);
-    public static Sprite player_left_2 = new Sprite(DEFAULT_SIZE, 3, 2, SpriteSheet.tiles, 12 ,16);
+    public static Sprite player_left_2 = new Sprite(DEFAULT_SIZE, 3, 2, SpriteSheet.tiles, 12, 16);
 
     public static Sprite player_right_1 = new Sprite(DEFAULT_SIZE, 1, 1, SpriteSheet.tiles, 11, 16);
     public static Sprite player_right_2 = new Sprite(DEFAULT_SIZE, 1, 2, SpriteSheet.tiles, 12, 16);
@@ -203,9 +201,7 @@ public class Sprite {
     }
 
     private void setColor(int color) {
-        for (int i = 0; i < _pixels.length; i++) {
-            _pixels[i] = color;
-        }
+        Arrays.fill(_pixels, color);
     }
 
     private void load() {
@@ -214,26 +210,6 @@ public class Sprite {
                 _pixels[x + y * SIZE] = _sheet._pixels[(x + _x) + (y + _y) * _sheet.SIZE];
             }
         }
-    }
-
-    public static Sprite movingSprite(Sprite normal, Sprite x1, Sprite x2, int animate, int time) {
-        int calc = animate % time;
-        int diff = time / 3;
-
-        if(calc < diff) {
-            return normal;
-        }
-
-        if(calc < diff * 2) {
-            return x1;
-        }
-
-        return x2;
-    }
-
-    public static Sprite movingSprite(Sprite x1, Sprite x2, int animate, int time) {
-        int diff = time / 2;
-        return (animate % time > diff) ? x1 : x2;
     }
 
     public int getSize() {
@@ -249,10 +225,9 @@ public class Sprite {
         PixelWriter pw = wr.getPixelWriter();
         for (int x = 0; x < SIZE; x++) {
             for (int y = 0; y < SIZE; y++) {
-                if ( _pixels[x + y * SIZE] == TRANSPARENT_COLOR) {
+                if (_pixels[x + y * SIZE] == TRANSPARENT_COLOR) {
                     pw.setArgb(x, y, 0);
-                }
-                else {
+                } else {
                     pw.setArgb(x, y, _pixels[x + y * SIZE]);
                 }
             }

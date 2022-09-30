@@ -1,22 +1,29 @@
 package uet.group85.bomberman.entities;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-
 import uet.group85.bomberman.auxilities.Coordinate;
+import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 
 public abstract class Entity {
+    // Position
     protected Coordinate pos;
-    protected Image img;
+    // Hit box
+    protected Rectangle box;
 
-    public Entity(Coordinate pos, Image img) {
+    public Entity(Coordinate pos, Rectangle box) {
         this.pos = pos.multiply(Sprite.SCALED_SIZE);
-        this.img = img;
+        this.box = box;
     }
 
-    public void render(GraphicsContext gc) {
-        gc.drawImage(img, pos.getX(), pos.getY());
+    public Coordinate getPos() {
+        return pos;
     }
+
+    public Rectangle getBox() {
+        return box;
+    }
+
     public abstract void update();
+    public abstract void render(GraphicsContext gc);
 }

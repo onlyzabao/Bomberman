@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
+import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Grass;
 import uet.group85.bomberman.entities.blocks.Wall;
@@ -28,18 +29,19 @@ public class BombermanGame extends Application {
     public static final int HEIGHT = 15;
 
     // Game components
-    private final List<Entity> blocks = new ArrayList<>();
-    private final List<Character> enemies = new ArrayList<>();
-    private final List<Item> items = new ArrayList<>();
-    private final List<Bomb> bombs = new ArrayList<>();
+    public static final List<Entity> blocks = new ArrayList<>();
+    public static final List<Character> enemies = new ArrayList<>();
+    public static final List<Item> items = new ArrayList<>();
+    public static final List<Bomb> bombs = new ArrayList<>();
     private Bomber bomberman;
 
     // Graphic components
-    private Canvas canvas;
-    private GraphicsContext gc;
+    private static final Canvas canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+    public static final GraphicsContext gc = canvas.getGraphicsContext2D();
 
     // Manage key press event
-    boolean[] keyPressed = new boolean[KeyCode.TOTAL];
+    public static final boolean[] keyPressed = new boolean[KeyCode.TOTAL];
+    public double elapsedTime;
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -47,10 +49,6 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Create canvas and graphics context
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
-        gc = canvas.getGraphicsContext2D();
-
         // Create root container
         Group root = new Group();
         root.getChildren().add(canvas);
@@ -101,11 +99,13 @@ public class BombermanGame extends Application {
         stage.show();
 
         // Manage frames
+        final long startNanoTime = System.nanoTime();
         AnimationTimer timer = new AnimationTimer() {
             @Override
-            public void handle(long l) {
-                render();
+            public void handle(long currentNanoTime) {
+                elapsedTime = (currentNanoTime - startNanoTime) / 1000000000.0;
                 update();
+                render();
             }
         };
         timer.start();
@@ -113,7 +113,7 @@ public class BombermanGame extends Application {
         // Add game components
         createMap();
 
-        bomberman = new Bomber(new Coordinate(2, 2), Sprite.player_right.getFxImage(), Character.State.ALIVE);
+        bomberman = new Bomber(this, new Coordinate(2, 2));
     }
 
     public void createMap() {
@@ -121,14 +121,16 @@ public class BombermanGame extends Application {
         // TODO: Make a map contains wall
         // TODO: Make a map contains brick
             // TODO: Config brick class so it can break, contains items, etc.
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
+        for (int j = 0; j < HEIGHT; j++) {
+            for (int i = 0; i < WIDTH; i++) {
                 Entity object;
                 if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 10 && j ==10) {
-                    object = new Wall(new Coordinate(i, j), Sprite.wall.getFxImage());
+                    object = new Wall(new Coordinate(i, j),
+                            new Rectangle(i, j, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
                 }
                 else {
-                    object = new Grass(new Coordinate(i, j), Sprite.grass.getFxImage());
+                    object = new Grass(new Coordinate(i, j),
+                            new Rectangle(i, j, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
                 }
                 blocks.add(object);
             }
@@ -137,7 +139,7 @@ public class BombermanGame extends Application {
 
     public void update() {
         enemies.forEach(Entity::update);
-        bomberman.move(keyPressed);
+        bomberman.update();
     }
 
     public void render() {

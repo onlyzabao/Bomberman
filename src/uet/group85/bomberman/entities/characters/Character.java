@@ -41,7 +41,7 @@ public abstract class Character extends Entity {
         this.stepDuration = stepDuration;
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
-        this.frameDuration = 0.1;
+        this.frameDuration = 0.2;
     }
 
     public Image getFrame(Image[] frame, double time) {
@@ -50,18 +50,22 @@ public abstract class Character extends Entity {
     }
 
     public boolean isCollided(Bound thisBound, Bound otherBound) {
+        // Check top side
         if ((thisBound.topY < otherBound.bottomY && thisBound.topY > otherBound.topY)
                 && !((thisBound.leftX >= otherBound.rightX) || (thisBound.rightX <= otherBound.leftX))) {
             return true;
         }
+        // Check bottom side
         if ((thisBound.bottomY > otherBound.topY && thisBound.bottomY < otherBound.bottomY)
                 && !((thisBound.leftX >= otherBound.rightX) || (thisBound.rightX <= otherBound.leftX))) {
             return true;
         }
+        // Check left side
         if ((thisBound.leftX < otherBound.rightX && thisBound.leftX > otherBound.leftX)
                 && !((thisBound.topY >= otherBound.bottomY) || (thisBound.bottomY <= otherBound.topY))) {
             return true;
         }
+        // Check right side
         if ((thisBound.rightX > otherBound.leftX && thisBound.rightX < otherBound.rightX)
                 && !((thisBound.topY >= otherBound.bottomY) || (thisBound.bottomY <= otherBound.topY))) {
             return true;

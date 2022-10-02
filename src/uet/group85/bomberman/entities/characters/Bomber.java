@@ -18,7 +18,6 @@ import java.util.List;
 public class Bomber extends Character {
     BombermanGame engine;
     boolean isMoving;
-    boolean isCollided;
 
     // Constructor
     public Bomber(BombermanGame engine, Coordinate pos) {
@@ -61,8 +60,8 @@ public class Bomber extends Character {
         switch (stepDirection) {
             case UP -> {
                 bomberBound.topY -= stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.topY / Sprite.SCALED_SIZE)
-                        + (bomberBound.leftX / Sprite.SCALED_SIZE));
+                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
+                        + (bomberBound.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
                 obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.topY / Sprite.SCALED_SIZE)
                         + (bomberBound.rightX / Sprite.SCALED_SIZE));
             }
@@ -91,41 +90,41 @@ public class Bomber extends Character {
         assert obstacle1 != null;
         assert obstacle2 != null;
         return isCollided(bomberBound, Bound.createBound(obstacle1))
-                && (obstacle1 instanceof Wall || obstacle1 instanceof Brick)
+                && (obstacle1 instanceof Wall || obstacle1 instanceof Brick) // Collide with a non-passable block (1)
                 || isCollided(bomberBound, Bound.createBound(obstacle2))
-                && (obstacle2 instanceof Wall || obstacle2 instanceof Brick);
+                && (obstacle2 instanceof Wall || obstacle2 instanceof Brick); // Collide with a non-passable block (2)
     }
 
     private void move() {
         if (++stepCounter == stepDuration) {
-            if (engine.keyPressed[KeyCode.UP]) {
-                stepDirection = Direction.UP;
-                isMoving = true;
-                if (!isCollideBlock()) {
-                    pos.y -= stepLength;
+            isMoving = false;
+            for (int i = 0; i < Direction.TOTAL.ordinal(); i++) {
+                if (engine.keyPressed[i]) {
+                    stepDirection = Direction.values()[i];
+                    isMoving = true;
+                    if (!isCollideBlock()) {
+                        step();
+                    }
                 }
-            } else if (engine.keyPressed[KeyCode.DOWN]) {
-                stepDirection = Direction.DOWN;
-                isMoving = true;
-                if (!isCollideBlock()) {
-                    pos.y += stepLength;
-                }
-            } else if (engine.keyPressed[KeyCode.LEFT]) {
-                stepDirection = Direction.LEFT;
-                isMoving = true;
-                if (!isCollideBlock()) {
-                    pos.x -= stepLength;
-                }
-            } else if (engine.keyPressed[KeyCode.RIGHT]) {
-                stepDirection = Direction.RIGHT;
-                isMoving = true;
-                if (!isCollideBlock()) {
-                    pos.x += stepLength;
-                }
-            } else {
-                isMoving = false;
             }
             stepCounter = 0;
+        }
+    }
+
+    private void step() {
+        switch (stepDirection) {
+            case UP -> {
+                pos.y -= stepLength;
+            }
+            case DOWN -> {
+                pos.y += stepLength;
+            }
+            case LEFT -> {
+                pos.x -= stepLength;
+            }
+            case RIGHT -> {
+                pos.x += stepLength;
+            }
         }
     }
 

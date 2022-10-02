@@ -22,6 +22,7 @@ import uet.group85.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class BombermanGame extends Application {
     // Window size
@@ -41,6 +42,7 @@ public class BombermanGame extends Application {
 
     // Manage key press event
     public final boolean[] keyPressed = new boolean[KeyCode.TOTAL];
+    // Manage time
     public double elapsedTime;
 
     public static void main(String[] args) {

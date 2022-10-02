@@ -24,24 +24,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BombermanGame extends Application {
-    // Window size
+    // Specifications
     public static final int WIDTH = 25;
     public static final int HEIGHT = 15;
 
-    // Game components
+    // Manage game objects - TODO: ObjectManager
     public final List<Block> blocks = new ArrayList<>();
     public final List<Character> enemies = new ArrayList<>();
     public final List<Item> items = new ArrayList<>();
     public final List<Bomb> bombs = new ArrayList<>();
     private Bomber bomberman;
 
-    // Graphic components
+    // Manage graphics
     private final Canvas canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
     public final GraphicsContext gc = canvas.getGraphicsContext2D();
 
-    // Manage key press event
+    // Manage control input - TODO: ControlManager
     public final boolean[] keyPressed = new boolean[KeyCode.TOTAL];
-    // Manage time
+    // Manage time - TODO: Timer
     public double elapsedTime;
 
     public static void main(String[] args) {
@@ -50,11 +50,11 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Create root container
+        // Root container
         Group root = new Group();
         root.getChildren().add(canvas);
 
-        // Create scene
+        // Play ground screen - TODO: ScreenManager
         Scene scene = new Scene(root);
 
         // Handle key press events
@@ -141,11 +141,13 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
+        // Update each objects and Check for game status
         enemies.forEach(Entity::update);
         bomberman.update();
     }
 
     public void render() {
+        // Draw objects
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         blocks.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));

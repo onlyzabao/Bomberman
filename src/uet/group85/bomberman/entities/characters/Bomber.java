@@ -9,10 +9,10 @@ import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomber extends Character {
-    BombermanGame engine;
-    boolean isMoving;
-    Block obstacle1;
-    Block obstacle2;
+    private final BombermanGame engine;
+    private boolean isMoving;
+    private Block obstacle1;
+    private Block obstacle2;
 
     // Constructor
     public Bomber(BombermanGame engine, Coordinate pos) {

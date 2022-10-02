@@ -4,10 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
-import uet.group85.bomberman.entities.blocks.Block;
-import uet.group85.bomberman.entities.blocks.Brick;
-import uet.group85.bomberman.entities.blocks.Grass;
-import uet.group85.bomberman.entities.blocks.Wall;
+import uet.group85.bomberman.entities.blocks.*;
 import uet.group85.bomberman.graphics.Sprite;
 
 import java.io.File;
@@ -45,6 +42,11 @@ public class mapManager {
         Grass gr = new Grass(cr);
         blocks.add(gr);
     }
+    protected void initPortal(int x, int y) {
+        Coordinate cr = new Coordinate(x, y);
+        Portal po = new Portal(cr);
+        blocks.add(po);
+    }
 
     public void loadMap() {
         try {
@@ -67,6 +69,9 @@ public class mapManager {
                             break;
                         case 3:
                             initBrick(col, row);
+                            break;
+                        case 6:
+                            initPortal(col, row);
                             break;
                     }
                     col++;

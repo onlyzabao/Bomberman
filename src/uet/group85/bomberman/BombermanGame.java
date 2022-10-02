@@ -12,14 +12,12 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
-import uet.group85.bomberman.entities.blocks.Grass;
-import uet.group85.bomberman.entities.blocks.Wall;
 import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
 import uet.group85.bomberman.entities.items.Item;
 import uet.group85.bomberman.graphics.Sprite;
-import uet.group85.bomberman.maps.mapManager;
+import uet.group85.bomberman.managers.MapManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,7 @@ public class BombermanGame extends Application {
     public final List<Item> items = new ArrayList<>();
     public final List<Bomb> bombs = new ArrayList<>();
     private Bomber bomberman;
-    mapManager mapM;
+    MapManager mapManager;
 
     // Manage graphics
     private final Canvas canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
@@ -140,7 +138,7 @@ public class BombermanGame extends Application {
 //                blocks.add(object);
 //            }
 //        }
-        mapM = new mapManager(blocks);
+        mapManager = new MapManager(this);
     }
 
     public void update() {

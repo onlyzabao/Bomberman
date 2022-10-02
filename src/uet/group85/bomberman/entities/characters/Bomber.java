@@ -121,16 +121,16 @@ public class Bomber extends Character {
 
     private void autoStep() {
         if (stepDirection == Direction.UP || stepDirection == Direction.DOWN) {
-            if (hitBox.leftX / Sprite.SCALED_SIZE == obstacle1.getPos().x / Sprite.SCALED_SIZE) {
-                pos.x += (obstacle1.isPassable() ? -1 : 1) * stepLength / 2;
+            if ((hitBox.leftX + 12) / Sprite.SCALED_SIZE == obstacle1.getPos().x / Sprite.SCALED_SIZE) {
+                pos.x += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
             } else {
-                pos.x += (obstacle2.isPassable() ? -1 : 1) * stepLength / 2;
+                pos.x += (obstacle2.isPassable() ? 1 : 0) * stepLength / 2;
             }
         } else {
-            if (hitBox.topY / Sprite.SCALED_SIZE == obstacle1.getPos().y / Sprite.SCALED_SIZE) {
-                pos.y += (obstacle1.isPassable() ? -1 : 1) * stepLength / 2;
+            if ((hitBox.topY + 16) / Sprite.SCALED_SIZE == obstacle1.getPos().y / Sprite.SCALED_SIZE) {
+                pos.y += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
             } else {
-                pos.y += (obstacle2.isPassable() ? -1 : 1) * stepLength / 2;
+                pos.y += (obstacle2.isPassable() ? 1 : 0) *stepLength / 2;
             }
         }
     }

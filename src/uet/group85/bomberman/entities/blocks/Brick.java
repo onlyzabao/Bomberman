@@ -5,12 +5,15 @@ import javafx.scene.image.Image;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
+import uet.group85.bomberman.graphics.Sprite;
 
 public class Brick extends Block {
 
-    public Brick(Coordinate pos, Rectangle solidArea) {
-        super(pos, solidArea);
+    private final Image img;
+    public Brick(Coordinate pos) {
+        super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isPassable = false;
+        img = Sprite.brick.getFxImage();
     }
 
     @Override
@@ -20,7 +23,6 @@ public class Brick extends Block {
 
     @Override
     public void render(GraphicsContext gc) {
-
+        gc.drawImage(img, pos.x, pos.y);
     }
-
 }

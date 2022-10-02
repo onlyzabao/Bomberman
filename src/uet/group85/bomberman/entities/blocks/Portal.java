@@ -5,12 +5,14 @@ import javafx.scene.image.Image;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
+import uet.group85.bomberman.graphics.Sprite;
 
 public class Portal extends Block {
-
-    public Portal(Coordinate pos, Rectangle solidArea) {
-        super(pos, solidArea);
+    private final Image img;
+    public Portal(Coordinate pos) {
+        super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isPassable = true;
+        img = Sprite.portal.getFxImage();
     }
 
     @Override
@@ -20,6 +22,6 @@ public class Portal extends Block {
 
     @Override
     public void render(GraphicsContext gc) {
-
+        gc.drawImage(img, pos.x, pos.y);
     }
 }

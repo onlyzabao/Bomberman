@@ -19,6 +19,7 @@ import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
 import uet.group85.bomberman.entities.items.Item;
 import uet.group85.bomberman.graphics.Sprite;
+import uet.group85.bomberman.maps.mapManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class BombermanGame extends Application {
     public final List<Item> items = new ArrayList<>();
     public final List<Bomb> bombs = new ArrayList<>();
     private Bomber bomberman;
+    mapManager mapM;
 
     // Graphic components
     private final Canvas canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
@@ -122,22 +124,23 @@ public class BombermanGame extends Application {
         // TODO: Make a map contains wall
         // TODO: Make a map contains brick
             // TODO: Config brick class so it can break, contains items, etc.
-        for (int j = 0; j < HEIGHT; j++) {
-            for (int i = 0; i < WIDTH; i++) {
-                Block object;
-                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 2 && j == 2) {
-                    object = new Wall(new Coordinate(i, j));
-                }
-                else {
-                    if (i % 2 == 0 && j % 2 == 0) {
-                        object = new Wall(new Coordinate(i, j));
-                    } else {
-                        object = new Grass(new Coordinate(i, j));
-                    }
-                }
-                blocks.add(object);
-            }
-        }
+//        for (int j = 0; j < HEIGHT; j++) {
+//            for (int i = 0; i < WIDTH; i++) {
+//                Block object;
+//                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 2 && j == 2) {
+//                    object = new Wall(new Coordinate(i, j));
+//                }
+//                else {
+//                    if (i % 2 == 0 && j % 2 == 0) {
+//                        object = new Wall(new Coordinate(i, j));
+//                    } else {
+//                        object = new Grass(new Coordinate(i, j));
+//                    }
+//                }
+//                blocks.add(object);
+//            }
+//        }
+        mapM = new mapManager(blocks);
     }
 
     public void update() {

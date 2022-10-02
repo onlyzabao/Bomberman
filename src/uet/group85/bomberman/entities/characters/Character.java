@@ -1,9 +1,13 @@
 package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.image.Image;
+import uet.group85.bomberman.auxilities.Bound;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
+import uet.group85.bomberman.graphics.Sprite;
+
+import javax.swing.*;
 
 public abstract class Character extends Entity {
     public enum State {
@@ -43,6 +47,26 @@ public abstract class Character extends Entity {
     public Image getFrame(Image[] frame, double time) {
         int index = (int) ((time % (frame.length * frameDuration)) / frameDuration);
         return frame[index];
+    }
+
+    public boolean isCollided(Bound thisBound, Bound otherBound) {
+        if ((thisBound.topY < otherBound.bottomY && thisBound.topY > otherBound.topY)
+                && !((thisBound.leftX >= otherBound.rightX) || (thisBound.rightX <= otherBound.leftX))) {
+            return true;
+        }
+        if ((thisBound.bottomY > otherBound.topY && thisBound.bottomY < otherBound.bottomY)
+                && !((thisBound.leftX >= otherBound.rightX) || (thisBound.rightX <= otherBound.leftX))) {
+            return true;
+        }
+        if ((thisBound.leftX < otherBound.rightX && thisBound.leftX > otherBound.leftX)
+                && !((thisBound.topY >= otherBound.bottomY) || (thisBound.bottomY <= otherBound.topY))) {
+            return true;
+        }
+        if ((thisBound.rightX > otherBound.leftX && thisBound.rightX < otherBound.rightX)
+                && !((thisBound.topY >= otherBound.bottomY) || (thisBound.bottomY <= otherBound.topY))) {
+            return true;
+        }
+        return false;
     }
 
     public State getState() {

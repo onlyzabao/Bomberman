@@ -9,8 +9,8 @@ import uet.group85.bomberman.graphics.Sprite;
 
 public class Wall extends Entity {
     private final Image img;
-    public Wall(Coordinate pos, Rectangle box) {
-        super(pos, box);
+    public Wall(Coordinate pos) {
+        super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         img = Sprite.wall.getFxImage();
     }
 

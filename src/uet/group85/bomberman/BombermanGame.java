@@ -29,18 +29,18 @@ public class BombermanGame extends Application {
     public static final int HEIGHT = 15;
 
     // Game components
-    public static final List<Entity> blocks = new ArrayList<>();
-    public static final List<Character> enemies = new ArrayList<>();
-    public static final List<Item> items = new ArrayList<>();
-    public static final List<Bomb> bombs = new ArrayList<>();
+    public final List<Entity> blocks = new ArrayList<>();
+    public final List<Character> enemies = new ArrayList<>();
+    public final List<Item> items = new ArrayList<>();
+    public final List<Bomb> bombs = new ArrayList<>();
     private Bomber bomberman;
 
     // Graphic components
-    private static final Canvas canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
-    public static final GraphicsContext gc = canvas.getGraphicsContext2D();
+    private final Canvas canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+    public final GraphicsContext gc = canvas.getGraphicsContext2D();
 
     // Manage key press event
-    public static final boolean[] keyPressed = new boolean[KeyCode.TOTAL];
+    public final boolean[] keyPressed = new boolean[KeyCode.TOTAL];
     public double elapsedTime;
 
     public static void main(String[] args) {
@@ -113,7 +113,7 @@ public class BombermanGame extends Application {
         // Add game components
         createMap();
 
-        bomberman = new Bomber(this, new Coordinate(2, 2));
+        bomberman = new Bomber(this, new Coordinate(2, 1));
     }
 
     public void createMap() {
@@ -124,13 +124,11 @@ public class BombermanGame extends Application {
         for (int j = 0; j < HEIGHT; j++) {
             for (int i = 0; i < WIDTH; i++) {
                 Entity object;
-                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 10 && j ==10) {
-                    object = new Wall(new Coordinate(i, j),
-                            new Rectangle(i, j, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 2 && j == 2) {
+                    object = new Wall(new Coordinate(i, j));
                 }
                 else {
-                    object = new Grass(new Coordinate(i, j),
-                            new Rectangle(i, j, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+                    object = new Grass(new Coordinate(i, j));
                 }
                 blocks.add(object);
             }

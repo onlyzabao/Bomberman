@@ -7,10 +7,11 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.graphics.Sprite;
 
-public class Wall extends Entity {
+public class Wall extends Block {
     private final Image img;
     public Wall(Coordinate pos) {
         super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        isPassable = false;
         img = Sprite.wall.getFxImage();
     }
 

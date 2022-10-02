@@ -6,8 +6,8 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 
 public class Bomb extends Entity {
-    public Bomb(Coordinate pos, Rectangle box) {
-        super(pos, box);
+    public Bomb(Coordinate pos, Rectangle solidArea) {
+        super(pos, solidArea);
     }
 
     @Override

@@ -7,10 +7,11 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.graphics.Sprite;
 
-public class Grass extends Entity {
+public class Grass extends Block {
     private final Image img;
     public Grass(Coordinate pos) {
         super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        isPassable = true;
         img = Sprite.grass.getFxImage();
     }
 

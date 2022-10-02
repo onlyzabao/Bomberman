@@ -10,8 +10,8 @@ import javafx.stage.Stage;
 
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
-import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
+import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.blocks.Grass;
 import uet.group85.bomberman.entities.blocks.Wall;
 import uet.group85.bomberman.entities.bomb.Bomb;
@@ -22,7 +22,6 @@ import uet.group85.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class BombermanGame extends Application {
     // Window size
@@ -30,7 +29,7 @@ public class BombermanGame extends Application {
     public static final int HEIGHT = 15;
 
     // Game components
-    public final List<Entity> blocks = new ArrayList<>();
+    public final List<Block> blocks = new ArrayList<>();
     public final List<Character> enemies = new ArrayList<>();
     public final List<Item> items = new ArrayList<>();
     public final List<Bomb> bombs = new ArrayList<>();
@@ -125,12 +124,16 @@ public class BombermanGame extends Application {
             // TODO: Config brick class so it can break, contains items, etc.
         for (int j = 0; j < HEIGHT; j++) {
             for (int i = 0; i < WIDTH; i++) {
-                Entity object;
+                Block object;
                 if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 2 && j == 2) {
                     object = new Wall(new Coordinate(i, j));
                 }
                 else {
-                    object = new Grass(new Coordinate(i, j));
+                    if (i % 2 == 0 && j % 2 == 0) {
+                        object = new Wall(new Coordinate(i, j));
+                    } else {
+                        object = new Grass(new Coordinate(i, j));
+                    }
                 }
                 blocks.add(object);
             }

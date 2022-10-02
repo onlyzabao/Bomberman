@@ -6,8 +6,8 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 
 public class Flame extends Entity {
-    public Flame(Coordinate pos, Rectangle box) {
-        super(pos, box);
+    public Flame(Coordinate pos, Rectangle solidArea) {
+        super(pos, solidArea);
     }
 
     @Override

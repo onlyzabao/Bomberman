@@ -6,10 +6,11 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 
-public class Portal extends Entity {
+public class Portal extends Block {
 
-    public Portal(Coordinate pos, Rectangle box) {
-        super(pos, box);
+    public Portal(Coordinate pos, Rectangle solidArea) {
+        super(pos, solidArea);
+        isPassable = true;
     }
 
     @Override

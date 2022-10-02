@@ -3,21 +3,16 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.group85.bomberman.BombermanGame;
-import uet.group85.bomberman.auxilities.Bound;
 import uet.group85.bomberman.auxilities.Coordinate;
-import uet.group85.bomberman.auxilities.KeyCode;
 import uet.group85.bomberman.auxilities.Rectangle;
-import uet.group85.bomberman.entities.Entity;
-import uet.group85.bomberman.entities.blocks.Brick;
-import uet.group85.bomberman.entities.blocks.Wall;
-import uet.group85.bomberman.entities.items.Item;
+import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.graphics.Sprite;
-
-import java.util.List;
 
 public class Bomber extends Character {
     BombermanGame engine;
     boolean isMoving;
+    Block obstacle1;
+    Block obstacle2;
 
     // Constructor
     public Bomber(BombermanGame engine, Coordinate pos) {
@@ -51,48 +46,48 @@ public class Bomber extends Character {
         };
 
         isMoving = false;
+        obstacle1 = null;
+        obstacle2 = null;
     }
 
     private boolean isCollideBlock() {
-        Bound bomberBound = Bound.createBound(this);
-        Entity obstacle1 = null;
-        Entity obstacle2 = null;
+        this.hitBox.update(this);
+        
+        // Detect obstacle
         switch (stepDirection) {
             case UP -> {
-                bomberBound.topY -= stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
-                        + (bomberBound.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
-                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.topY / Sprite.SCALED_SIZE)
-                        + (bomberBound.rightX / Sprite.SCALED_SIZE));
+                hitBox.topY -= stepLength;
+                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
+                        + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
+                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
+                        + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case DOWN -> {
-                bomberBound.bottomY += stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.bottomY / Sprite.SCALED_SIZE)
-                        + (bomberBound.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.bottomY / Sprite.SCALED_SIZE)
-                        + (bomberBound.rightX / Sprite.SCALED_SIZE));
+                hitBox.bottomY += stepLength;
+                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                        + (hitBox.leftX / Sprite.SCALED_SIZE));
+                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                        + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case LEFT -> {
-                bomberBound.leftX -= stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.topY / Sprite.SCALED_SIZE)
-                        + (bomberBound.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.bottomY / Sprite.SCALED_SIZE)
-                        + (bomberBound.leftX / Sprite.SCALED_SIZE));
+                hitBox.leftX -= stepLength;
+                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
+                        + (hitBox.leftX / Sprite.SCALED_SIZE));
+                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                        + (hitBox.leftX / Sprite.SCALED_SIZE));
             }
             case RIGHT -> {
-                bomberBound.rightX += stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.topY / Sprite.SCALED_SIZE)
-                        + (bomberBound.rightX / Sprite.SCALED_SIZE));
-                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (bomberBound.bottomY / Sprite.SCALED_SIZE)
-                        + (bomberBound.rightX / Sprite.SCALED_SIZE));
+                hitBox.rightX += stepLength;
+                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
+                        + (hitBox.rightX / Sprite.SCALED_SIZE));
+                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                        + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
         }
         assert obstacle1 != null;
         assert obstacle2 != null;
-        return isCollided(bomberBound, Bound.createBound(obstacle1))
-                && (obstacle1 instanceof Wall || obstacle1 instanceof Brick) // Collide with a non-passable block (1)
-                || isCollided(bomberBound, Bound.createBound(obstacle2))
-                && (obstacle2 instanceof Wall || obstacle2 instanceof Brick); // Collide with a non-passable block (2)
+        return isCollided(obstacle1) && (!obstacle1.isPassable())
+                || isCollided(obstacle2) && (!obstacle2.isPassable());
     }
 
     private void move() {
@@ -104,6 +99,10 @@ public class Bomber extends Character {
                     isMoving = true;
                     if (!isCollideBlock()) {
                         step();
+                    } else {
+                        if (obstacle1.isPassable() ^ obstacle2.isPassable()) {
+                            autoStep();
+                        }
                     }
                 }
             }
@@ -113,17 +112,25 @@ public class Bomber extends Character {
 
     private void step() {
         switch (stepDirection) {
-            case UP -> {
-                pos.y -= stepLength;
+            case UP -> pos.y -= stepLength;
+            case DOWN -> pos.y += stepLength;
+            case LEFT -> pos.x -= stepLength;
+            case RIGHT -> pos.x += stepLength;
+        }
+    }
+
+    private void autoStep() {
+        if (stepDirection == Direction.UP || stepDirection == Direction.DOWN) {
+            if (hitBox.leftX / Sprite.SCALED_SIZE == obstacle1.getPos().x / Sprite.SCALED_SIZE) {
+                pos.x += (obstacle1.isPassable() ? -1 : 1) * stepLength / 2;
+            } else {
+                pos.x += (obstacle2.isPassable() ? -1 : 1) * stepLength / 2;
             }
-            case DOWN -> {
-                pos.y += stepLength;
-            }
-            case LEFT -> {
-                pos.x -= stepLength;
-            }
-            case RIGHT -> {
-                pos.x += stepLength;
+        } else {
+            if (hitBox.topY / Sprite.SCALED_SIZE == obstacle1.getPos().y / Sprite.SCALED_SIZE) {
+                pos.y += (obstacle1.isPassable() ? -1 : 1) * stepLength / 2;
+            } else {
+                pos.y += (obstacle2.isPassable() ? -1 : 1) * stepLength / 2;
             }
         }
     }

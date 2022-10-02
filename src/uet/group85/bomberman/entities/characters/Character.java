@@ -5,9 +5,6 @@ import uet.group85.bomberman.auxilities.Bound;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
-import uet.group85.bomberman.graphics.Sprite;
-
-import javax.swing.*;
 
 public abstract class Character extends Entity {
     public enum State {
@@ -26,6 +23,8 @@ public abstract class Character extends Entity {
     protected int stepDuration;
     protected int stepCounter;
     protected Direction stepDirection;
+    // Character collision
+    protected Bound hitBox;
 
     // Character sprite
     protected Image[] defaultFrame;
@@ -34,13 +33,14 @@ public abstract class Character extends Entity {
     protected double frameDuration;
 
     // Constructor
-    public Character(Coordinate pos, Rectangle box, int stepLength, int stepDuration) {
-        super(pos, box);
+    public Character(Coordinate pos, Rectangle solidArea, int stepLength, int stepDuration) {
+        super(pos, solidArea);
         this.state = State.ALIVE;
         this.stepLength = stepLength;
         this.stepDuration = stepDuration;
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
+        this.hitBox = new Bound();
         this.frameDuration = 0.2;
     }
 
@@ -49,25 +49,26 @@ public abstract class Character extends Entity {
         return frame[index];
     }
 
-    public boolean isCollided(Bound thisBound, Bound otherBound) {
+    public boolean isCollided(Entity other) {
+        Bound otherHitBox = other.getHitBox();
         // Check top side
-        if ((thisBound.topY < otherBound.bottomY && thisBound.topY > otherBound.topY)
-                && !((thisBound.leftX >= otherBound.rightX) || (thisBound.rightX <= otherBound.leftX))) {
+        if ((hitBox.topY < otherHitBox.bottomY && hitBox.topY > otherHitBox.topY)
+                && !((hitBox.leftX >= otherHitBox.rightX) || (hitBox.rightX <= otherHitBox.leftX))) {
             return true;
         }
         // Check bottom side
-        if ((thisBound.bottomY > otherBound.topY && thisBound.bottomY < otherBound.bottomY)
-                && !((thisBound.leftX >= otherBound.rightX) || (thisBound.rightX <= otherBound.leftX))) {
+        if ((hitBox.bottomY > otherHitBox.topY && hitBox.bottomY < otherHitBox.bottomY)
+                && !((hitBox.leftX >= otherHitBox.rightX) || (hitBox.rightX <= otherHitBox.leftX))) {
             return true;
         }
         // Check left side
-        if ((thisBound.leftX < otherBound.rightX && thisBound.leftX > otherBound.leftX)
-                && !((thisBound.topY >= otherBound.bottomY) || (thisBound.bottomY <= otherBound.topY))) {
+        if ((hitBox.leftX < otherHitBox.rightX && hitBox.leftX > otherHitBox.leftX)
+                && !((hitBox.topY >= otherHitBox.bottomY) || (hitBox.bottomY <= otherHitBox.topY))) {
             return true;
         }
         // Check right side
-        if ((thisBound.rightX > otherBound.leftX && thisBound.rightX < otherBound.rightX)
-                && !((thisBound.topY >= otherBound.bottomY) || (thisBound.bottomY <= otherBound.topY))) {
+        if ((hitBox.rightX > otherHitBox.leftX && hitBox.rightX < otherHitBox.rightX)
+                && !((hitBox.topY >= otherHitBox.bottomY) || (hitBox.bottomY <= otherHitBox.topY))) {
             return true;
         }
         return false;

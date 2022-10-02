@@ -6,8 +6,8 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 
 public abstract class Item extends Entity {
-    public Item(Coordinate pos, Rectangle box) {
-        super(pos, box);
+    public Item(Coordinate pos, Rectangle solidArea) {
+        super(pos, solidArea);
     }
 
 }

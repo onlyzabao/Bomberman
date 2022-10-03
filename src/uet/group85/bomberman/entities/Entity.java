@@ -21,6 +21,10 @@ public abstract class Entity {
         return pos;
     }
 
+    public void setPos(Coordinate pos) {
+        this.pos = pos;
+    }
+
     public Rectangle getSolidArea() {
         return solidArea;
     }

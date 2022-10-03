@@ -5,6 +5,7 @@ import uet.group85.bomberman.auxilities.Bound;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
+import uet.group85.bomberman.entities.blocks.Block;
 
 public abstract class Character extends Entity {
     public enum State {
@@ -25,6 +26,8 @@ public abstract class Character extends Entity {
     protected Direction stepDirection;
     // Character collision
     protected Bound hitBox;
+    protected Block obstacle1;
+    protected Block obstacle2;
 
     // Character sprite
     protected Image[] defaultFrame;
@@ -36,11 +39,16 @@ public abstract class Character extends Entity {
     public Character(Coordinate pos, Rectangle solidArea, int stepLength, int stepDuration) {
         super(pos, solidArea);
         this.state = State.ALIVE;
+
         this.stepLength = stepLength;
         this.stepDuration = stepDuration;
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
+
         this.hitBox = new Bound();
+        obstacle1 = null;
+        obstacle2 = null;
+
         this.frameDuration = 0.2;
     }
 

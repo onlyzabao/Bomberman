@@ -4,24 +4,23 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
+import uet.group85.bomberman.auxilities.KeyCode;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomber extends Character {
     private final BombermanGame engine;
+    // Specifications
     private boolean isMoving;
-    private Block obstacle1;
-    private Block obstacle2;
+    private boolean isCoolingDown;
+    private double startTime;
+    private final double coolDownTime;
 
     // Constructor
     public Bomber(BombermanGame engine, Coordinate pos) {
-        super(pos, new Rectangle(
-                0,
-                0,
-                24,
-                32
-        ), 2, 3);
+        super(pos, new Rectangle(0, 0, 24, 32), 2, 3);
 
         this.engine = engine;
 
@@ -46,13 +45,13 @@ public class Bomber extends Character {
         };
 
         isMoving = false;
-        obstacle1 = null;
-        obstacle2 = null;
+        isCoolingDown = false;
+        coolDownTime = 0.25;
     }
 
     private boolean isCollideBlock() {
         this.hitBox.update(this);
-        
+
         // Detect obstacle
         switch (stepDirection) {
             case UP -> {
@@ -130,7 +129,26 @@ public class Bomber extends Character {
             if ((hitBox.topY + 16) / Sprite.SCALED_SIZE == obstacle1.getPos().y / Sprite.SCALED_SIZE) {
                 pos.y += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
             } else {
-                pos.y += (obstacle2.isPassable() ? 1 : 0) *stepLength / 2;
+                pos.y += (obstacle2.isPassable() ? 1 : 0) * stepLength / 2;
+            }
+        }
+    }
+
+    private void bomb() {
+        if (engine.keyPressed[KeyCode.X]) {
+            if (isCoolingDown) {
+                if (engine.elapsedTime - startTime > coolDownTime) {
+                    isCoolingDown = false;
+                }
+            } else{
+                for (Bomb instance : engine.bombs) {
+                    if (!instance.isBombed()) {
+                        instance.setBombed(true);
+                        isCoolingDown = true;
+                        startTime = engine.elapsedTime;
+                        break;
+                    }
+                }
             }
         }
     }
@@ -138,6 +156,7 @@ public class Bomber extends Character {
     @Override
     public void update() {
         move();
+        bomb();
     }
 
     @Override

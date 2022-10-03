@@ -12,6 +12,8 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Grass;
+import uet.group85.bomberman.entities.blocks.Wall;
 import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
@@ -32,7 +34,7 @@ public class BombermanGame extends Application {
     public final List<Character> enemies = new ArrayList<>();
     public final List<Item> items = new ArrayList<>();
     public final List<Bomb> bombs = new ArrayList<>();
-    private Bomber bomberman;
+    public final Bomber bomberman = new Bomber(this, new Coordinate(2, 1));
     MapManager mapManager;
 
     // Manage graphics
@@ -73,6 +75,9 @@ public class BombermanGame extends Application {
                         case RIGHT:
                             if (!keyPressed[KeyCode.RIGHT]) keyPressed[KeyCode.RIGHT] = true;
                             break;
+                        case X:
+                            if (!keyPressed[KeyCode.X]) keyPressed[KeyCode.X] = true;
+                            break;
                     }
                 }
         );
@@ -90,6 +95,9 @@ public class BombermanGame extends Application {
                             break;
                         case RIGHT:
                             if (keyPressed[KeyCode.RIGHT]) keyPressed[KeyCode.RIGHT] = false;
+                            break;
+                        case X:
+                            if (keyPressed[KeyCode.X]) keyPressed[KeyCode.X] = false;
                             break;
                     }
                 }
@@ -113,8 +121,9 @@ public class BombermanGame extends Application {
 
         // Add game components
         createMap();
-
-        bomberman = new Bomber(this, new Coordinate(2, 1));
+        bombs.add(new Bomb(this));
+        bombs.add(new Bomb(this));
+        bombs.add(new Bomb(this));
     }
 
     public void createMap() {
@@ -122,28 +131,32 @@ public class BombermanGame extends Application {
         // TODO: Make a map contains wall
         // TODO: Make a map contains brick
             // TODO: Config brick class so it can break, contains items, etc.
-//        for (int j = 0; j < HEIGHT; j++) {
-//            for (int i = 0; i < WIDTH; i++) {
-//                Block object;
-//                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 2 && j == 2) {
-//                    object = new Wall(new Coordinate(i, j));
-//                }
-//                else {
-//                    if (i % 2 == 0 && j % 2 == 0) {
-//                        object = new Wall(new Coordinate(i, j));
-//                    } else {
-//                        object = new Grass(new Coordinate(i, j));
-//                    }
-//                }
-//                blocks.add(object);
-//            }
-//        }
-        mapManager = new MapManager(this);
+        for (int j = 0; j < HEIGHT; j++) {
+            for (int i = 0; i < WIDTH; i++) {
+                Block object;
+                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 2 && j == 2) {
+                    object = new Wall(new Coordinate(i, j));
+                }
+                else {
+                    if (i % 2 == 0 && j % 2 == 0) {
+                        object = new Wall(new Coordinate(i, j));
+                    } else {
+                        object = new Grass(new Coordinate(i, j));
+                    }
+                }
+                blocks.add(object);
+            }
+        }
+        /*
+        Temporarily turn of map manager to get more space for testing
+         */
+        //mapManager = new MapManager(this);
     }
 
     public void update() {
         // Update each objects and Check for game status
-        enemies.forEach(Entity::update);
+        enemies.forEach(Character::update);
+        bombs.forEach(Bomb::update);
         bomberman.update();
     }
 
@@ -152,6 +165,7 @@ public class BombermanGame extends Application {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         blocks.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
+        bombs.forEach(g -> g.render(gc));
         bomberman.render(gc);
     }
 }

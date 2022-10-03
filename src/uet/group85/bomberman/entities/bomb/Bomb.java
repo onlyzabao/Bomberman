@@ -6,6 +6,7 @@ import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
+import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomb extends Entity {
@@ -13,6 +14,7 @@ public class Bomb extends Entity {
     // Specifications
     private boolean isBombed;
     private boolean isCountingDown;
+    private Block belowBlock;
     // Sprites
     private final Image[] bomb;
     private final Image[] explosion;
@@ -28,6 +30,7 @@ public class Bomb extends Entity {
 
         isBombed = false;
         isCountingDown = false;
+        belowBlock = null;
 
         bomb = new Image[]{
                 Sprite.bomb.getFxImage(),
@@ -50,25 +53,31 @@ public class Bomb extends Entity {
     }
 
     private void countDown() {
+        Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
         if (isCountingDown) {
             if (engine.elapsedTime - startTime > countDownTime) {
+                belowBlock.setPassable(true);
+                this.pos.reset();
                 isCountingDown = false;
                 isBombed = false;
+            } else if (!bomberUnitPos.equals(this.pos.divide(Sprite.SCALED_SIZE))) {
+                belowBlock.setPassable(false);
             }
         } else {
-            Coordinate bomberCenter = engine.bomberman.getPos().add(12, 16);
-            Coordinate newBombPos = bomberCenter.divide(Sprite.SCALED_SIZE);
+            Coordinate thisBombPos = new Coordinate(bomberUnitPos).multiply(Sprite.SCALED_SIZE);
             boolean isSeparate = true;
             for (Bomb instance : engine.bombs) {
-                Coordinate oldBombPos = instance.getPos().divide(Sprite.SCALED_SIZE);
-                if (oldBombPos.equals(newBombPos)) {
+                Coordinate otherBombPos = instance.getPos();
+                if (otherBombPos.equals(thisBombPos)) {
                     isSeparate = false;
                     break;
                 }
             }
             if (isSeparate) {
-                this.setPos(newBombPos.multiply(Sprite.SCALED_SIZE));
+                this.setPos(thisBombPos);
                 isCountingDown = true;
+                Coordinate bombUnitPos = this.pos.divide(Sprite.SCALED_SIZE);
+                belowBlock = engine.blocks.get(BombermanGame.WIDTH * (bombUnitPos.y) + (bombUnitPos.x));
                 startTime = engine.elapsedTime;;
             } else {
                 isBombed = false;

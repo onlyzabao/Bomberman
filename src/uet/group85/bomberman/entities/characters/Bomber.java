@@ -51,8 +51,7 @@ public class Bomber extends Character {
 
     private boolean isCollideBlock() {
         this.hitBox.update(this);
-
-        // Detect obstacle
+        // Detect obstacles
         switch (stepDirection) {
             case UP -> {
                 hitBox.topY -= stepLength;

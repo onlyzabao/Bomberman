@@ -15,4 +15,8 @@ public abstract class Block extends Entity {
     public boolean isPassable() {
         return isPassable;
     }
+
+    public void setPassable(boolean passable) {
+        isPassable = passable;
+    }
 }

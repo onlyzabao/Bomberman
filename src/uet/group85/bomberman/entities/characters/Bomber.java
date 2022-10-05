@@ -49,45 +49,6 @@ public class Bomber extends Character {
         coolDownTime = 0.25;
     }
 
-    private boolean isCollideBlock() {
-        this.hitBox.update(this);
-        // Detect obstacles
-        switch (stepDirection) {
-            case UP -> {
-                hitBox.topY -= stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
-                        + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
-                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-            }
-            case DOWN -> {
-                hitBox.bottomY += stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-            }
-            case LEFT -> {
-                hitBox.leftX -= stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
-            }
-            case RIGHT -> {
-                hitBox.rightX += stepLength;
-                obstacle1 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-                obstacle2 = engine.blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-            }
-        }
-        assert obstacle1 != null;
-        assert obstacle2 != null;
-        return isCollided(obstacle1) && (!obstacle1.isPassable())
-                || isCollided(obstacle2) && (!obstacle2.isPassable());
-    }
-
     private void move() {
         if (++stepCounter == stepDuration) {
             isMoving = false;
@@ -95,7 +56,7 @@ public class Bomber extends Character {
                 if (engine.keyPressed[i]) {
                     stepDirection = Direction.values()[i];
                     isMoving = true;
-                    if (!isCollideBlock()) {
+                    if (!isCollided(engine.blocks)) {
                         step();
                     } else {
                         if (obstacle1.isPassable() ^ obstacle2.isPassable()) {

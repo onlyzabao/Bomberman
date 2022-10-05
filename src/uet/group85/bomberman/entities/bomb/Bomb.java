@@ -20,8 +20,8 @@ public class Bomb extends Entity {
     private final Image[] explosion;
     private final double frameDuration;
     // Time
-    private double startTime;
-    private final double countDownTime;
+    private double countDownTime;
+    private final double countDownDuration;
 
     public Bomb(BombermanGame engine) {
         super(new Coordinate(0, 0), new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
@@ -44,7 +44,7 @@ public class Bomb extends Entity {
         };
         frameDuration = 0.15;
 
-        countDownTime = 2.0;
+        countDownDuration = 2.0;
     }
 
     public Image getFrame(Image[] frame, double time) {
@@ -55,7 +55,7 @@ public class Bomb extends Entity {
     private void countDown() {
         Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
         if (isCountingDown) {
-            if (engine.elapsedTime - startTime > countDownTime) {
+            if (engine.elapsedTime - countDownTime > countDownDuration) {
                 belowBlock.setPassable(true);
                 this.pos.reset();
                 isCountingDown = false;
@@ -78,7 +78,7 @@ public class Bomb extends Entity {
                 isCountingDown = true;
                 Coordinate bombUnitPos = this.pos.divide(Sprite.SCALED_SIZE);
                 belowBlock = engine.blocks.get(BombermanGame.WIDTH * (bombUnitPos.y) + (bombUnitPos.x));
-                startTime = engine.elapsedTime;;
+                countDownTime = engine.elapsedTime;;
             } else {
                 isBombed = false;
             }

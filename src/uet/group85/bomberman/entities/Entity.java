@@ -11,10 +11,13 @@ public abstract class Entity {
     protected Coordinate pos;
     // Solid area
     protected Rectangle solidArea;
+    // Hit box
+    protected Bound hitBox;
 
     public Entity(Coordinate pos, Rectangle solidArea) {
         this.pos = pos.multiply(Sprite.SCALED_SIZE);
         this.solidArea = solidArea;
+        this.hitBox = new Bound(this);
     }
 
     public Coordinate getPos() {
@@ -29,8 +32,6 @@ public abstract class Entity {
         return solidArea;
     }
     public Bound getHitBox() {
-        Bound hitBox = new Bound();
-        hitBox.update(this);
         return hitBox;
     }
 

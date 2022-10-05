@@ -15,11 +15,8 @@ public class Bound {
         this.rightX = 0;
     }
 
-    public Bound(Bound other) {
-        this.topY = other.topY;
-        this.bottomY = other.bottomY;
-        this.leftX = other.leftX;
-        this.rightX = other.rightX;
+    public Bound(Entity entity) {
+        this.update(entity);
     }
 
     public void update(Entity entity) {

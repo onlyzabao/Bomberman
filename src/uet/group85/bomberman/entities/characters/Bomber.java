@@ -6,7 +6,6 @@ import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
 import uet.group85.bomberman.auxilities.Rectangle;
-import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 
@@ -15,8 +14,8 @@ public class Bomber extends Character {
     // Specifications
     private boolean isMoving;
     private boolean isCoolingDown;
-    private double startTime;
-    private final double coolDownTime;
+    private double bombTime;
+    private final double coolDownDuration;
 
     // Constructor
     public Bomber(BombermanGame engine, Coordinate pos) {
@@ -46,7 +45,7 @@ public class Bomber extends Character {
 
         isMoving = false;
         isCoolingDown = false;
-        coolDownTime = 0.25;
+        coolDownDuration = 0.25;
     }
 
     private void move() {
@@ -97,7 +96,7 @@ public class Bomber extends Character {
     private void bomb() {
         if (engine.keyPressed[KeyCode.X]) {
             if (isCoolingDown) {
-                if (engine.elapsedTime - startTime > coolDownTime) {
+                if (engine.elapsedTime - bombTime > coolDownDuration) {
                     isCoolingDown = false;
                 }
             } else{
@@ -105,7 +104,7 @@ public class Bomber extends Character {
                     if (!instance.isBombed()) {
                         instance.setBombed(true);
                         isCoolingDown = true;
-                        startTime = engine.elapsedTime;
+                        bombTime = engine.elapsedTime;
                         break;
                     }
                 }
@@ -115,16 +114,19 @@ public class Bomber extends Character {
 
     @Override
     public void update() {
+        super.update();
         move();
         bomb();
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        if (isMoving) {
-            gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], engine.elapsedTime), pos.x, pos.y);
-        } else {
-            gc.drawImage(defaultFrame[stepDirection.ordinal()], pos.x, pos.y);
+        if (this.state.equals(State.ALIVE)) {
+            if (isMoving) {
+                gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], engine.elapsedTime), pos.x, pos.y);
+            } else {
+                gc.drawImage(defaultFrame[stepDirection.ordinal()], pos.x, pos.y);
+            }
         }
     }
 }

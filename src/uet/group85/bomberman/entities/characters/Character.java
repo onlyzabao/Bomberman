@@ -29,7 +29,6 @@ public abstract class Character extends Entity {
     protected int stepCounter;
     protected Direction stepDirection;
     // Character collision
-    protected Bound hitBox;
     protected Block obstacle1;
     protected Block obstacle2;
 
@@ -87,7 +86,6 @@ public abstract class Character extends Entity {
     }
 
     public boolean isCollided(List<Block> blocks) {
-        this.hitBox.update(this);
         // Detect obstacles
         switch (stepDirection) {
             case UP -> {
@@ -131,5 +129,10 @@ public abstract class Character extends Entity {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    @Override
+    public void update() {
+        this.hitBox.update(this);
     }
 }

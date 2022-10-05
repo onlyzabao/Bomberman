@@ -12,16 +12,9 @@ import uet.group85.bomberman.graphics.Sprite;
 import java.util.List;
 
 public abstract class Character extends Entity {
-    public enum State {
-        ALIVE, DYING, DEAD
-    }
-
     public enum Direction {
         UP, DOWN, LEFT, RIGHT, TOTAL
     }
-
-    // Character state
-    protected State state;
 
     // Character movement
     protected int stepLength;
@@ -36,12 +29,11 @@ public abstract class Character extends Entity {
     protected Image[] defaultFrame;
     protected Image[][] movingFrame;
     protected Image[] dyingFrame;
-    protected double frameDuration;
+    protected double[] frameDuration;
 
     // Constructor
     public Character(Coordinate pos, Rectangle solidArea, int stepLength, int stepDuration) {
         super(pos, solidArea);
-        this.state = State.ALIVE;
 
         this.stepLength = stepLength;
         this.stepDuration = stepDuration;
@@ -51,11 +43,9 @@ public abstract class Character extends Entity {
         this.hitBox = new Bound(this);
         obstacle1 = null;
         obstacle2 = null;
-
-        this.frameDuration = 0.2;
     }
 
-    public Image getFrame(Image[] frame, double time) {
+    public Image getFrame(Image[] frame, double time, double frameDuration) {
         int index = (int) ((time % (frame.length * frameDuration)) / frameDuration);
         return frame[index];
     }
@@ -86,6 +76,11 @@ public abstract class Character extends Entity {
     }
 
     public boolean isCollided(List<Block> blocks) {
+        Coordinate thisUnitPos = this.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
+        Block tmpObstacle = blocks.get(BombermanGame.WIDTH * (thisUnitPos.y) + (thisUnitPos.x));
+        if (!tmpObstacle.isPassable()) {
+            return false;
+        }
         // Detect obstacles
         switch (stepDirection) {
             case UP -> {
@@ -121,14 +116,6 @@ public abstract class Character extends Entity {
         assert obstacle2 != null;
         return isCollided(obstacle1) && (!obstacle1.isPassable())
                 || isCollided(obstacle2) && (!obstacle2.isPassable());
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 
     @Override

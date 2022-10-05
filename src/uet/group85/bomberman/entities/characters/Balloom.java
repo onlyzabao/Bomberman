@@ -10,6 +10,9 @@ import uet.group85.bomberman.graphics.Sprite;
 public class Balloom extends Character {
     private final BombermanGame engine;
     // Specifications
+    enum FrameType {
+        MOVING, DYING
+    }
 
     public Balloom(BombermanGame engine, Coordinate pos) {
         super(pos, new Rectangle(2, 2, 28, 28), 2, 3);
@@ -25,6 +28,8 @@ public class Balloom extends Character {
                 {Sprite.balloom_left1.getFxImage(), Sprite.balloom_left2.getFxImage(), Sprite.balloom_left3.getFxImage()},
                 {Sprite.balloom_right1.getFxImage(), Sprite.balloom_right2.getFxImage(), Sprite.balloom_right3.getFxImage()}
         };
+
+        frameDuration = new double[] {0.2, 1.0};
     }
 
     private void move() {
@@ -35,12 +40,13 @@ public class Balloom extends Character {
 
     @Override
     public void update() {
+        super.update();
         move();
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        if (state.equals(State.ALIVE)) {
+        if (this.isExist) {
             // TODO: Render base on stepDirection
         }
     }

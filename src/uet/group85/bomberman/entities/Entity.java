@@ -13,11 +13,13 @@ public abstract class Entity {
     protected Rectangle solidArea;
     // Hit box
     protected Bound hitBox;
+    protected boolean isExist;
 
     public Entity(Coordinate pos, Rectangle solidArea) {
         this.pos = pos.multiply(Sprite.SCALED_SIZE);
         this.solidArea = solidArea;
         this.hitBox = new Bound(this);
+        this.isExist = true;
     }
 
     public Coordinate getPos() {
@@ -33,6 +35,10 @@ public abstract class Entity {
     }
     public Bound getHitBox() {
         return hitBox;
+    }
+
+    public boolean isExist() {
+        return isExist;
     }
 
     public abstract void update();

@@ -155,8 +155,8 @@ public class BombermanGame extends Application {
 
     public void update() {
         // Update each objects and Check for game status
+        blocks.forEach(Block::update);
         enemies.forEach(Character::update);
-        bombs.forEach(Bomb::update);
         bomberman.update();
     }
 
@@ -165,7 +165,6 @@ public class BombermanGame extends Application {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         blocks.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
-        bombs.forEach(g -> g.render(gc));
         bomberman.render(gc);
     }
 }

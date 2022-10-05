@@ -7,22 +7,48 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.graphics.Sprite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Grass extends Block {
     private final Image img;
+    private final List<Entity> overlay;
     public Grass(Coordinate pos) {
         super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isPassable = true;
         img = Sprite.grass.getFxImage();
+        overlay = new ArrayList<>();
+    }
+
+    public void addLayer(Entity layer) {
+        this.overlay.add(layer);
+    }
+
+    public void removeLayer(Entity layer) {
+        this.overlay.remove(layer);
+    }
+
+    public boolean hasOverlay() {
+        return overlay.size() != 0;
     }
 
     @Override
     public void update() {
-
+        if (hasOverlay()) {
+            isPassable = false;
+            overlay.removeIf(entity -> !entity.isExist());
+            overlay.forEach(Entity::update);
+        } else {
+            isPassable = true;
+        }
     }
 
     @Override
     public void render(GraphicsContext gc) {
         gc.drawImage(img, pos.x, pos.y);
+        if (hasOverlay()) {
+            overlay.forEach(entity -> entity.render(gc));
+        }
     }
 }
 

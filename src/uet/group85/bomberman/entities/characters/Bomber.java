@@ -6,7 +6,6 @@ import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
 import uet.group85.bomberman.auxilities.Rectangle;
-import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Grass;
 import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.graphics.Sprite;

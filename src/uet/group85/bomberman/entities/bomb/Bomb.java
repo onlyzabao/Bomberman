@@ -6,19 +6,20 @@ import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
-import uet.group85.bomberman.entities.blocks.Grass;
+import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomb extends Entity {
     private final BombermanGame engine;
+
     enum FrameType {
         COUNTDOWN, EXPLODE
     }
+
     // Specifications
     private boolean isCountingDown;
     // Sprites
-    private final Image[] bomb;
-    private final Image[] explosion;
+    private final Image[] img;
     private final double[] frameDuration;
     // Time
     private double countDownTime;
@@ -29,18 +30,13 @@ public class Bomb extends Entity {
 
         this.engine = engine;
 
-        bomb = new Image[]{
+        img = new Image[]{
                 Sprite.bomb.getFxImage(),
                 Sprite.bomb_1.getFxImage(),
                 Sprite.bomb_2.getFxImage()
         };
-        explosion = new Image[]{
-                Sprite.bomb_exploded.getFxImage(),
-                Sprite.bomb_exploded1.getFxImage(),
-                Sprite.bomb_exploded2.getFxImage()
-        };
 
-        frameDuration = new double[] {0.15, 1.0};
+        frameDuration = new double[]{0.15, 1.0};
 
         isExist = false;
         isCountingDown = false;
@@ -56,6 +52,12 @@ public class Bomb extends Entity {
         if (engine.elapsedTime - countDownTime > countDownDuration) {
             isCountingDown = false;
             isExist = false;
+        } else {
+            Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
+            if (bomberUnitPos.equals(this.pos.divide(Sprite.SCALED_SIZE))) {
+                Block belowBlock = engine.blocks.get(BombermanGame.WIDTH * (bomberUnitPos.y) + (bomberUnitPos.x));
+                belowBlock.setPassable(true);
+            }
         }
     }
 
@@ -76,7 +78,7 @@ public class Bomb extends Entity {
     @Override
     public void render(GraphicsContext gc) {
         if (isCountingDown) {
-            gc.drawImage(getFrame(bomb, engine.elapsedTime,
+            gc.drawImage(getFrame(img, engine.elapsedTime,
                     frameDuration[FrameType.COUNTDOWN.ordinal()]), pos.x, pos.y);
         }
     }

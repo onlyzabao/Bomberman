@@ -7,6 +7,9 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Brick;
+import uet.group85.bomberman.entities.blocks.Grass;
+import uet.group85.bomberman.entities.blocks.Wall;
 import uet.group85.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -76,11 +79,7 @@ public abstract class Character extends Entity {
     }
 
     public boolean isCollided(List<Block> blocks) {
-        Coordinate thisUnitPos = this.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
-        Block tmpObstacle = blocks.get(BombermanGame.WIDTH * (thisUnitPos.y) + (thisUnitPos.x));
-        if (!tmpObstacle.isPassable()) {
-            return false;
-        }
+        this.hitBox.update(this);
         // Detect obstacles
         switch (stepDirection) {
             case UP -> {

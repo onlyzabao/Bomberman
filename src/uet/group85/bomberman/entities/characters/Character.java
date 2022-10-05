@@ -48,7 +48,7 @@ public abstract class Character extends Entity {
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
 
-        this.hitBox = new Bound();
+        this.hitBox = new Bound(this);
         obstacle1 = null;
         obstacle2 = null;
 

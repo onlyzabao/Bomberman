@@ -111,8 +111,8 @@ public class Bomber extends Character {
                         Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
                         Grass grass = (Grass) engine.blocks.get(BombermanGame.WIDTH * (bomberUnitPos.y) + (bomberUnitPos.x));
                         if (!grass.hasOverlay()) {
-                            grass.addLayer(bomb);
                             bomb.create(bomberUnitPos.multiply(Sprite.SCALED_SIZE));
+                            grass.addLayer(bomb);
                             isCoolingDown = true;
                             bombTime = engine.elapsedTime;
                         }

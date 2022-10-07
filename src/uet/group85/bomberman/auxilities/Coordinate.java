@@ -9,7 +9,7 @@ public class Coordinate {
         this.y = y;
     }
 
-    public Coordinate(Coordinate other) {
+    public void Copy(Coordinate other) {
         this.x = other.x;
         this.y = other.y;
     }

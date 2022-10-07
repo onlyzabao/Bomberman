@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
+import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
@@ -35,9 +36,10 @@ public class Grass extends Block {
     @Override
     public void update() {
         if (hasOverlay()) {
-            isPassable = false;
+            Entity topLayer = overlay.get(overlay.size() - 1);
+            isPassable = !(topLayer instanceof Bomb || topLayer instanceof Brick);
+            topLayer.update();
             overlay.removeIf(entity -> !entity.isExist());
-            overlay.forEach(Entity::update);
         } else {
             isPassable = true;
         }
@@ -47,7 +49,7 @@ public class Grass extends Block {
     public void render(GraphicsContext gc) {
         gc.drawImage(img, pos.x, pos.y);
         if (hasOverlay()) {
-            overlay.forEach(entity -> entity.render(gc));
+            overlay.get(overlay.size() - 1).render(gc);
         }
     }
 }

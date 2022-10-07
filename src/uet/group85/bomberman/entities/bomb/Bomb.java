@@ -7,14 +7,17 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Brick;
 import uet.group85.bomberman.entities.blocks.Grass;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomb extends Entity {
     private final BombermanGame engine;
+
     enum FlameType {
         TOP, BOTTOM, LEFT, RIGHT, HORIZONTAL, VERTICAL, MID
     }
+
     // Specifications
     private boolean isCountingDown;
     private double countDownTime;
@@ -120,12 +123,14 @@ public class Bomb extends Entity {
                     belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[6]));
                 } else if (0 < j && j < flameLen) {
                     belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[i <= 2 ? 5 : 4]));
-                } else if (j == flameLen){
+                } else if (j == flameLen) {
                     belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[i - 1]));
                 }
                 Block nextBlock = engine.blocks.get(BombermanGame.WIDTH * (tmpUnitPos.y + y) + (tmpUnitPos.x + x));
                 if (!nextBlock.isPassable()) {
-                    // TODO: Break brick
+                    if (nextBlock instanceof Grass) {
+                        ((Brick) ((Grass) nextBlock).getLayer()).breakNow(engine.elapsedTime);
+                    }
                     break;
                 }
             }

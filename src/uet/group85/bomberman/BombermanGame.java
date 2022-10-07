@@ -12,6 +12,7 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Brick;
 import uet.group85.bomberman.entities.blocks.Grass;
 import uet.group85.bomberman.entities.blocks.Wall;
 import uet.group85.bomberman.entities.bomb.Bomb;
@@ -134,7 +135,7 @@ public class BombermanGame extends Application {
         for (int j = 0; j < HEIGHT; j++) {
             for (int i = 0; i < WIDTH; i++) {
                 Block object;
-                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1 || i == 2 && j == 2) {
+                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
                     object = new Wall(new Coordinate(i, j));
                 }
                 else {
@@ -142,6 +143,9 @@ public class BombermanGame extends Application {
                         object = new Wall(new Coordinate(i, j));
                     } else {
                         object = new Grass(new Coordinate(i, j));
+                        if (i == 9) {
+                            ((Grass) object).addLayer(new Brick(this, new Coordinate(i, j)));
+                        }
                     }
                 }
                 blocks.add(object);

@@ -28,11 +28,11 @@ public class MapManager {
         loadMap();
     }
 
-    protected void initBrick(int x, int y) {
-        Coordinate cr = new Coordinate(x, y);
-        Brick br = new Brick(cr);
-        engine.blocks.add(br);
-    }
+//    protected void initBrick(int x, int y) {
+//        Coordinate cr = new Coordinate(x, y);
+//        Brick br = new Brick(cr);
+//        engine.blocks.add(br);
+//    }
 
     protected void initWall(int x, int y) {
         Coordinate cr = new Coordinate(x, y);
@@ -66,7 +66,7 @@ public class MapManager {
                     switch (mapTileNum[row][col]) {
                         case 0 -> initGrass(col, row);
                         case 2 -> initWall(col, row);
-                        case 3 -> initBrick(col, row);
+//                        case 3 -> initBrick(col, row);
                         case 6 -> initPortal(col, row);
                     }
                     col++;

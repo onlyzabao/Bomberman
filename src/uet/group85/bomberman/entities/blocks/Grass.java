@@ -28,6 +28,9 @@ public class Grass extends Block {
     public void removeLayer(Entity layer) {
         this.overlay.remove(layer);
     }
+    public Entity getLayer() {
+        return overlay.get(overlay.size() - 1);
+    }
 
     public boolean hasOverlay() {
         return overlay.size() != 0;

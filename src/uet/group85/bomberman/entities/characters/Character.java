@@ -48,7 +48,7 @@ public abstract class Character extends Entity {
         obstacle2 = null;
     }
 
-    public Image getFrame(Image[] frame, double time, double frameDuration) {
+    protected Image getFrame(Image[] frame, double time, double frameDuration) {
         int index = (int) ((time % (frame.length * frameDuration)) / frameDuration);
         return frame[index];
     }

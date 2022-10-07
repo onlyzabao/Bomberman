@@ -87,7 +87,7 @@ public class Bomb extends Entity {
         flameLen = 1;
     }
 
-    public Image getFrame(Image[] frame, double time) {
+    private Image getFrame(Image[] frame, double time) {
         int index = (int) ((time % (frame.length * frameDuration)) / frameDuration);
         return frame[index];
     }
@@ -129,7 +129,10 @@ public class Bomb extends Entity {
                 Block nextBlock = engine.blocks.get(BombermanGame.WIDTH * (tmpUnitPos.y + y) + (tmpUnitPos.x + x));
                 if (!nextBlock.isPassable()) {
                     if (nextBlock instanceof Grass) {
-                        ((Brick) ((Grass) nextBlock).getLayer()).breakNow(engine.elapsedTime);
+                        Entity layer = ((Grass) nextBlock).getLayer();
+                        if (layer instanceof Brick) {
+                            ((Brick) layer).breakNow(engine.elapsedTime);
+                        }
                     }
                     break;
                 }

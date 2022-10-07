@@ -40,7 +40,7 @@ public class Brick extends Block {
         isBreaking = true;
     }
 
-    public Image getFrame(Image[] frame, double time) {
+    private Image getFrame(Image[] frame, double time) {
         int index = (int) (((time - breakTime) % breakDuration) / frameDuration);
         return frame[index];
     }

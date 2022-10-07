@@ -32,15 +32,24 @@ public class Flame extends Entity {
         explodeTime = engine.elapsedTime;
     }
 
-    public Image getFrame(Image[] frame, double time) {
+    private Image getFrame(Image[] frame, double time) {
         int index = (int) (((time - explodeTime) % explodeDuration) / frameDuration);
         return frame[index];
+    }
+
+    private void checkCollision() {
+        Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
+        if (bomberUnitPos.equals(pos.divide(Sprite.SCALED_SIZE))) {
+            engine.bomberman.eliminateNow(engine.elapsedTime);
+        }
     }
 
     @Override
     public void update() {
         if (engine.elapsedTime - explodeTime > explodeDuration) {
             this.isExist = false;
+        } else {
+            checkCollision();
         }
     }
 

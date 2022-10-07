@@ -16,10 +16,13 @@ public class Bomber extends Character {
         MOVING, DYING
     }
     // Specifications
+    private boolean isLiving;
     private boolean isMoving;
     private boolean isCoolingDown;
     private double bombTime;
     private final double coolDownDuration;
+    private double deadTime;
+    private final double deadDuration;
 
     // Constructor
     public Bomber(BombermanGame engine, Coordinate pos) {
@@ -47,11 +50,13 @@ public class Bomber extends Character {
                 {Sprite.player_right_1.getFxImage(), Sprite.player_right_2.getFxImage()}
         };
 
-        frameDuration = new double[] {0.2, 0.5};
+        frameDuration = new double[] {0.2, 0.4};
 
+        isLiving = true;
         isMoving = false;
         isCoolingDown = false;
         coolDownDuration = 0.25;
+        deadDuration = 1.2;
     }
 
     private void move() {
@@ -108,7 +113,7 @@ public class Bomber extends Character {
             } else{
                 for (Bomb bomb : engine.bombs) {
                     if (!bomb.isExist()) {
-                        Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
+                        Coordinate bomberUnitPos = this.pos.add(12, 16).divide(Sprite.SCALED_SIZE);
                         Grass grass = (Grass) engine.blocks.get(BombermanGame.WIDTH * (bomberUnitPos.y) + (bomberUnitPos.x));
                         if (!grass.hasOverlay()) {
                             bomb.create(bomberUnitPos.multiply(Sprite.SCALED_SIZE));
@@ -123,21 +128,38 @@ public class Bomber extends Character {
         }
     }
 
+    public void eliminateNow(double deadTime) {
+        this.deadTime = deadTime;
+        isLiving = false;
+    }
+
     @Override
     public void update() {
-        super.update();
-        move();
-        bomb();
+        if (isExist) {
+            if (isLiving) {
+                super.update();
+                move();
+                bomb();
+            } else if (engine.elapsedTime - deadTime > deadDuration) {
+                isExist = false;
+            }
+
+        }
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        if (this.isExist) {
-            if (isMoving) {
-                gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], engine.elapsedTime,
-                        frameDuration[FrameType.MOVING.ordinal()]), pos.x, pos.y);
+        if (isExist) {
+            if (isLiving) {
+                if (isMoving) {
+                    gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], engine.elapsedTime,
+                            frameDuration[FrameType.MOVING.ordinal()]), pos.x, pos.y);
+                } else {
+                    gc.drawImage(defaultFrame[stepDirection.ordinal()], pos.x, pos.y);
+                }
             } else {
-                gc.drawImage(defaultFrame[stepDirection.ordinal()], pos.x, pos.y);
+                gc.drawImage(getFrame(dyingFrame, engine.elapsedTime,
+                        frameDuration[FrameType.DYING.ordinal()]), pos.x, pos.y);
             }
         }
     }

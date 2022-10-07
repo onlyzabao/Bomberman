@@ -40,14 +40,24 @@ public class Balloom extends Character {
 
     @Override
     public void update() {
-        super.update();
-        move();
+        if (isExist) {
+            if (isLiving) {
+                super.update();
+                move();
+            } else if (engine.elapsedTime - deadTime > deadDuration) {
+                engine.enemies.remove(this);
+            }
+        }
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        if (this.isExist) {
-            // TODO: Render base on stepDirection
+        if (isExist) {
+            if (isLiving) {
+                // TODO: Render base on stepDirection
+            } else {
+                // TODO: Render dead frame
+            }
         }
     }
 }

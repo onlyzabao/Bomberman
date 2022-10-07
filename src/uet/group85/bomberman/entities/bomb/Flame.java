@@ -42,6 +42,7 @@ public class Flame extends Entity {
         if (bomberUnitPos.equals(pos.divide(Sprite.SCALED_SIZE))) {
             engine.bomberman.eliminateNow(engine.elapsedTime);
         }
+        // TODO: Check with enemies
     }
 
     @Override

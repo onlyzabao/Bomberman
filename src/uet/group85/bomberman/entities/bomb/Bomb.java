@@ -28,7 +28,7 @@ public class Bomb extends Entity {
     private final Image[][] explodeImg;
     private final double frameDuration;
 
-    public Bomb(BombermanGame engine) {
+    public Bomb(BombermanGame engine, int flameLen) {
         super(new Coordinate(0, 0), new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
 
         this.engine = engine;
@@ -84,7 +84,7 @@ public class Bomb extends Entity {
         isCountingDown = false;
         countDownDuration = 2.0;
 
-        flameLen = 1;
+        this.flameLen = flameLen;
     }
 
     private Image getFrame(Image[] frame, double time) {
@@ -139,6 +139,14 @@ public class Bomb extends Entity {
             }
         }
         this.isExist = false;
+    }
+
+    public int getFlameLen() {
+        return flameLen;
+    }
+
+    public void increaseFlameLen() {
+        this.flameLen += 1;
     }
 
     @Override

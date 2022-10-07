@@ -10,15 +10,14 @@ import javafx.stage.Stage;
 
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
-import uet.group85.bomberman.entities.Entity;
-import uet.group85.bomberman.entities.blocks.Block;
-import uet.group85.bomberman.entities.blocks.Brick;
-import uet.group85.bomberman.entities.blocks.Grass;
-import uet.group85.bomberman.entities.blocks.Wall;
+import uet.group85.bomberman.entities.blocks.*;
 import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
+import uet.group85.bomberman.entities.items.BombItem;
+import uet.group85.bomberman.entities.items.FlameItem;
 import uet.group85.bomberman.entities.items.Item;
+import uet.group85.bomberman.entities.items.SpeedItem;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.MapManager;
 
@@ -122,9 +121,7 @@ public class BombermanGame extends Application {
 
         // Add game components
         createMap();
-        bombs.add(new Bomb(this));
-        bombs.add(new Bomb(this));
-        bombs.add(new Bomb(this));
+        bombs.add(new Bomb(this, 1));
     }
 
     public void createMap() {
@@ -144,6 +141,18 @@ public class BombermanGame extends Application {
                     } else {
                         object = new Grass(new Coordinate(i, j));
                         if (i == 9) {
+                            if (j == 7) {
+                                ((Grass) object).addLayer(new BombItem(this, new Coordinate(i, j)));
+                            }
+                            if (j == 9) {
+                                ((Grass) object).addLayer(new Portal(this, new Coordinate(i, j)));
+                            }
+                            if (j == 11) {
+                                ((Grass) object).addLayer(new SpeedItem(this, new Coordinate(i, j)));
+                            }
+                            if (j == 13) {
+                                ((Grass) object).addLayer(new FlameItem(this, new Coordinate(i, j)));
+                            }
                             ((Grass) object).addLayer(new Brick(this, new Coordinate(i, j)));
                         }
                     }

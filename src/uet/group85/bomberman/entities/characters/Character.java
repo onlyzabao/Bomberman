@@ -24,6 +24,9 @@ public abstract class Character extends Entity {
     protected int stepDuration;
     protected int stepCounter;
     protected Direction stepDirection;
+    protected boolean isLiving;
+    protected double deadTime;
+    protected final double deadDuration;
     // Character collision
     protected Block obstacle1;
     protected Block obstacle2;
@@ -42,6 +45,8 @@ public abstract class Character extends Entity {
         this.stepDuration = stepDuration;
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
+        isLiving = true;
+        deadDuration = 1.2;
 
         this.hitBox = new Bound(this);
         obstacle1 = null;
@@ -115,6 +120,16 @@ public abstract class Character extends Entity {
         assert obstacle2 != null;
         return isCollided(obstacle1) && (!obstacle1.isPassable())
                 || isCollided(obstacle2) && (!obstacle2.isPassable());
+    }
+
+    public void eliminateNow(double deadTime) {
+        this.deadTime = deadTime;
+        isLiving = false;
+    }
+
+    public void increaseSpeed() {
+        this.stepLength += 2;
+        this.stepDuration += 1;
     }
 
     @Override

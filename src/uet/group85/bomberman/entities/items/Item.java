@@ -9,5 +9,4 @@ public abstract class Item extends Entity {
     public Item(Coordinate pos, Rectangle solidArea) {
         super(pos, solidArea);
     }
-
 }

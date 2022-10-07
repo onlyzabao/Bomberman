@@ -16,13 +16,10 @@ public class Bomber extends Character {
         MOVING, DYING
     }
     // Specifications
-    private boolean isLiving;
     private boolean isMoving;
     private boolean isCoolingDown;
     private double bombTime;
     private final double coolDownDuration;
-    private double deadTime;
-    private final double deadDuration;
 
     // Constructor
     public Bomber(BombermanGame engine, Coordinate pos) {
@@ -56,7 +53,6 @@ public class Bomber extends Character {
         isMoving = false;
         isCoolingDown = false;
         coolDownDuration = 0.25;
-        deadDuration = 1.2;
     }
 
     private void move() {
@@ -128,11 +124,6 @@ public class Bomber extends Character {
         }
     }
 
-    public void eliminateNow(double deadTime) {
-        this.deadTime = deadTime;
-        isLiving = false;
-    }
-
     @Override
     public void update() {
         if (isExist) {
@@ -143,7 +134,6 @@ public class Bomber extends Character {
             } else if (engine.elapsedTime - deadTime > deadDuration) {
                 isExist = false;
             }
-
         }
     }
 

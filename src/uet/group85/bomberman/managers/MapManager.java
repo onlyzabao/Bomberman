@@ -45,11 +45,11 @@ public class MapManager {
         Grass gr = new Grass(cr);
         engine.blocks.add(gr);
     }
-    protected void initPortal(int x, int y) {
-        Coordinate cr = new Coordinate(x, y);
-        Portal po = new Portal(cr);
-        engine.blocks.add(po);
-    }
+//    protected void initPortal(int x, int y) {
+//        Coordinate cr = new Coordinate(x, y);
+////        Portal po = new Portal(cr);
+////        engine.blocks.add(po);
+//    }
 
     public void loadMap() {
         try {
@@ -67,7 +67,7 @@ public class MapManager {
                         case 0 -> initGrass(col, row);
                         case 2 -> initWall(col, row);
 //                        case 3 -> initBrick(col, row);
-                        case 6 -> initPortal(col, row);
+//                        case 6 -> initPortal(col, row);
                     }
                     col++;
                 }

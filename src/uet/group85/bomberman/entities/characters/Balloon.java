@@ -2,6 +2,7 @@ package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+
 import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;

@@ -2,6 +2,7 @@ package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+
 import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
@@ -33,20 +34,17 @@ public class Bomber extends Character {
                 Sprite.player_left.getFxImage(),
                 Sprite.player_right.getFxImage()
         };
-
         dyingFrame = new Image[]{
                 Sprite.player_dead1.getFxImage(),
                 Sprite.player_dead2.getFxImage(),
                 Sprite.player_dead3.getFxImage()
         };
-
         movingFrame = new Image[][]{
                 {Sprite.player_up_1.getFxImage(), Sprite.player_up_2.getFxImage()},
                 {Sprite.player_down_1.getFxImage(), Sprite.player_down_2.getFxImage()},
                 {Sprite.player_left_1.getFxImage(), Sprite.player_left_2.getFxImage()},
                 {Sprite.player_right_1.getFxImage(), Sprite.player_right_2.getFxImage()}
         };
-
         frameDuration = new double[] {0.2, 0.4};
 
         isLiving = true;

@@ -8,13 +8,6 @@ public class Bound {
     public int leftX;
     public int rightX;
 
-    public Bound() {
-        this.topY = 0;
-        this.bottomY = 0;
-        this.leftX = 0;
-        this.rightX = 0;
-    }
-
     public Bound(Entity entity) {
         this.update(entity);
     }

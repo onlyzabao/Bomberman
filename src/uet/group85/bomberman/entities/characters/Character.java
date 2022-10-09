@@ -1,15 +1,13 @@
 package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.image.Image;
+
 import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Bound;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
-import uet.group85.bomberman.entities.blocks.Brick;
-import uet.group85.bomberman.entities.blocks.Grass;
-import uet.group85.bomberman.entities.blocks.Wall;
 import uet.group85.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public abstract class Character extends Entity {
     protected Block obstacle1;
     protected Block obstacle2;
 
-    // Character sprite
+    // Character animation
     protected Image[] defaultFrame;
     protected Image[][] movingFrame;
     protected Image[] dyingFrame;

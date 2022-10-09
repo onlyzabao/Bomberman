@@ -16,15 +16,15 @@ import java.util.Scanner;
 
 public class MapManager {
     private final BombermanGame engine;
-    private final char WALL = '#';
-    private final char BRICK = '*';
-    private final char PORTAL = 'x';
-    private final char BOMBER = 'p';
-    private final char BALLOON = '1';
-    private final char ONEAL = '2';
-    private final char BOMB_ITEM = 'b';
-    private final char FLAME_ITEM = 'f';
-    private final char SPEED_ITEM = 's';
+    private static final char WALL = '#';
+    private static final char BRICK = '*';
+    private static final char PORTAL = 'x';
+    private static final char BOMBER = 'p';
+    private static final char BALLOON = '1';
+    private static final char ONEAL = '2';
+    private static final char BOMB_ITEM = 'b';
+    private static final char FLAME_ITEM = 'f';
+    private static final char SPEED_ITEM = 's';
 
     public MapManager(BombermanGame engine) {
         this.engine = engine;

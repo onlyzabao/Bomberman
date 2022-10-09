@@ -9,8 +9,8 @@ import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class BombItem extends Item {
-    private BombermanGame engine;
-    private Image img;
+    private final BombermanGame engine;
+    private final Image img;
     public BombItem(BombermanGame engine, Coordinate pos) {
         super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
 

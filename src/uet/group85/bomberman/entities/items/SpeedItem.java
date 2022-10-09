@@ -9,7 +9,7 @@ import uet.group85.bomberman.graphics.Sprite;
 
 public class SpeedItem extends Item {
     private final BombermanGame engine;
-    private Image img;
+    private final Image img;
     public SpeedItem(BombermanGame engine, Coordinate pos) {
         super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
 

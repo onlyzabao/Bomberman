@@ -46,7 +46,7 @@ public class BombermanGame extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // Root container
         Group root = new Group();
         root.getChildren().add(canvas);

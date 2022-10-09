@@ -99,38 +99,34 @@ public class MapManager {
         engine.bomberman = null;
     }
 
-    public void loadMap(int level) {
+    public void loadMap(int level) throws FileNotFoundException {
         reset();
         String path = String.format("res/levels/Level%d.txt", level);
-        try {
-            File myFile = new File(path);
-            Scanner myReader = new Scanner(myFile);
-            int numOfRows = myReader.nextInt();
-            int numOfCols = myReader.nextInt();
-            myReader.nextLine();
-            for (int j = 0; j < numOfRows; j++) {
-                String line = myReader.nextLine();
-                for (int i = 0; i < numOfCols; i++) {
-                    switch (line.charAt(i)) {
-                        // Blocks
-                        case WALL -> initWall(i, j);
-                        case BRICK -> initBrick(i, j);
-                        case PORTAL -> initPortal(i, j);
-                        // Characters
-                        case BOMBER -> initBomber(i, j);
-                        case BALLOON -> initBalloon(i, j);
-                        case ONEAL -> initOneal(i, j);
-                        // Items
-                        case BOMB_ITEM -> initBombItem(i, j);
-                        case FLAME_ITEM -> initFlameItem(i, j);
-                        case SPEED_ITEM -> initSpeedItem(i, j);
-                        default -> initGrass(i, j);
-                    }
+        File myFile = new File(path);
+        Scanner myReader = new Scanner(myFile);
+        int numOfRows = myReader.nextInt();
+        int numOfCols = myReader.nextInt();
+        myReader.nextLine();
+        for (int j = 0; j < numOfRows; j++) {
+            String line = myReader.nextLine();
+            for (int i = 0; i < numOfCols; i++) {
+                switch (line.charAt(i)) {
+                    // Blocks
+                    case WALL -> initWall(i, j);
+                    case BRICK -> initBrick(i, j);
+                    case PORTAL -> initPortal(i, j);
+                    // Characters
+                    case BOMBER -> initBomber(i, j);
+                    case BALLOON -> initBalloon(i, j);
+                    case ONEAL -> initOneal(i, j);
+                    // Items
+                    case BOMB_ITEM -> initBombItem(i, j);
+                    case FLAME_ITEM -> initFlameItem(i, j);
+                    case SPEED_ITEM -> initSpeedItem(i, j);
+                    default -> initGrass(i, j);
                 }
             }
-            myReader.close();
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
         }
+        myReader.close();
     }
 }

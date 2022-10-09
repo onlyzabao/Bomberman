@@ -8,19 +8,15 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
-import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.KeyCode;
 import uet.group85.bomberman.entities.blocks.*;
 import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
-import uet.group85.bomberman.entities.items.BombItem;
-import uet.group85.bomberman.entities.items.FlameItem;
-import uet.group85.bomberman.entities.items.Item;
-import uet.group85.bomberman.entities.items.SpeedItem;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.MapManager;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +46,7 @@ public class BombermanGame extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         // Root container
         Group root = new Group();
         root.getChildren().add(canvas);
@@ -119,7 +115,12 @@ public class BombermanGame extends Application {
         timer.start();
 
         // Add game components
-        mapManager.loadMap(1);
+        try {
+            mapManager.loadMap(1);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
     }
 
     public void update() {

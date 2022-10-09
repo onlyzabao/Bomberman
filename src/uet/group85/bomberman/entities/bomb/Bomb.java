@@ -113,21 +113,21 @@ public class Bomb extends Entity {
 
     private void explode() {
         Coordinate thisUnitPos = this.pos.divide(Sprite.SCALED_SIZE);
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= 4; i++) { // 4 directions
             for (int j = 0; j <= flameLen; j++) {
                 int x = (i % 2 == 0 ? 1 : -1) * (i <= 2 ? 0 : 1);
                 int y = (i % 2 == 0 ? 1 : -1) * (i <= 2 ? 1 : 0);
                 Coordinate tmpUnitPos = new Coordinate(thisUnitPos.x + (j * x), thisUnitPos.y + (j * y));
                 Grass belowBlock = (Grass) engine.blocks.get(BombermanGame.WIDTH * (tmpUnitPos.y) + (tmpUnitPos.x));
                 if (j == 0 && i == 1) {
-                    belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[6]));
+                    belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[6])); // Mid
                 } else if (0 < j && j < flameLen) {
-                    belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[i <= 2 ? 5 : 4]));
+                    belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[i <= 2 ? 5 : 4])); // Orientation
                 } else if (j == flameLen) {
-                    belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[i - 1]));
+                    belowBlock.addLayer(new Flame(engine, tmpUnitPos, explodeImg[i - 1])); // Last
                 }
                 Block nextBlock = engine.blocks.get(BombermanGame.WIDTH * (tmpUnitPos.y + y) + (tmpUnitPos.x + x));
-                if (!nextBlock.isPassable()) {
+                if (!nextBlock.isPassable() && j != flameLen) {
                     if (nextBlock instanceof Grass) {
                         Entity layer = ((Grass) nextBlock).getLayer();
                         if (layer instanceof Brick) {

@@ -26,16 +26,15 @@ import java.util.List;
 
 public class BombermanGame extends Application {
     // Specifications
-    public static final int WIDTH = 25;
-    public static final int HEIGHT = 15;
+    public static final int WIDTH = 31;
+    public static final int HEIGHT = 13;
 
     // Manage game objects - TODO: ObjectManager
     public final List<Block> blocks = new ArrayList<>();
     public final List<Character> enemies = new ArrayList<>();
-    public final List<Item> items = new ArrayList<>();
     public final List<Bomb> bombs = new ArrayList<>();
-    public final Bomber bomberman = new Bomber(this, new Coordinate(2, 1));
-    MapManager mapManager;
+    public Bomber bomberman;
+    private final MapManager mapManager = new MapManager(this);
 
     // Manage graphics
     private final Canvas canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
@@ -120,50 +119,7 @@ public class BombermanGame extends Application {
         timer.start();
 
         // Add game components
-        createMap();
-        bombs.add(new Bomb(this, 1));
-    }
-
-    public void createMap() {
-        // TODO: Read map from a file
-        // TODO: Make a map contains wall
-        // TODO: Make a map contains brick
-            // TODO: Config brick class so it can break, contains items, etc.
-        for (int j = 0; j < HEIGHT; j++) {
-            for (int i = 0; i < WIDTH; i++) {
-                Block object;
-                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
-                    object = new Wall(new Coordinate(i, j));
-                }
-                else {
-                    if (i % 2 == 0 && j % 2 == 0) {
-                        object = new Wall(new Coordinate(i, j));
-                    } else {
-                        object = new Grass(new Coordinate(i, j));
-                        if (i == 9) {
-                            if (j == 7) {
-                                ((Grass) object).addLayer(new BombItem(this, new Coordinate(i, j)));
-                            }
-                            if (j == 9) {
-                                ((Grass) object).addLayer(new Portal(this, new Coordinate(i, j)));
-                            }
-                            if (j == 11) {
-                                ((Grass) object).addLayer(new SpeedItem(this, new Coordinate(i, j)));
-                            }
-                            if (j == 13) {
-                                ((Grass) object).addLayer(new FlameItem(this, new Coordinate(i, j)));
-                            }
-                            ((Grass) object).addLayer(new Brick(this, new Coordinate(i, j)));
-                        }
-                    }
-                }
-                blocks.add(object);
-            }
-        }
-        /*
-        Temporarily turn of map manager to get more space for testing
-         */
-        //mapManager = new MapManager(this);
+        mapManager.loadMap(1);
     }
 
     public void update() {

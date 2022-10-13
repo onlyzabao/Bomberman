@@ -1,33 +1,46 @@
 package uet.group85.bomberman.entities;
 
 import javafx.scene.canvas.GraphicsContext;
+import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Bound;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 
 public abstract class Entity {
+    protected final BombermanGame engine;
     // Position
-    protected Coordinate pos;
+    protected Coordinate mapPos;
+    protected Coordinate screenPos;
     // Solid area
-    protected Rectangle solidArea;
+    protected final Rectangle solidArea;
     // Hit box
     protected Bound hitBox;
     protected boolean isExist;
 
-    public Entity(Coordinate pos, Rectangle solidArea) {
-        this.pos = pos.multiply(Sprite.SCALED_SIZE);
+    public Entity(BombermanGame engine, Coordinate mapPos, Rectangle solidArea) {
+        this.engine = engine;
+        this.mapPos = mapPos.multiply(Sprite.SCALED_SIZE);
+        this.screenPos = new Coordinate(0, 0);
         this.solidArea = solidArea;
         this.hitBox = new Bound(this);
         this.isExist = true;
     }
 
-    public Coordinate getPos() {
-        return pos;
+    public Coordinate getMapPos() {
+        return mapPos;
     }
 
-    public void setPos(Coordinate pos) {
-        this.pos = pos;
+    public void setMapPos(Coordinate mapPos) {
+        this.mapPos = mapPos;
+    }
+
+    public Coordinate getScreenPos() {
+        return screenPos;
+    }
+
+    public void setScreenPos(Coordinate screenPos) {
+        this.screenPos = screenPos;
     }
 
     public Rectangle getSolidArea() {

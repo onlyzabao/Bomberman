@@ -3,6 +3,7 @@ package uet.group85.bomberman.entities.blocks;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
+import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
@@ -18,8 +19,8 @@ public class Grass extends Block {
     // Specifications
     private final List<Entity> overlay;
 
-    public Grass(Coordinate pos) {
-        super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+    public Grass(BombermanGame engine, Coordinate pos) {
+        super(engine, pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isPassable = true;
 
         img = Sprite.grass.getFxImage();
@@ -53,7 +54,7 @@ public class Grass extends Block {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.drawImage(img, pos.x, pos.y);
+        gc.drawImage(img, mapPos.x, mapPos.y);
         if (hasOverlay()) {
             overlay.get(overlay.size() - 1).render(gc);
         }

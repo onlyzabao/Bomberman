@@ -12,7 +12,6 @@ import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomber extends Character {
-    private final BombermanGame engine;
     enum FrameType {
         MOVING, DYING
     }
@@ -24,9 +23,7 @@ public class Bomber extends Character {
 
     // Constructor
     public Bomber(BombermanGame engine, Coordinate pos) {
-        super(pos, new Rectangle(0, 0, 24, 32), 2, 3);
-
-        this.engine = engine;
+        super(engine, pos, new Rectangle(0, 0, 24, 32), 2, 3);
 
         defaultFrame = new Image[]{
                 Sprite.player_up.getFxImage(),
@@ -75,25 +72,25 @@ public class Bomber extends Character {
 
     private void step() {
         switch (stepDirection) {
-            case UP -> pos.y -= stepLength;
-            case DOWN -> pos.y += stepLength;
-            case LEFT -> pos.x -= stepLength;
-            case RIGHT -> pos.x += stepLength;
+            case UP -> mapPos.y -= stepLength;
+            case DOWN -> mapPos.y += stepLength;
+            case LEFT -> mapPos.x -= stepLength;
+            case RIGHT -> mapPos.x += stepLength;
         }
     }
 
     private void autoStep() {
         if (stepDirection == Direction.UP || stepDirection == Direction.DOWN) {
-            if ((hitBox.leftX + 12) / Sprite.SCALED_SIZE == obstacle1.getPos().x / Sprite.SCALED_SIZE) {
-                pos.x += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
+            if ((hitBox.leftX + 12) / Sprite.SCALED_SIZE == obstacle1.getMapPos().x / Sprite.SCALED_SIZE) {
+                mapPos.x += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
             } else {
-                pos.x += (obstacle2.isPassable() ? 1 : 0) * stepLength / 2;
+                mapPos.x += (obstacle2.isPassable() ? 1 : 0) * stepLength / 2;
             }
         } else {
-            if ((hitBox.topY + 16) / Sprite.SCALED_SIZE == obstacle1.getPos().y / Sprite.SCALED_SIZE) {
-                pos.y += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
+            if ((hitBox.topY + 16) / Sprite.SCALED_SIZE == obstacle1.getMapPos().y / Sprite.SCALED_SIZE) {
+                mapPos.y += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
             } else {
-                pos.y += (obstacle2.isPassable() ? 1 : 0) * stepLength / 2;
+                mapPos.y += (obstacle2.isPassable() ? 1 : 0) * stepLength / 2;
             }
         }
     }
@@ -107,7 +104,7 @@ public class Bomber extends Character {
             } else{
                 for (Bomb bomb : engine.bombs) {
                     if (!bomb.isExist()) {
-                        Coordinate bomberUnitPos = this.pos.add(12, 16).divide(Sprite.SCALED_SIZE);
+                        Coordinate bomberUnitPos = this.mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
                         Grass grass = (Grass) engine.blocks.get(BombermanGame.WIDTH * (bomberUnitPos.y) + (bomberUnitPos.x));
                         if (!grass.hasOverlay()) {
                             bomb.create(bomberUnitPos.multiply(Sprite.SCALED_SIZE));
@@ -126,7 +123,6 @@ public class Bomber extends Character {
     public void update() {
         if (isExist) {
             if (isLiving) {
-                super.update();
                 move();
                 bomb();
             } else if (engine.elapsedTime - deadTime > deadDuration) {
@@ -141,13 +137,13 @@ public class Bomber extends Character {
             if (isLiving) {
                 if (isMoving) {
                     gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], engine.elapsedTime,
-                            frameDuration[FrameType.MOVING.ordinal()]), pos.x, pos.y);
+                            frameDuration[FrameType.MOVING.ordinal()]), mapPos.x, mapPos.y);
                 } else {
-                    gc.drawImage(defaultFrame[stepDirection.ordinal()], pos.x, pos.y);
+                    gc.drawImage(defaultFrame[stepDirection.ordinal()], mapPos.x, mapPos.y);
                 }
             } else {
                 gc.drawImage(getFrame(dyingFrame, engine.elapsedTime,
-                        frameDuration[FrameType.DYING.ordinal()]), pos.x, pos.y);
+                        frameDuration[FrameType.DYING.ordinal()]), mapPos.x, mapPos.y);
             }
         }
     }

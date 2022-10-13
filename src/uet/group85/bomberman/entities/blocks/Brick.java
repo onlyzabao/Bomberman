@@ -9,7 +9,6 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Brick extends Block {
-    private final BombermanGame engine;
     // Animation
     private final Image normalImg;
     private final Image[] breakingImg;
@@ -20,10 +19,8 @@ public class Brick extends Block {
     private final double breakDuration;
 
     public Brick(BombermanGame engine, Coordinate pos) {
-        super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        super(engine, pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isPassable = false;
-
-        this.engine = engine;
 
         normalImg = Sprite.brick.getFxImage();
         breakingImg = new Image[]{
@@ -59,10 +56,9 @@ public class Brick extends Block {
     @Override
     public void render(GraphicsContext gc) {
         if (!isBreaking) {
-            gc.drawImage(normalImg, pos.x, pos.y);
+            gc.drawImage(normalImg, mapPos.x, mapPos.y);
         } else {
-            gc.drawImage(getFrame(breakingImg, engine.elapsedTime), pos.x, pos.y);
+            gc.drawImage(getFrame(breakingImg, engine.elapsedTime), mapPos.x, mapPos.y);
         }
-
     }
 }

@@ -9,15 +9,12 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Portal extends Block {
-    private final BombermanGame engine;
     // Animation
     private final Image img;
 
     public Portal(BombermanGame engine, Coordinate pos) {
-        super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        super(engine, pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isPassable = true;
-
-        this.engine = engine;
 
         img = Sprite.portal.getFxImage();
     }
@@ -27,8 +24,8 @@ public class Portal extends Block {
         if (!engine.bomberman.isExist()) {
             System.out.println("Lose!");
         } else if (engine.enemies.size() == 0) {
-            Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
-            if (bomberUnitPos.equals(pos.divide(Sprite.SCALED_SIZE))) {
+            Coordinate bomberUnitPos = engine.bomberman.getMapPos().add(12, 16).divide(Sprite.SCALED_SIZE);
+            if (bomberUnitPos.equals(mapPos.divide(Sprite.SCALED_SIZE))) {
                 System.out.println("Win!");
             }
         }
@@ -36,6 +33,6 @@ public class Portal extends Block {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.drawImage(img, pos.x, pos.y);
+        gc.drawImage(img, mapPos.x, mapPos.y);
     }
 }

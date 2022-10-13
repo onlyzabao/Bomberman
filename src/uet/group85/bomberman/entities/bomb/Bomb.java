@@ -13,7 +13,6 @@ import uet.group85.bomberman.entities.blocks.Grass;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomb extends Entity {
-    private final BombermanGame engine;
     // Specifications
     private boolean isCountingDown;
     private double countDownTime;
@@ -25,10 +24,8 @@ public class Bomb extends Entity {
     private final double frameDuration;
 
     public Bomb(BombermanGame engine, int flameLen) {
-        super(new Coordinate(0, 0), new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        super(engine, new Coordinate(0, 0), new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isExist = false;
-
-        this.engine = engine;
 
         countDownImg = new Image[]{
                 Sprite.bomb.getFxImage(),
@@ -85,7 +82,7 @@ public class Bomb extends Entity {
     }
 
     public void create(Coordinate pos) {
-        this.pos = pos;
+        this.mapPos = pos;
         isExist = true;
         isCountingDown = true;
         countDownTime = engine.elapsedTime;
@@ -95,8 +92,8 @@ public class Bomb extends Entity {
         if (engine.elapsedTime - countDownTime > countDownDuration) {
             isCountingDown = false;
         } else {
-            Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
-            if (bomberUnitPos.equals(this.pos.divide(Sprite.SCALED_SIZE))) {
+            Coordinate bomberUnitPos = engine.bomberman.getMapPos().add(12, 16).divide(Sprite.SCALED_SIZE);
+            if (bomberUnitPos.equals(this.mapPos.divide(Sprite.SCALED_SIZE))) {
                 Block belowBlock = engine.blocks.get(BombermanGame.WIDTH * (bomberUnitPos.y) + (bomberUnitPos.x));
                 belowBlock.setPassable(true);
             }
@@ -104,7 +101,7 @@ public class Bomb extends Entity {
     }
 
     private void explode() {
-        Coordinate thisUnitPos = this.pos.divide(Sprite.SCALED_SIZE);
+        Coordinate thisUnitPos = this.mapPos.divide(Sprite.SCALED_SIZE);
         for (int i = 1; i <= 4; i++) { // 4 directions
             for (int j = 0; j <= flameLen; j++) {
                 int x = (i % 2 == 0 ? 1 : -1) * (i <= 2 ? 0 : 1);
@@ -153,7 +150,7 @@ public class Bomb extends Entity {
     @Override
     public void render(GraphicsContext gc) {
         if (isCountingDown) {
-            gc.drawImage(getFrame(countDownImg, engine.elapsedTime), pos.x, pos.y);
+            gc.drawImage(getFrame(countDownImg, engine.elapsedTime), mapPos.x, mapPos.y);
         }
     }
 }

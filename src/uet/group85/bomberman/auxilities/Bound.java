@@ -13,9 +13,9 @@ public class Bound {
     }
 
     public void update(Entity entity) {
-        this.topY = entity.getPos().y + entity.getSolidArea().y;
-        this.bottomY = entity.getPos().y + entity.getSolidArea().y + entity.getSolidArea().h;
-        this.leftX = entity.getPos().x + entity.getSolidArea().x;
-        this.rightX = entity.getPos().x + entity.getSolidArea().x + entity.getSolidArea().w;
+        this.topY = entity.getMapPos().y + entity.getSolidArea().y;
+        this.bottomY = entity.getMapPos().y + entity.getSolidArea().y + entity.getSolidArea().h;
+        this.leftX = entity.getMapPos().x + entity.getSolidArea().x;
+        this.rightX = entity.getMapPos().x + entity.getSolidArea().x + entity.getSolidArea().w;
     }
 }

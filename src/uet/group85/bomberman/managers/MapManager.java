@@ -31,15 +31,15 @@ public class MapManager {
     }
 
     private void initWall(int x, int y) {
-        engine.blocks.add(new Wall(new Coordinate(x, y)));
+        engine.blocks.add(new Wall(engine, new Coordinate(x, y)));
     }
 
     private void initGrass(int x, int y) {
-        engine.blocks.add(new Grass(new Coordinate(x, y)));
+        engine.blocks.add(new Grass(engine, new Coordinate(x, y)));
     }
 
     private void initGrass(int x, int y, Entity[] layers) {
-        Grass belowBlock = new Grass(new Coordinate(x, y));
+        Grass belowBlock = new Grass(engine, new Coordinate(x, y));
         for (Entity layer : layers) {
             belowBlock.addLayer(layer);
         }

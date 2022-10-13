@@ -9,16 +9,13 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Balloon extends Character {
-    private final BombermanGame engine;
     // Specifications
     enum FrameType {
         MOVING, DYING
     }
 
     public Balloon(BombermanGame engine, Coordinate pos) {
-        super(pos, new Rectangle(2, 2, 28, 28), 2, 3);
-
-        this.engine = engine;
+        super(engine, pos, new Rectangle(2, 2, 28, 28), 2, 3);
 
         dyingFrame = new Image[] {
                 Sprite.balloom_dead.getFxImage()
@@ -43,7 +40,6 @@ public class Balloon extends Character {
     public void update() {
         if (isExist) {
             if (isLiving) {
-                super.update();
                 move();
             } else if (engine.elapsedTime - deadTime > deadDuration) {
                 engine.enemies.remove(this);

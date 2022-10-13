@@ -36,8 +36,8 @@ public abstract class Character extends Entity {
     protected double[] frameDuration;
 
     // Constructor
-    public Character(Coordinate pos, Rectangle solidArea, int stepLength, int stepDuration) {
-        super(pos, solidArea);
+    public Character(BombermanGame engine, Coordinate pos, Rectangle solidArea, int stepLength, int stepDuration) {
+        super(engine, pos, solidArea);
 
         this.stepLength = stepLength;
         this.stepDuration = stepDuration;
@@ -128,10 +128,5 @@ public abstract class Character extends Entity {
     public void increaseSpeed() {
         this.stepLength += 2;
         this.stepDuration += 1;
-    }
-
-    @Override
-    public void update() {
-        this.hitBox.update(this);
     }
 }

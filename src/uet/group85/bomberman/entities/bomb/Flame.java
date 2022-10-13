@@ -10,7 +10,6 @@ import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Flame extends Entity {
-    private final BombermanGame engine;
     // Specifications
     private final double explodeTime;
     private final double explodeDuration;
@@ -19,10 +18,8 @@ public class Flame extends Entity {
     private final double frameDuration;
 
     public Flame(BombermanGame engine, Coordinate pos,Image[] img) {
-        super(pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        super(engine, pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isExist = true;
-
-        this.engine = engine;
 
         this.img = img;
         frameDuration = 0.1;
@@ -37,8 +34,8 @@ public class Flame extends Entity {
     }
 
     private void checkCollision() {
-        Coordinate bomberUnitPos = engine.bomberman.getPos().add(12, 16).divide(Sprite.SCALED_SIZE);
-        if (bomberUnitPos.equals(pos.divide(Sprite.SCALED_SIZE))) {
+        Coordinate bomberUnitPos = engine.bomberman.getMapPos().add(12, 16).divide(Sprite.SCALED_SIZE);
+        if (bomberUnitPos.equals(mapPos.divide(Sprite.SCALED_SIZE))) {
             engine.bomberman.eliminateNow(engine.elapsedTime);
         }
         // TODO: Check with enemies
@@ -55,6 +52,6 @@ public class Flame extends Entity {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.drawImage(getFrame(img, engine.elapsedTime), pos.x, pos.y);
+        gc.drawImage(getFrame(img, engine.elapsedTime), mapPos.x, mapPos.y);
     }
 }

@@ -1,5 +1,6 @@
 package uet.group85.bomberman.entities.blocks;
 
+import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
@@ -7,8 +8,8 @@ import uet.group85.bomberman.entities.Entity;
 public abstract class Block extends Entity {
     boolean isPassable;
 
-    public Block(Coordinate pos, Rectangle solidArea) {
-        super(pos, solidArea);
+    public Block(BombermanGame engine, Coordinate pos, Rectangle solidArea) {
+        super(engine, pos, solidArea);
     }
 
     public boolean isPassable() {

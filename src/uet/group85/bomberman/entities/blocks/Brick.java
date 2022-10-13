@@ -18,8 +18,9 @@ public class Brick extends Block {
     private double breakTime;
     private final double breakDuration;
 
-    public Brick(BombermanGame engine, Coordinate pos) {
-        super(engine, pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+    public Brick(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
+        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        this.screenPos = screenPos;
         isPassable = false;
 
         normalImg = Sprite.brick.getFxImage();
@@ -56,9 +57,9 @@ public class Brick extends Block {
     @Override
     public void render(GraphicsContext gc) {
         if (!isBreaking) {
-            gc.drawImage(normalImg, mapPos.x, mapPos.y);
+            gc.drawImage(normalImg, this.screenPos.x, this.screenPos.y);
         } else {
-            gc.drawImage(getFrame(breakingImg, engine.elapsedTime), mapPos.x, mapPos.y);
+            gc.drawImage(getFrame(breakingImg, engine.elapsedTime), this.screenPos.x, this.screenPos.y);
         }
     }
 }

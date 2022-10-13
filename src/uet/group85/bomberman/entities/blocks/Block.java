@@ -8,8 +8,8 @@ import uet.group85.bomberman.entities.Entity;
 public abstract class Block extends Entity {
     boolean isPassable;
 
-    public Block(BombermanGame engine, Coordinate pos, Rectangle solidArea) {
-        super(engine, pos, solidArea);
+    public Block(BombermanGame engine, Coordinate mapPos, Rectangle solidArea) {
+        super(engine, mapPos, solidArea);
     }
 
     public boolean isPassable() {

@@ -36,8 +36,8 @@ public abstract class Character extends Entity {
     protected double[] frameDuration;
 
     // Constructor
-    public Character(BombermanGame engine, Coordinate pos, Rectangle solidArea, int stepLength, int stepDuration) {
-        super(engine, pos, solidArea);
+    public Character(BombermanGame engine, Coordinate mapPos, Rectangle solidArea, int stepLength, int stepDuration) {
+        super(engine, mapPos, solidArea);
 
         this.stepLength = stepLength;
         this.stepDuration = stepDuration;
@@ -46,7 +46,7 @@ public abstract class Character extends Entity {
         isLiving = true;
         deadDuration = 1.2;
 
-        this.hitBox = new Bound(this);
+        this.hitBox = new Bound(mapPos, solidArea);
         obstacle1 = null;
         obstacle2 = null;
     }
@@ -82,35 +82,35 @@ public abstract class Character extends Entity {
     }
 
     public boolean isCollided(List<Block> blocks) {
-        this.hitBox.update(this);
+        this.hitBox.update(mapPos, solidArea);
         // Detect obstacles
         switch (stepDirection) {
             case UP -> {
                 hitBox.topY -= stepLength;
-                obstacle1 = blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
+                obstacle1 = blocks.get(BombermanGame.COLUMNS * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
                         + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
-                obstacle2 = blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle2 = blocks.get(BombermanGame.COLUMNS * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case DOWN -> {
                 hitBox.bottomY += stepLength;
-                obstacle1 = blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle1 = blocks.get(BombermanGame.COLUMNS * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = blocks.get(BombermanGame.COLUMNS * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case LEFT -> {
                 hitBox.leftX -= stepLength;
-                obstacle1 = blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle1 = blocks.get(BombermanGame.COLUMNS * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = blocks.get(BombermanGame.COLUMNS * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
             }
             case RIGHT -> {
                 hitBox.rightX += stepLength;
-                obstacle1 = blocks.get(BombermanGame.WIDTH * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle1 = blocks.get(BombermanGame.COLUMNS * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(BombermanGame.WIDTH * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = blocks.get(BombermanGame.COLUMNS * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
         }

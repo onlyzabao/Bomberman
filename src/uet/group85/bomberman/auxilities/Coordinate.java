@@ -9,6 +9,11 @@ public class Coordinate {
         this.y = y;
     }
 
+    public Coordinate(Coordinate other) {
+        this.x = other.x;
+        this.y = other.y;
+    }
+
     public Coordinate add(Coordinate other) {
         return new Coordinate(this.x + other.x, this.y + other.y);
     }

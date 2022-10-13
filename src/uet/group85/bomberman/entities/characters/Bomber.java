@@ -12,6 +12,10 @@ import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomber extends Character {
+    public static final Coordinate MIDDLE = new Coordinate(
+            (BombermanGame.WIDTH - Sprite.SCALED_SIZE) / 2,
+            (BombermanGame.HEIGHT - Sprite.SCALED_SIZE) / 2
+    );
     enum FrameType {
         MOVING, DYING
     }
@@ -22,8 +26,8 @@ public class Bomber extends Character {
     private final double coolDownDuration;
 
     // Constructor
-    public Bomber(BombermanGame engine, Coordinate pos) {
-        super(engine, pos, new Rectangle(0, 0, 24, 32), 2, 3);
+    public Bomber(BombermanGame engine, Coordinate mapPos) {
+        super(engine, mapPos, new Rectangle(0, 0, 24, 32), 2, 3);
 
         defaultFrame = new Image[]{
                 Sprite.player_up.getFxImage(),
@@ -52,6 +56,7 @@ public class Bomber extends Character {
 
     private void move() {
         if (++stepCounter == stepDuration) {
+            this.hitBox.update(mapPos, solidArea);
             isMoving = false;
             for (int i = 0; i < Direction.TOTAL.ordinal(); i++) {
                 if (engine.keyPressed[i]) {
@@ -105,9 +110,9 @@ public class Bomber extends Character {
                 for (Bomb bomb : engine.bombs) {
                     if (!bomb.isExist()) {
                         Coordinate bomberUnitPos = this.mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
-                        Grass grass = (Grass) engine.blocks.get(BombermanGame.WIDTH * (bomberUnitPos.y) + (bomberUnitPos.x));
+                        Grass grass = (Grass) engine.blocks.get(BombermanGame.COLUMNS * (bomberUnitPos.y) + (bomberUnitPos.x));
                         if (!grass.hasOverlay()) {
-                            bomb.create(bomberUnitPos.multiply(Sprite.SCALED_SIZE));
+                            bomb.create(grass.getMapPos(), grass.getScreenPos());
                             grass.addLayer(bomb);
                             isCoolingDown = true;
                             bombTime = engine.elapsedTime;
@@ -120,31 +125,45 @@ public class Bomber extends Character {
     }
 
     @Override
+    public void updateScreenPos() {
+        if (mapPos.x < MIDDLE.x) {
+            screenPos.x = mapPos.x;
+        } else if ((BombermanGame.COLUMNS - 1) * Sprite.SCALED_SIZE - mapPos.x < MIDDLE.x) {
+            screenPos.x = BombermanGame.WIDTH - BombermanGame.COLUMNS * Sprite.SCALED_SIZE + mapPos.x;
+        } else {
+            screenPos.x = MIDDLE.x;
+        }
+        if (mapPos.y < MIDDLE.y) {
+            screenPos.y = mapPos.y;
+        } else if ((BombermanGame.ROWS - 1) * Sprite.SCALED_SIZE - mapPos.y < MIDDLE.y) {
+            screenPos.y = BombermanGame.HEIGHT - BombermanGame.ROWS * Sprite.SCALED_SIZE + mapPos.y;
+        } else {
+            screenPos.y = MIDDLE.y;
+        }
+    }
+
+    @Override
     public void update() {
-        if (isExist) {
-            if (isLiving) {
-                move();
-                bomb();
-            } else if (engine.elapsedTime - deadTime > deadDuration) {
-                isExist = false;
-            }
+        if (isLiving) {
+            move();
+            bomb();
+        } else if (engine.elapsedTime - deadTime > deadDuration) {
+            isExist = false;
         }
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        if (isExist) {
-            if (isLiving) {
-                if (isMoving) {
-                    gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], engine.elapsedTime,
-                            frameDuration[FrameType.MOVING.ordinal()]), mapPos.x, mapPos.y);
-                } else {
-                    gc.drawImage(defaultFrame[stepDirection.ordinal()], mapPos.x, mapPos.y);
-                }
+        if (isLiving) {
+            if (isMoving) {
+                gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], engine.elapsedTime,
+                        frameDuration[FrameType.MOVING.ordinal()]), screenPos.x, screenPos.y);
             } else {
-                gc.drawImage(getFrame(dyingFrame, engine.elapsedTime,
-                        frameDuration[FrameType.DYING.ordinal()]), mapPos.x, mapPos.y);
+                gc.drawImage(defaultFrame[stepDirection.ordinal()], screenPos.x, screenPos.y);
             }
+        } else {
+            gc.drawImage(getFrame(dyingFrame, engine.elapsedTime,
+                    frameDuration[FrameType.DYING.ordinal()]), screenPos.x, screenPos.y);
         }
     }
 }

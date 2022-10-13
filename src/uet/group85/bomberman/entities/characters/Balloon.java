@@ -14,8 +14,8 @@ public class Balloon extends Character {
         MOVING, DYING
     }
 
-    public Balloon(BombermanGame engine, Coordinate pos) {
-        super(engine, pos, new Rectangle(2, 2, 28, 28), 2, 3);
+    public Balloon(BombermanGame engine, Coordinate mapPos) {
+        super(engine, mapPos, new Rectangle(2, 2, 28, 28), 2, 3);
 
         dyingFrame = new Image[] {
                 Sprite.balloom_dead.getFxImage()

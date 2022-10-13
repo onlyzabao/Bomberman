@@ -9,11 +9,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
 import uet.group85.bomberman.auxilities.KeyCode;
+import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.*;
 import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
-import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.MapManager;
 
 import java.io.FileNotFoundException;
@@ -22,8 +22,10 @@ import java.util.List;
 
 public class BombermanGame extends Application {
     // Specifications
-    public static final int WIDTH = 31;
-    public static final int HEIGHT = 13;
+    public static final int WIDTH = 640;
+    public static final int HEIGHT = 416;
+    public static final int COLUMNS = 31;
+    public static final int ROWS = 13;
 
     // Manage game objects - TODO: ObjectManager
     public final List<Block> blocks = new ArrayList<>();
@@ -33,7 +35,7 @@ public class BombermanGame extends Application {
     private final MapManager mapManager = new MapManager(this);
 
     // Manage graphics
-    private final Canvas canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+    private final Canvas canvas = new Canvas(WIDTH, HEIGHT);
     public final GraphicsContext gc = canvas.getGraphicsContext2D();
 
     // Manage control input - TODO: ControlManager
@@ -125,16 +127,30 @@ public class BombermanGame extends Application {
 
     public void update() {
         // Update each objects and Check for game status
-        blocks.forEach(Block::update);
+        blocks.forEach(Entity::update);
+
         enemies.forEach(Character::update);
-        bomberman.update();
+
+        if (bomberman.isExist()) {
+            bomberman.update();
+        }
     }
 
     public void render() {
         // Draw objects
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        blocks.forEach(g -> g.render(gc));
+        bomberman.updateScreenPos();
+        blocks.forEach(block -> {
+            block.updateScreenPos();
+            if (!block.isOutOfScreen()) {
+                block.render(gc);
+            }
+        });
+
         enemies.forEach(g -> g.render(gc));
-        bomberman.render(gc);
+
+        if (bomberman.isExist()) {
+            bomberman.render(gc);
+        }
     }
 }

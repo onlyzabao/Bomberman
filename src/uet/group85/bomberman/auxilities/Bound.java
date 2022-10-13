@@ -1,21 +1,19 @@
 package uet.group85.bomberman.auxilities;
 
-import uet.group85.bomberman.entities.Entity;
-
 public class Bound {
     public int topY;
     public int bottomY;
     public int leftX;
     public int rightX;
 
-    public Bound(Entity entity) {
-        this.update(entity);
+    public Bound(Coordinate mapPos, Rectangle solidArea) {
+        this.update(mapPos, solidArea);
     }
 
-    public void update(Entity entity) {
-        this.topY = entity.getMapPos().y + entity.getSolidArea().y;
-        this.bottomY = entity.getMapPos().y + entity.getSolidArea().y + entity.getSolidArea().h;
-        this.leftX = entity.getMapPos().x + entity.getSolidArea().x;
-        this.rightX = entity.getMapPos().x + entity.getSolidArea().x + entity.getSolidArea().w;
+    public void update(Coordinate mapPos, Rectangle solidArea) {
+        this.topY = mapPos.y + solidArea.y;
+        this.bottomY = mapPos.y + solidArea.y + solidArea.h;
+        this.leftX = mapPos.x + solidArea.x;
+        this.rightX = mapPos.x + solidArea.x + solidArea.w;
     }
 }

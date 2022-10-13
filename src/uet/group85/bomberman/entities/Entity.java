@@ -20,10 +20,10 @@ public abstract class Entity {
 
     public Entity(BombermanGame engine, Coordinate mapPos, Rectangle solidArea) {
         this.engine = engine;
-        this.mapPos = mapPos.multiply(Sprite.SCALED_SIZE);
-        this.screenPos = new Coordinate(0, 0);
+        this.mapPos = mapPos;
+        this.screenPos = new Coordinate(mapPos);
         this.solidArea = solidArea;
-        this.hitBox = new Bound(this);
+        this.hitBox = new Bound(mapPos, solidArea);
         this.isExist = true;
     }
 
@@ -31,21 +31,25 @@ public abstract class Entity {
         return mapPos;
     }
 
-    public void setMapPos(Coordinate mapPos) {
-        this.mapPos = mapPos;
-    }
-
     public Coordinate getScreenPos() {
         return screenPos;
     }
 
-    public void setScreenPos(Coordinate screenPos) {
-        this.screenPos = screenPos;
+    public void updateScreenPos() {
+        this.screenPos.x = mapPos.x - engine.bomberman.mapPos.x + engine.bomberman.screenPos.x;
+        this.screenPos.y = mapPos.y - engine.bomberman.mapPos.y + engine.bomberman.screenPos.y;
     }
 
-    public Rectangle getSolidArea() {
-        return solidArea;
+    public boolean isOutOfScreen() {
+        if (screenPos.x < -32 || screenPos.x > BombermanGame.WIDTH) {
+            return true;
+        }
+        if (screenPos.y < -32 || screenPos.y > BombermanGame.HEIGHT) {
+            return true;
+        }
+        return false;
     }
+
     public Bound getHitBox() {
         return hitBox;
     }

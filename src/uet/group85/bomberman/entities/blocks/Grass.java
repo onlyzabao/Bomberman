@@ -19,8 +19,9 @@ public class Grass extends Block {
     // Specifications
     private final List<Entity> overlay;
 
-    public Grass(BombermanGame engine, Coordinate pos) {
-        super(engine, pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+    public Grass(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
+        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        this.screenPos = screenPos;
         isPassable = true;
 
         img = Sprite.grass.getFxImage();
@@ -54,7 +55,7 @@ public class Grass extends Block {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.drawImage(img, mapPos.x, mapPos.y);
+        gc.drawImage(img, this.screenPos.x, this.screenPos.y);
         if (hasOverlay()) {
             overlay.get(overlay.size() - 1).render(gc);
         }

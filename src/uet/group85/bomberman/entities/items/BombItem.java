@@ -10,8 +10,9 @@ import uet.group85.bomberman.graphics.Sprite;
 
 public class BombItem extends Item {
     private final Image img;
-    public BombItem(BombermanGame engine, Coordinate pos) {
-        super(engine, pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+    public BombItem(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
+        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        this.screenPos = screenPos;
 
         this.img = Sprite.powerup_bombs.getFxImage();
     }
@@ -27,6 +28,6 @@ public class BombItem extends Item {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.drawImage(img, mapPos.x, mapPos.y);
+        gc.drawImage(img, this.screenPos.x, this.screenPos.y);
     }
 }

@@ -17,8 +17,9 @@ public class Flame extends Entity {
     private final Image[] img;
     private final double frameDuration;
 
-    public Flame(BombermanGame engine, Coordinate pos,Image[] img) {
-        super(engine, pos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+    public Flame(BombermanGame engine, Coordinate mapPos, Coordinate screenPos,Image[] img) {
+        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        this.screenPos = screenPos;
         isExist = true;
 
         this.img = img;
@@ -52,6 +53,8 @@ public class Flame extends Entity {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.drawImage(getFrame(img, engine.elapsedTime), mapPos.x, mapPos.y);
+        if (!isOutOfScreen()) {
+            gc.drawImage(getFrame(img, engine.elapsedTime), this.screenPos.x, this.screenPos.y);
+        }
     }
 }

@@ -3,7 +3,6 @@ package uet.group85.bomberman.entities.bomb;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
@@ -11,6 +10,7 @@ import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.blocks.Brick;
 import uet.group85.bomberman.entities.blocks.Grass;
 import uet.group85.bomberman.graphics.Sprite;
+import uet.group85.bomberman.managers.GameManager;
 
 public class Bomb extends Entity {
     // Specifications
@@ -23,8 +23,8 @@ public class Bomb extends Entity {
     private final Image[][] explodeImg;
     private final double frameDuration;
 
-    public Bomb(BombermanGame engine, int flameLen) {
-        super(engine, new Coordinate(0, 0), new Coordinate(0, 0),
+    public Bomb(int flameLen) {
+        super(new Coordinate(0, 0), new Coordinate(0, 0),
                 new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isExist = false;
 
@@ -87,16 +87,16 @@ public class Bomb extends Entity {
         this.screenPos = screenPos;
         isExist = true;
         isCountingDown = true;
-        countDownTime = engine.elapsedTime;
+        countDownTime = GameManager.elapsedTime;
     }
 
     private void countDown() {
-        if (engine.elapsedTime - countDownTime > countDownDuration) {
+        if (GameManager.elapsedTime - countDownTime > countDownDuration) {
             isCountingDown = false;
         } else {
-            Coordinate bomberUnitPos = engine.bomberman.getMapPos().add(12, 16).divide(Sprite.SCALED_SIZE);
+            Coordinate bomberUnitPos = GameManager.bomber.getMapPos().add(12, 16).divide(Sprite.SCALED_SIZE);
             if (bomberUnitPos.equals(this.mapPos.divide(Sprite.SCALED_SIZE))) {
-                Block belowBlock = engine.blocks.get(BombermanGame.COLUMNS * (bomberUnitPos.y) + (bomberUnitPos.x));
+                Block belowBlock = GameManager.blocks.get(GameManager.mapCols * (bomberUnitPos.y) + (bomberUnitPos.x));
                 belowBlock.setPassable(true);
             }
         }
@@ -109,23 +109,20 @@ public class Bomb extends Entity {
                 int x = (i % 2 == 0 ? 1 : -1) * (i <= 2 ? 0 : 1);
                 int y = (i % 2 == 0 ? 1 : -1) * (i <= 2 ? 1 : 0);
                 Coordinate tmpUnitPos = new Coordinate(thisUnitPos.x + (j * x), thisUnitPos.y + (j * y));
-                Grass belowBlock = (Grass) engine.blocks.get(BombermanGame.COLUMNS * (tmpUnitPos.y) + (tmpUnitPos.x));
+                Grass belowBlock = (Grass) GameManager.blocks.get(GameManager.mapCols * (tmpUnitPos.y) + (tmpUnitPos.x));
                 if (j == 0 && i == 1) {
-                    belowBlock.addLayer(new Flame(engine, belowBlock.getMapPos(),
-                            belowBlock.getScreenPos(), explodeImg[6])); // Middle flame
+                    belowBlock.addLayer(new Flame(belowBlock.getMapPos(), belowBlock.getScreenPos(), explodeImg[6])); // Middle flame
                 } else if (0 < j && j < flameLen) {
-                    belowBlock.addLayer(new Flame(engine, belowBlock.getMapPos(),
-                            belowBlock.getScreenPos(), explodeImg[i <= 2 ? 5 : 4])); // Orientation
+                    belowBlock.addLayer(new Flame(belowBlock.getMapPos(), belowBlock.getScreenPos(), explodeImg[i <= 2 ? 5 : 4])); // Orientation
                 } else if (j == flameLen) {
-                    belowBlock.addLayer(new Flame(engine, belowBlock.getMapPos(),
-                            belowBlock.getScreenPos(), explodeImg[i - 1])); // Last flame
+                    belowBlock.addLayer(new Flame(belowBlock.getMapPos(), belowBlock.getScreenPos(), explodeImg[i - 1])); // Last flame
                 }
-                Block nextBlock = engine.blocks.get(BombermanGame.COLUMNS * (tmpUnitPos.y + y) + (tmpUnitPos.x + x));
+                Block nextBlock = GameManager.blocks.get(GameManager.mapCols * (tmpUnitPos.y + y) + (tmpUnitPos.x + x));
                 if (!nextBlock.isPassable() && j != flameLen) {
                     if (nextBlock instanceof Grass) {
                         Entity layer = ((Grass) nextBlock).getLayer();
                         if (layer instanceof Brick) {
-                            ((Brick) layer).breakNow(engine.elapsedTime);
+                            ((Brick) layer).breakNow(GameManager.elapsedTime);
                         }
                     }
                     break;
@@ -155,7 +152,7 @@ public class Bomb extends Entity {
     @Override
     public void render(GraphicsContext gc) {
         if (isCountingDown) {
-            gc.drawImage(getFrame(countDownImg, engine.elapsedTime), this.screenPos.x, this.screenPos.y);
+            gc.drawImage(getFrame(countDownImg, GameManager.elapsedTime), this.screenPos.x, this.screenPos.y);
         }
     }
 }

@@ -3,10 +3,10 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
+import uet.group85.bomberman.managers.GameManager;
 
 public class Balloon extends Character {
     // Specifications
@@ -14,8 +14,8 @@ public class Balloon extends Character {
         MOVING, DYING
     }
 
-    public Balloon(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
-        super(engine, mapPos, screenPos, new Rectangle(2, 2, 28, 28), 2, 3);
+    public Balloon(Coordinate mapPos, Coordinate screenPos) {
+        super(mapPos, screenPos, new Rectangle(2, 2, 28, 28), 2, 3);
 
         dyingFrame = new Image[] {
                 Sprite.balloom_dead.getFxImage()
@@ -32,8 +32,8 @@ public class Balloon extends Character {
 
     private void move() {
         // TODO: Select direction (stepDirection attribute in Character class) randomly
-        // TODO: Handle collision with map (use isCollided(engine.blocks))
-        // TODO: Handle collision with bomber (use isCollided(engine.bomberman))
+        // TODO: Handle collision with map (use isCollided(GameManager.blocks))
+        // TODO: Handle collision with bomber (use isCollided(GameManager.bomberman))
     }
 
     @Override
@@ -41,8 +41,8 @@ public class Balloon extends Character {
         if (isExist) {
             if (isLiving) {
                 move();
-            } else if (engine.elapsedTime - deadTime > deadDuration) {
-                engine.enemies.remove(this);
+            } else if (GameManager.elapsedTime - deadTime > deadDuration) {
+                GameManager.enemies.remove(this);
             }
         }
     }

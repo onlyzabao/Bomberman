@@ -1,12 +1,12 @@
 package uet.group85.bomberman.auxilities;
 
-public class Bound {
+public class Border {
     public int topY;
     public int bottomY;
     public int leftX;
     public int rightX;
 
-    public Bound(Coordinate mapPos, Rectangle solidArea) {
+    public Border(Coordinate mapPos, Rectangle solidArea) {
         this.update(mapPos, solidArea);
     }
 

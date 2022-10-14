@@ -3,10 +3,10 @@ package uet.group85.bomberman.entities.blocks;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
+import uet.group85.bomberman.managers.GameManager;
 
 public class Brick extends Block {
     // Animation
@@ -18,8 +18,8 @@ public class Brick extends Block {
     private double breakTime;
     private final double breakDuration;
 
-    public Brick(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
-        super(engine, mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE),
+    public Brick(Coordinate mapPos, Coordinate screenPos) {
+        super(mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE),
                 false);
 
         normalImg = Sprite.brick.getFxImage();
@@ -47,7 +47,7 @@ public class Brick extends Block {
     @Override
     public void update() {
         if (isBreaking) {
-            if (engine.elapsedTime - breakTime > breakDuration) {
+            if (GameManager.elapsedTime - breakTime > breakDuration) {
                 isExist = false;
             }
         }
@@ -58,7 +58,7 @@ public class Brick extends Block {
         if (!isBreaking) {
             gc.drawImage(normalImg, this.screenPos.x, this.screenPos.y);
         } else {
-            gc.drawImage(getFrame(breakingImg, engine.elapsedTime), this.screenPos.x, this.screenPos.y);
+            gc.drawImage(getFrame(breakingImg, GameManager.elapsedTime), this.screenPos.x, this.screenPos.y);
         }
     }
 }

@@ -2,13 +2,13 @@ package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.BombermanGame;
-import uet.group85.bomberman.auxilities.Bound;
+import uet.group85.bomberman.auxilities.Border;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.graphics.Sprite;
+import uet.group85.bomberman.managers.GameManager;
 
 import java.util.List;
 
@@ -36,11 +36,10 @@ public abstract class Character extends Entity {
     protected double[] frameDuration;
 
     // Constructor
-    public Character(BombermanGame engine,
-                     Coordinate mapPos, Coordinate screenPos,
+    public Character(Coordinate mapPos, Coordinate screenPos,
                      Rectangle solidArea,
                      int stepLength, int stepDuration) {
-        super(engine, mapPos, screenPos, solidArea);
+        super(mapPos, screenPos, solidArea);
 
         this.stepLength = stepLength;
         this.stepDuration = stepDuration;
@@ -60,7 +59,7 @@ public abstract class Character extends Entity {
     }
 
     public boolean isCollided(Entity other) {
-        Bound otherHitBox = other.getHitBox();
+        Border otherHitBox = other.getHitBox();
         // Check top side
         if ((hitBox.topY < otherHitBox.bottomY && hitBox.topY > otherHitBox.topY)
                 && !((hitBox.leftX >= otherHitBox.rightX) || (hitBox.rightX <= otherHitBox.leftX))) {
@@ -90,30 +89,30 @@ public abstract class Character extends Entity {
         switch (stepDirection) {
             case UP -> {
                 hitBox.topY -= stepLength;
-                obstacle1 = blocks.get(BombermanGame.COLUMNS * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
+                obstacle1 = blocks.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
                         + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
-                obstacle2 = blocks.get(BombermanGame.COLUMNS * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle2 = blocks.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case DOWN -> {
                 hitBox.bottomY += stepLength;
-                obstacle1 = blocks.get(BombermanGame.COLUMNS * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle1 = blocks.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(BombermanGame.COLUMNS * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = blocks.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case LEFT -> {
                 hitBox.leftX -= stepLength;
-                obstacle1 = blocks.get(BombermanGame.COLUMNS * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle1 = blocks.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(BombermanGame.COLUMNS * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = blocks.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
             }
             case RIGHT -> {
                 hitBox.rightX += stepLength;
-                obstacle1 = blocks.get(BombermanGame.COLUMNS * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle1 = blocks.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(BombermanGame.COLUMNS * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = blocks.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
         }
@@ -130,6 +129,6 @@ public abstract class Character extends Entity {
 
     public void increaseSpeed() {
         this.stepLength += 2;
-        this.stepDuration += 1;
+        this.stepDuration += 2;
     }
 }

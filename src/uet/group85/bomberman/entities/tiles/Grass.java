@@ -1,4 +1,4 @@
-package uet.group85.bomberman.entities.blocks;
+package uet.group85.bomberman.entities.tiles;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -6,18 +6,20 @@ import javafx.scene.image.Image;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
-import uet.group85.bomberman.entities.bomb.Bomb;
+import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Brick;
+import uet.group85.bomberman.entities.blocks.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grass extends Block {
+public class Grass extends Tile {
     // Animation
     private final Image img;
     // Specifications
-    private final List<Entity> overlay;
+    private final List<Block> overlay;
 
     public Grass(Coordinate mapPos, Coordinate screenPos) {
         super(mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE),
@@ -28,7 +30,7 @@ public class Grass extends Block {
         overlay = new ArrayList<>();
     }
 
-    public void addLayer(Entity layer) {
+    public void addLayer(Block layer) {
         this.overlay.add(layer);
     }
 

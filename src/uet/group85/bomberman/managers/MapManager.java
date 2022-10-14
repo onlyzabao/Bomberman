@@ -3,9 +3,11 @@ package uet.group85.bomberman.managers;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.*;
-import uet.group85.bomberman.entities.items.BombItem;
-import uet.group85.bomberman.entities.items.FlameItem;
-import uet.group85.bomberman.entities.items.SpeedItem;
+import uet.group85.bomberman.entities.blocks.BombItem;
+import uet.group85.bomberman.entities.blocks.FlameItem;
+import uet.group85.bomberman.entities.blocks.SpeedItem;
+import uet.group85.bomberman.entities.tiles.Grass;
+import uet.group85.bomberman.entities.tiles.Wall;
 import uet.group85.bomberman.graphics.Sprite;
 
 import java.io.File;
@@ -24,29 +26,29 @@ public class MapManager {
     private static final char SPEED_ITEM = 's';
 
     private static void initWall(Coordinate mapPos) {
-        GameManager.blocks.add(new Wall(mapPos, new Coordinate(mapPos)));
+        GameManager.tiles.add(new Wall(mapPos, new Coordinate(mapPos)));
     }
 
     private static void initGrass(Coordinate mapPos) {
-        GameManager.blocks.add(new Grass(mapPos, new Coordinate(mapPos)));
+        GameManager.tiles.add(new Grass(mapPos, new Coordinate(mapPos)));
     }
 
-    private static void initGrass(Coordinate mapPos, Coordinate screenPos, Entity[] layers) {
+    private static void initGrass(Coordinate mapPos, Coordinate screenPos, Block[] layers) {
         Grass belowBlock = new Grass(mapPos, screenPos);
-        for (Entity layer : layers) {
+        for (Block layer : layers) {
             belowBlock.addLayer(layer);
         }
-        GameManager.blocks.add(belowBlock);
+        GameManager.tiles.add(belowBlock);
     }
 
     private static void initBrick(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
-        initGrass(mapPos, screenPos, new Entity[]{new Brick(mapPos, screenPos)});
+        initGrass(mapPos, screenPos, new Block[]{new Brick(mapPos, screenPos)});
     }
 
     private static void initPortal(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
-        initGrass(mapPos, screenPos, new Entity[]{
+        initGrass(mapPos, screenPos, new Block[]{
                 new Portal(mapPos, screenPos),
                 new Brick(mapPos, screenPos)
         });
@@ -68,7 +70,7 @@ public class MapManager {
 
     private static void initBombItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
-        initGrass(mapPos, screenPos, new Entity[]{
+        initGrass(mapPos, screenPos, new Block[]{
                 new BombItem(mapPos, screenPos),
                 new Brick(mapPos, screenPos)
         });
@@ -76,7 +78,7 @@ public class MapManager {
 
     private static void initFlameItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
-        initGrass(mapPos, screenPos,new Entity[]{
+        initGrass(mapPos, screenPos,new Block[]{
                 new FlameItem(mapPos, screenPos),
                 new Brick(mapPos, screenPos)
         });
@@ -84,14 +86,14 @@ public class MapManager {
 
     private static void initSpeedItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
-        initGrass(mapPos, screenPos, new Entity[]{
+        initGrass(mapPos, screenPos, new Block[]{
                 new SpeedItem(mapPos, screenPos),
                 new Brick(mapPos, screenPos)
         });
     }
 
     private static void reset() {
-        GameManager.blocks.clear();
+        GameManager.tiles.clear();
         GameManager.enemies.clear();
     }
 

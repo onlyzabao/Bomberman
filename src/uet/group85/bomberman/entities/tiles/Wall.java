@@ -1,14 +1,15 @@
-package uet.group85.bomberman.entities.blocks;
+package uet.group85.bomberman.entities.tiles;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
+import uet.group85.bomberman.entities.tiles.Tile;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 
-public class Wall extends Block {
+public class Wall extends Tile {
     // Animation
     private final Image img;
 

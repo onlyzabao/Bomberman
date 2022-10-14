@@ -7,6 +7,7 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.tiles.Tile;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 
@@ -16,29 +17,26 @@ public abstract class Character extends Entity {
     public enum Direction {
         UP, DOWN, LEFT, RIGHT, TOTAL
     }
-
-    // Character movement
+    protected final double DYING_PERIOD = 1.2;
+    protected boolean isDying;
+    protected double deadTime;
     protected int stepLength;
     protected int stepDuration;
     protected int stepCounter;
     protected Direction stepDirection;
-    protected boolean isLiving;
-    protected double deadTime;
-    protected final double deadDuration;
-    // Character collision
-    protected Block obstacle1;
-    protected Block obstacle2;
+    protected Tile obstacle1;
+    protected Tile obstacle2;
 
-    // Character animation
     protected Image[] defaultFrame;
     protected Image[][] movingFrame;
     protected Image[] dyingFrame;
     protected double[] frameDuration;
 
-    // Constructor
+    protected boolean isExist;
+
     public Character(Coordinate mapPos, Coordinate screenPos,
                      Rectangle solidArea,
-                     int stepLength, int stepDuration) {
+                     int stepLength, int stepDuration, boolean isExist) {
         super(mapPos, screenPos, solidArea);
 
         this.stepLength = stepLength;
@@ -46,19 +44,15 @@ public abstract class Character extends Entity {
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
 
-        isLiving = true;
-        deadDuration = 1.2;
+        isDying = false;
 
         obstacle1 = null;
         obstacle2 = null;
+
+        this.isExist = isExist;
     }
 
-    protected Image getFrame(Image[] frame, double time, double frameDuration) {
-        int index = (int) ((time % (frame.length * frameDuration)) / frameDuration);
-        return frame[index];
-    }
-
-    public boolean isCollided(Entity other) {
+    public boolean isCollided(Tile other) {
         Border otherHitBox = other.getHitBox();
         // Check top side
         if ((hitBox.topY < otherHitBox.bottomY && hitBox.topY > otherHitBox.topY)
@@ -83,36 +77,41 @@ public abstract class Character extends Entity {
         return false;
     }
 
-    public boolean isCollided(List<Block> blocks) {
+    public boolean isCollided(Block other) {
+        Coordinate unitPos = this.mapPos.add(solidArea.w / 2, solidArea.h / 2).divide(Sprite.SCALED_SIZE);
+        return unitPos.equals(other.getMapPos().divide(Sprite.SCALED_SIZE));
+    }
+
+    public boolean isCollided(List<Tile> tiles) {
         this.hitBox.update(mapPos, solidArea);
         // Detect obstacles
         switch (stepDirection) {
             case UP -> {
                 hitBox.topY -= stepLength;
-                obstacle1 = blocks.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
+                obstacle1 = tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
                         + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
-                obstacle2 = blocks.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle2 = tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case DOWN -> {
                 hitBox.bottomY += stepLength;
-                obstacle1 = blocks.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle1 = tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case LEFT -> {
                 hitBox.leftX -= stepLength;
-                obstacle1 = blocks.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle1 = tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
             }
             case RIGHT -> {
                 hitBox.rightX += stepLength;
-                obstacle1 = blocks.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle1 = tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
-                obstacle2 = blocks.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle2 = tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
         }
@@ -124,11 +123,15 @@ public abstract class Character extends Entity {
 
     public void eliminateNow(double deadTime) {
         this.deadTime = deadTime;
-        isLiving = false;
+        isDying = true;
     }
 
-    public void increaseSpeed() {
-        this.stepLength += 2;
-        this.stepDuration += 2;
+    protected Image getFrame(Image[] frame, double time, double frameDuration) {
+        int index = (int) ((time % (frame.length * frameDuration)) / frameDuration);
+        return frame[index];
+    }
+
+    public boolean isExist() {
+        return isExist;
     }
 }

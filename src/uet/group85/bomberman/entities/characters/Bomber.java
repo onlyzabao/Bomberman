@@ -5,8 +5,8 @@ import javafx.scene.image.Image;
 
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
-import uet.group85.bomberman.entities.blocks.Grass;
-import uet.group85.bomberman.entities.bomb.Bomb;
+import uet.group85.bomberman.entities.tiles.Grass;
+import uet.group85.bomberman.entities.blocks.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.ScreenManager;
@@ -16,24 +16,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bomber extends Character {
+    enum FrameType {
+        MOVING, DYING
+    }
     public static final Coordinate screenMid = new Coordinate(
             (ScreenManager.WIDTH - Sprite.SCALED_SIZE) / 2,
             (ScreenManager.HEIGHT - Sprite.SCALED_SIZE) / 2
     );
     public static final List<Bomb> bombs = new ArrayList<>();
-    enum FrameType {
-        MOVING, DYING
-    }
-    // Specifications
-    private boolean isMoving;
+    private final double COOLDOWN_PERIOD = 0.25;
     private boolean isCoolingDown;
     private double bombTime;
-    private final double coolDownDuration;
+    private boolean isMoving;
 
-    // Constructor
     public Bomber() {
         super(new Coordinate(0, 0), new Coordinate(0, 0),
-                new Rectangle(0, 0, 24, 32), 2, 3);
+                new Rectangle(0, 0, 24, 32), 2, 3, true);
 
         defaultFrame = new Image[]{
                 Sprite.player_up.getFxImage(),
@@ -54,10 +52,8 @@ public class Bomber extends Character {
         };
         frameDuration = new double[] {0.2, 0.4};
 
-        isLiving = true;
         isMoving = false;
         isCoolingDown = false;
-        coolDownDuration = 0.25;
 
         bombs.add(new Bomb(1));
     }
@@ -70,7 +66,7 @@ public class Bomber extends Character {
                 if (GameManager.events[i]) {
                     stepDirection = Direction.values()[i];
                     isMoving = true;
-                    if (!isCollided(GameManager.blocks)) {
+                    if (!isCollided(GameManager.tiles)) {
                         step();
                     } else {
                         if (obstacle1.isPassable() ^ obstacle2.isPassable()) {
@@ -111,14 +107,14 @@ public class Bomber extends Character {
     private void updateBomb() {
         if (GameManager.events[GameScreen.BOMB]) {
             if (isCoolingDown) {
-                if (GameManager.elapsedTime - bombTime > coolDownDuration) {
+                if (GameManager.elapsedTime - bombTime > COOLDOWN_PERIOD) {
                     isCoolingDown = false;
                 }
             } else{
                 for (Bomb bomb : bombs) {
                     if (!bomb.isExist()) {
                         Coordinate bomberUnitPos = this.mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
-                        Grass grass = (Grass) GameManager.blocks.get(GameManager.mapCols * (bomberUnitPos.y) + (bomberUnitPos.x));
+                        Grass grass = (Grass) GameManager.tiles.get(GameManager.mapCols * (bomberUnitPos.y) + (bomberUnitPos.x));
                         if (!grass.hasOverlay()) {
                             bomb.create(grass.getMapPos(), grass.getScreenPos());
                             grass.addLayer(bomb);
@@ -149,20 +145,33 @@ public class Bomber extends Character {
         }
     }
 
+    public void increaseSpeed() {
+        this.stepLength += 2;
+        this.stepDuration += 2;
+    }
+
+    public void increaseBomb() {
+        bombs.add(new Bomb(1));
+    }
+
+    public void increaseFlame() {
+        bombs.forEach(Bomb::increaseFlameLen);
+    }
+
     @Override
     public void update() {
-        if (isLiving) {
+        if (!isDying) {
             updateMapPos();
             updateScreenPos();
             updateBomb();
-        } else if (GameManager.elapsedTime - deadTime > deadDuration) {
+        } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
             isExist = false;
         }
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        if (isLiving) {
+        if (!isDying) {
             if (isMoving) {
                 gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], GameManager.elapsedTime,
                         frameDuration[FrameType.MOVING.ordinal()]), screenPos.x, screenPos.y);

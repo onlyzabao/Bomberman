@@ -5,20 +5,13 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 
 public abstract class Block extends Entity {
-    boolean isPassable;
-
-    public Block(Coordinate mapPos, Coordinate screenPos,
-                 Rectangle solidArea,
-                 boolean isPassable) {
+    protected boolean isExist;
+    public Block(Coordinate mapPos, Coordinate screenPos, Rectangle solidArea, boolean isExist) {
         super(mapPos, screenPos, solidArea);
-        this.isPassable = isPassable;
+        this.isExist = isExist;
     }
 
-    public boolean isPassable() {
-        return isPassable;
-    }
-
-    public void setPassable(boolean passable) {
-        isPassable = passable;
+    public boolean isExist() {
+        return isExist;
     }
 }

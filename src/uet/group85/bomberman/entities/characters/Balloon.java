@@ -15,7 +15,7 @@ public class Balloon extends Character {
     }
 
     public Balloon(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(2, 2, 28, 28), 2, 3);
+        super(mapPos, screenPos, new Rectangle(2, 2, 28, 28), 2, 3, true);
 
         dyingFrame = new Image[] {
                 Sprite.balloom_dead.getFxImage()
@@ -39,9 +39,9 @@ public class Balloon extends Character {
     @Override
     public void update() {
         if (isExist) {
-            if (isLiving) {
+            if (isDying) {
                 move();
-            } else if (GameManager.elapsedTime - deadTime > deadDuration) {
+            } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
                 GameManager.enemies.remove(this);
             }
         }
@@ -50,7 +50,7 @@ public class Balloon extends Character {
     @Override
     public void render(GraphicsContext gc) {
         if (isExist) {
-            if (isLiving) {
+            if (isDying) {
                 // TODO: Render base on stepDirection
             } else {
                 // TODO: Render dead frame

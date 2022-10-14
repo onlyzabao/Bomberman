@@ -2,9 +2,9 @@ package uet.group85.bomberman.managers;
 
 import javafx.scene.canvas.GraphicsContext;
 import uet.group85.bomberman.entities.Entity;
-import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
+import uet.group85.bomberman.entities.tiles.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class GameManager {
     public static int mapCols;
     public static int mapRows;
 
-    public static final List<Block> blocks = new ArrayList<>();
+    public static final List<Tile> tiles = new ArrayList<>();
     public static final List<Character> enemies = new ArrayList<>();
 
     public static final Bomber bomber = new Bomber();
@@ -37,11 +37,11 @@ public class GameManager {
             }
         });
 
-        blocks.forEach(Entity::update);
+        tiles.forEach(Entity::update);
     }
 
     public static void render(GraphicsContext gc) {
-        blocks.forEach(block -> {
+        tiles.forEach(block -> {
             if (block.isVisible()) {
                 block.render(gc);
             }

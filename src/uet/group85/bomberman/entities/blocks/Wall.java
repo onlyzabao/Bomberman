@@ -12,15 +12,18 @@ public class Wall extends Block {
     // Animation
     private final Image img;
 
-    public Wall(BombermanGame engine, Coordinate mapPos) {
-        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
-        isPassable = false;
+    public Wall(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
+        super(engine, mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE),
+                false);
 
         img = Sprite.wall.getFxImage();
     }
 
     @Override
-    public void update() {}
+    public void update() {
+        this.screenPos.x = mapPos.x - engine.bomberman.getMapPos().x + engine.bomberman.getScreenPos().x;
+        this.screenPos.y = mapPos.y - engine.bomberman.getMapPos().y + engine.bomberman.getScreenPos().y;
+    }
 
     @Override
     public void render(GraphicsContext gc) {

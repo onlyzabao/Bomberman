@@ -19,9 +19,8 @@ public class Brick extends Block {
     private final double breakDuration;
 
     public Brick(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
-        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
-        this.screenPos = screenPos;
-        isPassable = false;
+        super(engine, mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE),
+                false);
 
         normalImg = Sprite.brick.getFxImage();
         breakingImg = new Image[]{

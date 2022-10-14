@@ -24,7 +24,8 @@ public class Bomb extends Entity {
     private final double frameDuration;
 
     public Bomb(BombermanGame engine, int flameLen) {
-        super(engine, new Coordinate(0, 0), new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
+        super(engine, new Coordinate(0, 0), new Coordinate(0, 0),
+                new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
         isExist = false;
 
         countDownImg = new Image[]{

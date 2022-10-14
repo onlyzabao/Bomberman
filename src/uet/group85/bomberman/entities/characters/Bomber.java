@@ -12,7 +12,7 @@ import uet.group85.bomberman.entities.bomb.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 
 public class Bomber extends Character {
-    public static final Coordinate MIDDLE = new Coordinate(
+    public static final Coordinate screenMid = new Coordinate(
             (BombermanGame.WIDTH - Sprite.SCALED_SIZE) / 2,
             (BombermanGame.HEIGHT - Sprite.SCALED_SIZE) / 2
     );
@@ -26,8 +26,8 @@ public class Bomber extends Character {
     private final double coolDownDuration;
 
     // Constructor
-    public Bomber(BombermanGame engine, Coordinate mapPos) {
-        super(engine, mapPos, new Rectangle(0, 0, 24, 32), 2, 3);
+    public Bomber(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
+        super(engine, mapPos, screenPos, new Rectangle(0, 0, 24, 32), 2, 3);
 
         defaultFrame = new Image[]{
                 Sprite.player_up.getFxImage(),
@@ -54,7 +54,7 @@ public class Bomber extends Character {
         coolDownDuration = 0.25;
     }
 
-    private void move() {
+    private void updateMapPos() {
         if (++stepCounter == stepDuration) {
             this.hitBox.update(mapPos, solidArea);
             isMoving = false;
@@ -100,7 +100,7 @@ public class Bomber extends Character {
         }
     }
 
-    private void bomb() {
+    private void updateBomb() {
         if (engine.keyPressed[KeyCode.X]) {
             if (isCoolingDown) {
                 if (engine.elapsedTime - bombTime > coolDownDuration) {
@@ -123,30 +123,30 @@ public class Bomber extends Character {
             }
         }
     }
-
-    @Override
-    public void updateScreenPos() {
-        if (mapPos.x < MIDDLE.x) {
+    private void updateScreenPos() {
+        if (mapPos.x < screenMid.x) {
             screenPos.x = mapPos.x;
-        } else if ((BombermanGame.COLUMNS - 1) * Sprite.SCALED_SIZE - mapPos.x < MIDDLE.x) {
+        } else if ((BombermanGame.COLUMNS - 1) * Sprite.SCALED_SIZE - mapPos.x < screenMid.x) {
             screenPos.x = BombermanGame.WIDTH - BombermanGame.COLUMNS * Sprite.SCALED_SIZE + mapPos.x;
         } else {
-            screenPos.x = MIDDLE.x;
+            screenPos.x = screenMid.x;
         }
-        if (mapPos.y < MIDDLE.y) {
+
+        if (mapPos.y < screenMid.y) {
             screenPos.y = mapPos.y;
-        } else if ((BombermanGame.ROWS - 1) * Sprite.SCALED_SIZE - mapPos.y < MIDDLE.y) {
+        } else if ((BombermanGame.ROWS - 1) * Sprite.SCALED_SIZE - mapPos.y < screenMid.y) {
             screenPos.y = BombermanGame.HEIGHT - BombermanGame.ROWS * Sprite.SCALED_SIZE + mapPos.y;
         } else {
-            screenPos.y = MIDDLE.y;
+            screenPos.y = screenMid.y;
         }
     }
 
     @Override
     public void update() {
         if (isLiving) {
-            move();
-            bomb();
+            updateMapPos();
+            updateScreenPos();
+            updateBomb();
         } else if (engine.elapsedTime - deadTime > deadDuration) {
             isExist = false;
         }

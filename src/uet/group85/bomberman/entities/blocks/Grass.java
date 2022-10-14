@@ -20,9 +20,8 @@ public class Grass extends Block {
     private final List<Entity> overlay;
 
     public Grass(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
-        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
-        this.screenPos = screenPos;
-        isPassable = true;
+        super(engine, mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE),
+                true);
 
         img = Sprite.grass.getFxImage();
 
@@ -43,6 +42,8 @@ public class Grass extends Block {
 
     @Override
     public void update() {
+        this.screenPos.x = mapPos.x - engine.bomberman.getMapPos().x + engine.bomberman.getScreenPos().x;
+        this.screenPos.y = mapPos.y - engine.bomberman.getMapPos().y + engine.bomberman.getScreenPos().y;
         if (hasOverlay()) {
             Entity topLayer = overlay.get(overlay.size() - 1);
             isPassable = !(topLayer instanceof Bomb || topLayer instanceof Brick);

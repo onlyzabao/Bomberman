@@ -7,7 +7,7 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 
 public abstract class Item extends Entity {
-    public Item(BombermanGame engine, Coordinate mapPos, Rectangle solidArea) {
-        super(engine, mapPos, solidArea);
+    public Item(BombermanGame engine, Coordinate mapPos, Coordinate screenPos, Rectangle solidArea) {
+        super(engine, mapPos, screenPos, solidArea);
     }
 }

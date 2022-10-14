@@ -32,7 +32,7 @@ public class MapManager {
     }
 
     private void initWall(Coordinate mapPos) {
-        engine.blocks.add(new Wall(engine, mapPos));
+        engine.blocks.add(new Wall(engine, mapPos, new Coordinate(mapPos)));
     }
 
     private void initGrass(Coordinate mapPos) {
@@ -62,7 +62,7 @@ public class MapManager {
 
     private void initBomber(Coordinate mapPos) {
         initGrass(mapPos);
-        engine.bomberman = new Bomber(engine, new Coordinate(mapPos));
+        engine.bomberman = new Bomber(engine, new Coordinate(mapPos), new Coordinate(mapPos));
         engine.bombs.add(new Bomb(engine, 1));
     }
 

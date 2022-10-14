@@ -127,22 +127,20 @@ public class BombermanGame extends Application {
 
     public void update() {
         // Update each objects and Check for game status
+        if (bomberman.isExist()) {
+            bomberman.update();
+        }
         blocks.forEach(Entity::update);
 
         enemies.forEach(Character::update);
 
-        if (bomberman.isExist()) {
-            bomberman.update();
-        }
     }
 
     public void render() {
         // Draw objects
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        bomberman.updateScreenPos();
         blocks.forEach(block -> {
-            block.updateScreenPos();
-            if (!block.isOutOfScreen()) {
+            if (block.isVisible()) {
                 block.render(gc);
             }
         });

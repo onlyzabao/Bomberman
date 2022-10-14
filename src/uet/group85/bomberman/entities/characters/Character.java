@@ -36,17 +36,20 @@ public abstract class Character extends Entity {
     protected double[] frameDuration;
 
     // Constructor
-    public Character(BombermanGame engine, Coordinate mapPos, Rectangle solidArea, int stepLength, int stepDuration) {
-        super(engine, mapPos, solidArea);
+    public Character(BombermanGame engine,
+                     Coordinate mapPos, Coordinate screenPos,
+                     Rectangle solidArea,
+                     int stepLength, int stepDuration) {
+        super(engine, mapPos, screenPos, solidArea);
 
         this.stepLength = stepLength;
         this.stepDuration = stepDuration;
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
+
         isLiving = true;
         deadDuration = 1.2;
 
-        this.hitBox = new Bound(mapPos, solidArea);
         obstacle1 = null;
         obstacle2 = null;
     }

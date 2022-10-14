@@ -11,8 +11,7 @@ import uet.group85.bomberman.graphics.Sprite;
 public class FlameItem extends Item {
     private final Image img;
     public FlameItem(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
-        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
-        this.screenPos = screenPos;
+        super(engine, mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
 
         img = Sprite.powerup_flames.getFxImage();
     }

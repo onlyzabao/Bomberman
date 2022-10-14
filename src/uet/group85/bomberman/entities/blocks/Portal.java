@@ -13,9 +13,8 @@ public class Portal extends Block {
     private final Image img;
 
     public Portal(BombermanGame engine, Coordinate mapPos, Coordinate screenPos) {
-        super(engine, mapPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE));
-        this.screenPos = screenPos;
-        isPassable = true;
+        super(engine, mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE),
+                true);
 
         img = Sprite.portal.getFxImage();
     }

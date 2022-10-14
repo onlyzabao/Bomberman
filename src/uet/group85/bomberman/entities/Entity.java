@@ -5,7 +5,6 @@ import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.auxilities.Bound;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
-import uet.group85.bomberman.graphics.Sprite;
 
 public abstract class Entity {
     protected final BombermanGame engine;
@@ -18,10 +17,12 @@ public abstract class Entity {
     protected Bound hitBox;
     protected boolean isExist;
 
-    public Entity(BombermanGame engine, Coordinate mapPos, Rectangle solidArea) {
+    protected Entity(BombermanGame engine,
+                     Coordinate mapPos, Coordinate screenPos,
+                     Rectangle solidArea) {
         this.engine = engine;
         this.mapPos = mapPos;
-        this.screenPos = new Coordinate(mapPos);
+        this.screenPos = screenPos;
         this.solidArea = solidArea;
         this.hitBox = new Bound(mapPos, solidArea);
         this.isExist = true;
@@ -35,19 +36,14 @@ public abstract class Entity {
         return screenPos;
     }
 
-    public void updateScreenPos() {
-        this.screenPos.x = mapPos.x - engine.bomberman.mapPos.x + engine.bomberman.screenPos.x;
-        this.screenPos.y = mapPos.y - engine.bomberman.mapPos.y + engine.bomberman.screenPos.y;
-    }
-
-    public boolean isOutOfScreen() {
+    public boolean isVisible() {
         if (screenPos.x < -32 || screenPos.x > BombermanGame.WIDTH) {
-            return true;
+            return false;
         }
         if (screenPos.y < -32 || screenPos.y > BombermanGame.HEIGHT) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public Bound getHitBox() {

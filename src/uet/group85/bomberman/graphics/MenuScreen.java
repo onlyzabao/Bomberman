@@ -1,11 +1,9 @@
-package uet.group85.bomberman.screens;
+package uet.group85.bomberman.graphics;
 
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import uet.group85.bomberman.managers.ScreenManager;
 
 public class MenuScreen implements Screen {
     public MenuScreen(Canvas canvas) {
@@ -18,7 +16,7 @@ public class MenuScreen implements Screen {
     }
 
     @Override
-    public void update(double elapsedTime) {
+    public void update() {
     }
 
     @Override

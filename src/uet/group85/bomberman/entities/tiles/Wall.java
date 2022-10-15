@@ -15,7 +15,6 @@ public class Wall extends Tile {
 
     public Wall(Coordinate mapPos, Coordinate screenPos) {
         super(mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE), false);
-
         img = Sprite.wall.getFxImage();
     }
 

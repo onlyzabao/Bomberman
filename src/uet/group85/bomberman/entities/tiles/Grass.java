@@ -22,11 +22,8 @@ public class Grass extends Tile {
     private final List<Block> overlay;
 
     public Grass(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE),
-                true);
-
+        super(mapPos, screenPos, new Rectangle(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE), true);
         img = Sprite.grass.getFxImage();
-
         overlay = new ArrayList<>();
     }
 

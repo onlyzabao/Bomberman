@@ -1,4 +1,4 @@
-package uet.group85.bomberman.screens;
+package uet.group85.bomberman.graphics;
 
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,7 +20,7 @@ public class PauseScreen implements Screen {
     }
 
     @Override
-    public void update(double elapsedTime) {
+    public void update() {
 
     }
 

@@ -6,6 +6,7 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.ScreenManager;
+import uet.group85.bomberman.graphics.GameScreen;
 
 public abstract class Entity {
     protected Coordinate mapPos;
@@ -45,8 +46,8 @@ public abstract class Entity {
     }
 
     public boolean isVisible() {
-        return (screenPos.y >= -Sprite.SCALED_SIZE && screenPos.y <= ScreenManager.HEIGHT)
-                && (screenPos.x >= -Sprite.SCALED_SIZE && screenPos.x <= ScreenManager.WIDTH);
+        return (screenPos.y >= -Sprite.SCALED_SIZE + GameScreen.TRANSLATED_Y && screenPos.y <= ScreenManager.HEIGHT)
+                && (screenPos.x >= -Sprite.SCALED_SIZE + GameScreen.TRANSLATED_X && screenPos.x <= ScreenManager.WIDTH);
     }
 
     public abstract void update();

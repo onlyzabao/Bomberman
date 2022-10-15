@@ -10,7 +10,7 @@ import uet.group85.bomberman.entities.blocks.Bomb;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.ScreenManager;
-import uet.group85.bomberman.screens.GameScreen;
+import uet.group85.bomberman.graphics.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,8 @@ public class Bomber extends Character {
         MOVING, DYING
     }
     public static final Coordinate screenMid = new Coordinate(
-            (ScreenManager.WIDTH - Sprite.SCALED_SIZE) / 2,
-            (ScreenManager.HEIGHT - Sprite.SCALED_SIZE) / 2
+            ((ScreenManager.WIDTH - GameScreen.TRANSLATED_X) - Sprite.SCALED_SIZE) / 2,
+            ((ScreenManager.HEIGHT - GameScreen.TRANSLATED_Y) - Sprite.SCALED_SIZE) / 2
     );
     public static final List<Bomb> bombs = new ArrayList<>();
     private final double COOLDOWN_PERIOD = 0.25;
@@ -129,19 +129,19 @@ public class Bomber extends Character {
     }
     private void updateScreenPos() {
         if (mapPos.x < screenMid.x) {
-            screenPos.x = mapPos.x;
+            screenPos.x = mapPos.x + GameScreen.TRANSLATED_X;
         } else if ((GameManager.mapCols - 1) * Sprite.SCALED_SIZE - mapPos.x < screenMid.x) {
             screenPos.x = ScreenManager.WIDTH - GameManager.mapCols * Sprite.SCALED_SIZE + mapPos.x;
         } else {
-            screenPos.x = screenMid.x;
+            screenPos.x = screenMid.x + GameScreen.TRANSLATED_X;
         }
 
         if (mapPos.y < screenMid.y) {
-            screenPos.y = mapPos.y;
+            screenPos.y = mapPos.y + GameScreen.TRANSLATED_Y;
         } else if ((GameManager.mapRows - 1) * Sprite.SCALED_SIZE - mapPos.y < screenMid.y) {
             screenPos.y = ScreenManager.HEIGHT - GameManager.mapRows * Sprite.SCALED_SIZE + mapPos.y;
         } else {
-            screenPos.y = screenMid.y;
+            screenPos.y = screenMid.y + GameScreen.TRANSLATED_Y;
         }
     }
 

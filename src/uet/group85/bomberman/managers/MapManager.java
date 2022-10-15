@@ -14,25 +14,29 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class MapManager {
-    private static final char WALL = '#';
-    private static final char BRICK = '*';
-    private static final char PORTAL = 'x';
-    private static final char BOMBER = 'p';
-    private static final char BALLOON = '1';
-    private static final char ONEAL = '2';
-    private static final char BOMB_ITEM = 'b';
-    private static final char FLAME_ITEM = 'f';
-    private static final char SPEED_ITEM = 's';
+    private final char WALL = '#';
+    private final char BRICK = '*';
+    private final char PORTAL = 'x';
+    private final char BOMBER = 'p';
+    private final char BALLOON = '1';
+    private final char ONEAL = '2';
+    private final char BOMB_ITEM = 'b';
+    private final char FLAME_ITEM = 'f';
+    private final char SPEED_ITEM = 's';
 
-    private static void initWall(Coordinate mapPos) {
+    public MapManager(int level) throws FileNotFoundException {
+        loadMap(level);
+    }
+
+    private void initWall(Coordinate mapPos) {
         GameManager.tiles.add(new Wall(mapPos, new Coordinate(mapPos)));
     }
 
-    private static void initGrass(Coordinate mapPos) {
+    private void initGrass(Coordinate mapPos) {
         GameManager.tiles.add(new Grass(mapPos, new Coordinate(mapPos)));
     }
 
-    private static void initGrass(Coordinate mapPos, Coordinate screenPos, Block[] layers) {
+    private void initGrass(Coordinate mapPos, Coordinate screenPos, Block[] layers) {
         Grass belowBlock = new Grass(mapPos, screenPos);
         for (Block layer : layers) {
             belowBlock.addLayer(layer);
@@ -40,12 +44,12 @@ public class MapManager {
         GameManager.tiles.add(belowBlock);
     }
 
-    private static void initBrick(Coordinate mapPos) {
+    private void initBrick(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{new Brick(mapPos, screenPos)});
     }
 
-    private static void initPortal(Coordinate mapPos) {
+    private void initPortal(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{
                 new Portal(mapPos, screenPos),
@@ -53,21 +57,21 @@ public class MapManager {
         });
     }
 
-    private static void initBomber(Coordinate mapPos) {
+    private void initBomber(Coordinate mapPos) {
         initGrass(mapPos);
         GameManager.bomber.setMapPos(new Coordinate(mapPos));
         GameManager.bomber.setScreenPos(new Coordinate(mapPos));
     }
 
-    private static void initBalloon(Coordinate mapPos) {
+    private void initBalloon(Coordinate mapPos) {
         initGrass(mapPos);
     }
 
-    private static void initOneal(Coordinate mapPos) {
+    private void initOneal(Coordinate mapPos) {
         initGrass(mapPos);
     }
 
-    private static void initBombItem(Coordinate mapPos) {
+    private void initBombItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{
                 new BombItem(mapPos, screenPos),
@@ -75,7 +79,7 @@ public class MapManager {
         });
     }
 
-    private static void initFlameItem(Coordinate mapPos) {
+    private void initFlameItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos,new Block[]{
                 new FlameItem(mapPos, screenPos),
@@ -83,7 +87,7 @@ public class MapManager {
         });
     }
 
-    private static void initSpeedItem(Coordinate mapPos) {
+    private void initSpeedItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{
                 new SpeedItem(mapPos, screenPos),
@@ -91,12 +95,12 @@ public class MapManager {
         });
     }
 
-    private static void reset() {
+    private void reset() {
         GameManager.tiles.clear();
         GameManager.enemies.clear();
     }
 
-    public static void loadMap(int level) throws FileNotFoundException {
+    public void loadMap(int level) throws FileNotFoundException {
         reset();
         String path = String.format("res/levels/Level%d.txt", level);
         File myFile = new File(path);

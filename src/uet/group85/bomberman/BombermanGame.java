@@ -11,42 +11,26 @@ import uet.group85.bomberman.screens.GameScreen;
 
 
 public class BombermanGame extends Application {
-    // Manage graphics
-    public double elapsedTime;
-
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
 
     @Override
     public void start(Stage stage) {
-        ScreenManager.screen = new GameScreen(ScreenManager.canvas);
-        ScreenManager.screen.handleEvent();
+        ScreenManager.init();
 
         // Manage frames
         final long startNanoTime = System.nanoTime();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long currentNanoTime) {
-                elapsedTime = (currentNanoTime - startNanoTime) / 1000000000.0;
-                update();
-                render();
+                ScreenManager.update((currentNanoTime - startNanoTime) / 1000000000.0);
+                ScreenManager.render();
             }
         };
         timer.start();
 
-        stage.setScene(ScreenManager.screen.getScene());
+        stage.setScene(ScreenManager.scene);
         stage.show();
-    }
-
-    public void update() {
-        // Update each objects and Check for game status
-        ScreenManager.screen.update(elapsedTime);
-    }
-
-    public void render() {
-        // Draw objects
-        ScreenManager.gc.clearRect(0, 0, ScreenManager.canvas.getWidth(), ScreenManager.canvas.getHeight());
-        ScreenManager.screen.render(ScreenManager.gc);
     }
 }

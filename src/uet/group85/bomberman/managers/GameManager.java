@@ -25,8 +25,8 @@ public class GameManager {
 
     public static double elapsedTime;
 
-    public static void update(double elapsedTime) {
-        GameManager.elapsedTime = elapsedTime;
+    public static void update(double time) {
+        elapsedTime = time;
         if (bomber.isExist()) {
             bomber.update();
         }

@@ -1,7 +1,6 @@
 package uet.group85.bomberman.managers;
 
 import uet.group85.bomberman.auxilities.Coordinate;
-import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.*;
 import uet.group85.bomberman.entities.blocks.BombItem;
 import uet.group85.bomberman.entities.blocks.FlameItem;

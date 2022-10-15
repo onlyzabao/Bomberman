@@ -1,26 +1,20 @@
 package uet.group85.bomberman.screens;
 
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import uet.group85.bomberman.managers.ScreenManager;
 
-public class MenuScreen extends Screen {
+public class MenuScreen implements Screen {
     public MenuScreen(Canvas canvas) {
-        super(canvas);
+
     }
 
     @Override
-    public void handleEvent() {
-        System.out.println("Menu");
-        scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()) {
-                case A -> {
-                    ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
-                }
-            }
-        });
+    public void handleEvent(Scene scene) {
+
     }
 
     @Override

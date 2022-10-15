@@ -1,6 +1,6 @@
 package uet.group85.bomberman.screens;
 
-import javafx.scene.canvas.Canvas;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.MapManager;
@@ -8,7 +8,7 @@ import uet.group85.bomberman.managers.ScreenManager;
 
 import java.io.FileNotFoundException;
 
-public class GameScreen extends Screen {
+public class GameScreen implements Screen {
     private static final int UP = 0;
     private static final int DOWN = 1;
     public static final int LEFT = 2;
@@ -16,8 +16,7 @@ public class GameScreen extends Screen {
     public static final int BOMB = 4;
     public static final int TOTAL = 5;
 
-    public GameScreen(Canvas canvas) {
-        super(canvas);
+    public GameScreen() {
         try {
             MapManager.loadMap(1);
         } catch (FileNotFoundException e) {
@@ -27,56 +26,57 @@ public class GameScreen extends Screen {
     }
 
     @Override
-    public void handleEvent() {
+    public void handleEvent(Scene scene) {
         scene.setOnKeyPressed(
                 keyEvent -> {
                     switch (keyEvent.getCode()) {
-                        case UP:
-                            if (!GameManager.events[UP]) GameManager.events[UP] = true;
-                            break;
-                        case DOWN:
-                            if (!GameManager.events[DOWN]) GameManager.events[DOWN] = true;
-                            break;
-                        case LEFT:
-                            if (!GameManager.events[LEFT]) GameManager.events[LEFT] = true;
-                            break;
-                        case RIGHT:
-                            if (!GameManager.events[RIGHT]) GameManager.events[RIGHT] = true;
-                            break;
-                        case X:
-                            if (!GameManager.events[BOMB]) GameManager.events[BOMB] = true;
-                            break;
-                        case A:
-                            ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
+                        case UP -> {
+                            GameManager.events[UP] = true;
+                        }
+                        case DOWN -> {
+                            GameManager.events[DOWN] = true;
+                        }
+                        case LEFT -> {
+                            GameManager.events[LEFT] = true;
+                        }
+                        case RIGHT -> {
+                            GameManager.events[RIGHT] = true;
+                        }
+                        case X -> {
+                            GameManager.events[BOMB] = true;
+                        }
+                        case ESCAPE -> {
+                            ScreenManager.switchScreen(ScreenManager.ScreenType.PAUSE);
+                        }
                     }
                 }
         );
         scene.setOnKeyReleased(
                 keyEvent -> {
                     switch (keyEvent.getCode()) {
-                        case UP:
-                            if (GameManager.events[UP]) GameManager.events[UP] = false;
-                            break;
-                        case DOWN:
-                            if (GameManager.events[DOWN]) GameManager.events[DOWN] = false;
-                            break;
-                        case LEFT:
-                            if (GameManager.events[LEFT]) GameManager.events[LEFT] = false;
-                            break;
-                        case RIGHT:
-                            if (GameManager.events[RIGHT]) GameManager.events[RIGHT] = false;
-                            break;
-                        case X:
-                            if (GameManager.events[BOMB]) GameManager.events[BOMB] = false;
-                            break;
+                        case UP -> {
+                            GameManager.events[UP] = false;
+                        }
+                        case DOWN -> {
+                            GameManager.events[DOWN] = false;
+                        }
+                        case LEFT -> {
+                            GameManager.events[LEFT] = false;
+                        }
+                        case RIGHT -> {
+                            GameManager.events[RIGHT] = false;
+                        }
+                        case X -> {
+                            GameManager.events[BOMB] = false;
+                        }
                     }
                 }
         );
     }
 
     @Override
-    public void update(double elapsedTime) {
-        GameManager.update(elapsedTime);
+    public void update(double time) {
+        GameManager.update(time);
     }
 
     @Override

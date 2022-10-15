@@ -151,7 +151,7 @@ public class Bomber extends Character {
     }
 
     public void increaseBomb() {
-        bombs.add(new Bomb(1));
+        bombs.add(new Bomb(bombs.get(0).getFlameLen()));
     }
 
     public void increaseFlame() {

@@ -115,12 +115,23 @@ public class Bomb extends Block {
                         if (layer instanceof Brick) {
                             ((Brick) layer).eliminateNow(GameManager.elapsedTime);
                         }
+                        if (layer instanceof Bomb) {
+                            ((Bomb) layer).setCountingDown(false);
+                        }
                     }
                     break;
                 }
             }
         }
         this.isExist = false;
+    }
+
+    public void setCountingDown(boolean countingDown) {
+        isCountingDown = countingDown;
+    }
+
+    public int getFlameLen() {
+        return flameLen;
     }
 
     public void increaseFlameLen() {

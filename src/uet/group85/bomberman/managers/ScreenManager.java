@@ -1,30 +1,54 @@
 package uet.group85.bomberman.managers;
 
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import uet.group85.bomberman.screens.GameScreen;
-import uet.group85.bomberman.screens.MenuScreen;
+import uet.group85.bomberman.screens.PauseScreen;
 import uet.group85.bomberman.screens.Screen;
 
 public class ScreenManager {
     public enum ScreenType {
-        MENU, GAME
+        GAME, MENU, PAUSE
     }
     public static final int WIDTH = 640;
     public static final int HEIGHT = 416;
     public static final Canvas canvas = new Canvas(WIDTH, HEIGHT);
     public static final GraphicsContext gc = canvas.getGraphicsContext2D();
-    public static Screen screen;
+    public static final Group root = new Group();
+    public static final Scene scene = new Scene(root);
+    public static Screen screen = new GameScreen();
+    public static Screen bufferScreen;
+
+    public static void init() {
+        root.getChildren().add(canvas);
+        screen.handleEvent(scene);
+    }
     public static void switchScreen(ScreenType type) {
         switch (type) {
             case GAME -> {
-                screen = new GameScreen(canvas);
-                screen.handleEvent();
+                System.out.println("Game");
+                screen = bufferScreen;
             }
             case MENU -> {
-                screen = new MenuScreen(canvas);
-                screen.handleEvent();
+                System.out.println("Menu");
+            }
+            case PAUSE -> {
+                System.out.println("Pause");
+                bufferScreen = screen;
+                screen = new PauseScreen();
             }
         }
+        screen.handleEvent(scene);
+    }
+
+    public static void update(double time) {
+        screen.update(time);
+    }
+
+    public static void render() {
+        gc.clearRect(0, 0, WIDTH, HEIGHT);
+        screen.render(gc);
     }
 }

@@ -25,7 +25,15 @@ public class MapManager {
     private final char FLAME_ITEM = 'f';
     private final char SPEED_ITEM = 's';
 
-    public MapManager(int level) throws FileNotFoundException {
+    public MapManager(int score, int level) throws FileNotFoundException {
+        GameManager.status = GameManager.Status.PLAYING;
+        GameManager.score = score;
+        GameManager.level = level;
+
+        GameManager.tiles.clear();
+        GameManager.enemies.clear();
+        GameManager.bomber.reset();
+
         loadMap(level);
     }
 
@@ -97,13 +105,7 @@ public class MapManager {
         });
     }
 
-    private void reset() {
-        GameManager.tiles.clear();
-        GameManager.enemies.clear();
-    }
-
     public void loadMap(int level) throws FileNotFoundException {
-        reset();
         String path = String.format("res/levels/Level%d.txt", level);
         File myFile = new File(path);
         Scanner myReader = new Scanner(myFile);

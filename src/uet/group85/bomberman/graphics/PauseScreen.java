@@ -14,7 +14,7 @@ public class PauseScreen implements Screen {
     public void handleEvent(Scene scene) {
         scene.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
+                ScreenManager.switchScreen(ScreenManager.ScreenType.NEW_GAME);
             }
         });
     }

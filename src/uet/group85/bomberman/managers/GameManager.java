@@ -14,16 +14,15 @@ public class GameManager {
     public enum Status {
         PLAYING, WIN, LOSE
     }
-    public static int mapCols;
-    public static int mapRows;
+    public static final boolean[] events = new boolean[Event.TOTAL.ordinal()];
 
     public static final List<Tile> tiles = new ArrayList<>();
     public static final List<Character> enemies = new ArrayList<>();
 
     public static final Bomber bomber = new Bomber();
-
-    public static final boolean[] events = new boolean[Event.TOTAL.ordinal()];
-    public static Status status = Status.PLAYING;
+    public static int mapCols;
+    public static int mapRows;
+    public static Status status;
     public static int score;
     public static int level;
 

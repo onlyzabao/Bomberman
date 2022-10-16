@@ -4,7 +4,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.text.Font;
 import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.graphics.GameScreen;
@@ -16,7 +15,7 @@ import java.io.FileNotFoundException;
 
 public class ScreenManager {
     public enum ScreenType {
-        GAME, MENU, PAUSE
+        NEW_GAME, NEXT_GAME, MENU, PAUSE
     }
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
@@ -41,18 +40,25 @@ public class ScreenManager {
     }
     public static void switchScreen(ScreenType type) {
         switch (type) {
-            case GAME -> {
-                screen = bufferScreen;
-                double pauseDuration = ((GameScreen) screen).getPausedTime() - ((GameScreen) screen).getStartedTime();
-                ((GameScreen) screen).setStartedTime(BombermanGame.elapsedTime - pauseDuration);
+            case NEW_GAME -> {
+                if (bufferScreen != null) {
+                    screen = bufferScreen;
+                    double pauseDuration = ((GameScreen) screen).getPausedTime() - ((GameScreen) screen).getStartedTime();
+                    ((GameScreen) screen).setStartedTime(BombermanGame.elapsedTime - pauseDuration);
+                } else {
+                    screen = new GameScreen(BombermanGame.elapsedTime, 0, 1);
+                }
             }
-            case MENU -> {
-                System.out.println("Menu");
+            case NEXT_GAME -> {
+                screen = new GameScreen(BombermanGame.elapsedTime, GameManager.score, ++GameManager.level);
             }
             case PAUSE -> {
                 bufferScreen = screen;
                 ((GameScreen) screen).setPausedTime(BombermanGame.elapsedTime);
                 screen = new PauseScreen();
+            }
+            case MENU -> {
+                System.out.println("Menu");
             }
         }
         screen.handleEvent(scene);

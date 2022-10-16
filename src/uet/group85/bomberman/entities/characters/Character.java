@@ -103,8 +103,10 @@ public abstract class Character extends Entity {
     }
 
     public void eliminateNow(double deadTime) {
-        this.deadTime = deadTime;
-        isDying = true;
+        if (!isDying) {
+            this.deadTime = deadTime;
+            isDying = true;
+        }
     }
 
     protected Image getFrame(Image[] frame, double time, FrameType type) {

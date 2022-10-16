@@ -8,6 +8,10 @@ import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Balloon extends Character {
 
     public Balloon(Coordinate mapPos, Coordinate screenPos) {
@@ -27,6 +31,27 @@ public class Balloon extends Character {
         };
     }
 
+    private void chooseDirection() {
+        List<Integer> directionChoices = new ArrayList<>(4);
+        for (int i = 0; i < 4; i++) {
+            if (!isBlocked[i]) {
+                directionChoices.add(i);
+            }
+        }
+        if (directionChoices.isEmpty()) {
+            stepDirection = Direction.NONE;
+            return;
+        }
+        if (!isBlocked[stepDirection.ordinal()] && !isBlocked[Direction.NONE.ordinal()]) {
+            if (directionChoices.size() < 3) {
+                return;
+            }
+        }
+        int randomDirection = new Random().nextInt(directionChoices.size());
+        stepDirection = Direction.values()[directionChoices.get(randomDirection)];
+    }
+
+
     private void updateMapPos() {
         if (++stepCounter == stepDuration) {
             this.hitBox.update(mapPos, solidArea);
@@ -35,14 +60,7 @@ public class Balloon extends Character {
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
                 checkDirection(GameManager.tiles);
-                if (isBlocked[stepDirection.ordinal()] || isBlocked[Direction.NONE.ordinal()]) {
-                    for (int i = 0; i < 4; i++) {
-                        if (!isBlocked[i]) {
-                            stepDirection = Direction.values()[i];
-                            break;
-                        }
-                    }
-                }
+                chooseDirection();
             }
             step();
             stepCounter = 0;
@@ -67,21 +85,21 @@ public class Balloon extends Character {
     public void update() {
         if (!isDying) {
             updateMapPos();
-            updateScreenPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
             GameManager.score += 200;
             isExist = false;
         }
+        updateScreenPos();
     }
 
     @Override
     public void render(GraphicsContext gc) {
         if (!isDying) {
-            gc.drawImage(getFrame(movingFrame[stepDirection.ordinal() < 2 ? 0 : 1], GameManager.elapsedTime,
-                    FrameType.MOVING), screenPos.x, screenPos.y);
+            gc.drawImage(getFrame(movingFrame[stepDirection.ordinal() < 2 ? stepDirection.ordinal() : stepDirection.ordinal() - 2],
+                    GameManager.elapsedTime, FrameType.MOVING), screenPos.x, screenPos.y);
         } else {
             if (GameManager.elapsedTime - deadTime < frameDuration[FrameType.INJURED.ordinal()]) {
-                gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime, FrameType.INJURED), screenPos.x, screenPos.y);
+                gc.drawImage(getFrame(defaultFrame, GameManager.elapsedTime, FrameType.INJURED), screenPos.x, screenPos.y);
             } else {
                 gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime,
                         FrameType.DYING), screenPos.x, screenPos.y);

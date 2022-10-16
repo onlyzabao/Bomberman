@@ -4,10 +4,15 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.text.Font;
 import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.graphics.GameScreen;
 import uet.group85.bomberman.graphics.PauseScreen;
 import uet.group85.bomberman.graphics.Screen;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class ScreenManager {
     public enum ScreenType {
@@ -19,17 +24,24 @@ public class ScreenManager {
     public static final GraphicsContext gc = canvas.getGraphicsContext2D();
     public static final Group root = new Group();
     public static final Scene scene = new Scene(root);
-    public static Screen screen = new GameScreen(BombermanGame.elapsedTime, 0,1);
+    public static Screen screen;
     public static Screen bufferScreen;
 
     public static void init() {
+        try {
+            gc.setFont(Font.loadFont(new FileInputStream("res/fonts/RetroGaming.ttf"), 32));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
         root.getChildren().add(canvas);
+
+        screen = new GameScreen(BombermanGame.elapsedTime, 0,1);
         screen.handleEvent(scene);
     }
     public static void switchScreen(ScreenType type) {
         switch (type) {
             case GAME -> {
-                System.out.println("Game");
                 screen = bufferScreen;
                 double pauseDuration = ((GameScreen) screen).getPausedTime() - ((GameScreen) screen).getStartedTime();
                 ((GameScreen) screen).setStartedTime(BombermanGame.elapsedTime - pauseDuration);
@@ -38,9 +50,8 @@ public class ScreenManager {
                 System.out.println("Menu");
             }
             case PAUSE -> {
-                System.out.println("Pause");
-                ((GameScreen) screen).setPausedTime(BombermanGame.elapsedTime);
                 bufferScreen = screen;
+                ((GameScreen) screen).setPausedTime(BombermanGame.elapsedTime);
                 screen = new PauseScreen();
             }
         }

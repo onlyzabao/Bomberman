@@ -4,14 +4,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.ScreenManager;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class GameScreen implements Screen {
@@ -31,9 +29,9 @@ public class GameScreen implements Screen {
 
     public GameScreen(double time, int score, int level) {
         try {
-            timeText.setFont(Font.loadFont(new FileInputStream("res/fonts/RetroGaming.ttf"), 32));
-            scoreText.setFont(Font.loadFont(new FileInputStream("res/fonts/RetroGaming.ttf"), 32));
-            levelText.setFont(Font.loadFont(new FileInputStream("res/fonts/RetroGaming.ttf"), 32));
+            timeText.setFont(ScreenManager.gc.getFont());
+            scoreText.setFont(ScreenManager.gc.getFont());
+            levelText.setFont(ScreenManager.gc.getFont());
 
             timeText.setFill(Color.WHITE);
             scoreText.setFill(Color.WHITE);
@@ -51,14 +49,12 @@ public class GameScreen implements Screen {
             timeText.setY(40);
             scoreText.setX(224);
             scoreText.setY(40);
-            levelText.setX(240);
-            levelText.setY(240);
+            levelText.setX(480);
+            levelText.setY(40);
 
             ScreenManager.root.getChildren().add(timeText);
             ScreenManager.root.getChildren().add(scoreText);
             ScreenManager.root.getChildren().add(levelText);
-
-            levelText.setText(String.format("Stage  %d", level));
 
             GameManager.create(score, level);
             startedTime = time;
@@ -89,45 +85,23 @@ public class GameScreen implements Screen {
         scene.setOnKeyPressed(
                 keyEvent -> {
                     switch (keyEvent.getCode()) {
-                        case UP -> {
-                            GameManager.events[UP] = true;
-                        }
-                        case DOWN -> {
-                            GameManager.events[DOWN] = true;
-                        }
-                        case LEFT -> {
-                            GameManager.events[LEFT] = true;
-                        }
-                        case RIGHT -> {
-                            GameManager.events[RIGHT] = true;
-                        }
-                        case X -> {
-                            GameManager.events[BOMB] = true;
-                        }
-                        case ESCAPE -> {
-                            ScreenManager.switchScreen(ScreenManager.ScreenType.PAUSE);
-                        }
+                        case UP -> GameManager.events[UP] = true;
+                        case DOWN -> GameManager.events[DOWN] = true;
+                        case LEFT -> GameManager.events[LEFT] = true;
+                        case RIGHT -> GameManager.events[RIGHT] = true;
+                        case X -> GameManager.events[BOMB] = true;
+                        case ESCAPE -> ScreenManager.switchScreen(ScreenManager.ScreenType.PAUSE);
                     }
                 }
         );
         scene.setOnKeyReleased(
                 keyEvent -> {
                     switch (keyEvent.getCode()) {
-                        case UP -> {
-                            GameManager.events[UP] = false;
-                        }
-                        case DOWN -> {
-                            GameManager.events[DOWN] = false;
-                        }
-                        case LEFT -> {
-                            GameManager.events[LEFT] = false;
-                        }
-                        case RIGHT -> {
-                            GameManager.events[RIGHT] = false;
-                        }
-                        case X -> {
-                            GameManager.events[BOMB] = false;
-                        }
+                        case UP -> GameManager.events[UP] = false;
+                        case DOWN -> GameManager.events[DOWN] = false;
+                        case LEFT -> GameManager.events[LEFT] = false;
+                        case RIGHT -> GameManager.events[RIGHT] = false;
+                        case X -> GameManager.events[BOMB] = false;
                     }
                 }
         );
@@ -135,19 +109,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void update() {
-        if (BombermanGame.elapsedTime - startedTime < INIT_PERIOD) {
-            levelText.toFront();
-            return;
+        if (BombermanGame.elapsedTime - startedTime > INIT_PERIOD) {
+            double elapsedTime = BombermanGame.elapsedTime - INIT_PERIOD - startedTime;
+            timeText.setText(String.format("Time  %.0f", 200.0 - elapsedTime));
+            scoreText.setText(String.format("Score  %d", GameManager.score));
+            levelText.setText(String.format("Stage  %d", GameManager.level));
+            GameManager.update(elapsedTime);
         }
-        levelText.setX(480);
-        levelText.setY(40);
-
-        double elapsedTime = BombermanGame.elapsedTime - INIT_PERIOD - startedTime;
-        timeText.toFront();
-        timeText.setText(String.format("Time  %.0f", 200.0 - elapsedTime));
-        scoreText.toFront();
-        scoreText.setText(String.format("Score  %d", GameManager.score));
-        GameManager.update(elapsedTime);
     }
 
     @Override
@@ -155,10 +123,12 @@ public class GameScreen implements Screen {
         if (BombermanGame.elapsedTime - startedTime < INIT_PERIOD) {
             gc.setFill(Color.BLACK);
             gc.fillRect(0,0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
-            return;
+            gc.setFill(Color.WHITE);
+            gc.fillText(String.format("Stage  %d", GameManager.level), 240, 240);
+        } else {
+            GameManager.render(gc);
+            gc.setFill(Color.color(0.65, 0.65, 0.65));
+            gc.fillRect(0,0, ScreenManager.WIDTH, TRANSLATED_Y);
         }
-        GameManager.render(gc);
-        gc.setFill(Color.color(0.65, 0.65, 0.65));
-        gc.fillRect(0,0, ScreenManager.WIDTH, TRANSLATED_Y);
     }
 }

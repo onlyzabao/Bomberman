@@ -3,6 +3,7 @@ package uet.group85.bomberman.graphics;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.ScreenManager;
 
@@ -27,5 +28,7 @@ public class PauseScreen implements Screen {
     @Override
     public void render(GraphicsContext gc) {
         GameManager.render(gc);
+        gc.setFill(Color.color(0.65, 0.65, 0.65));
+        gc.fillRect(0,0, ScreenManager.WIDTH, GameScreen.TRANSLATED_Y);
     }
 }

@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GameManager {
+public class GameManager {
     public enum Event {
         MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, BOMB, TOTAL
     }
@@ -24,11 +24,13 @@ public abstract class GameManager {
 
     public static final boolean[] events = new boolean[Event.TOTAL.ordinal()];
     public static int score;
+    public static int level;
 
     public static double elapsedTime;
 
     public static void create(int score, int level) throws FileNotFoundException {
         GameManager.score = score;
+        GameManager.level = level;
         new MapManager(level);
     }
 

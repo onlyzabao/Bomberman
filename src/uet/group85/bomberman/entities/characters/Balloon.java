@@ -69,6 +69,7 @@ public class Balloon extends Character {
             updateMapPos();
             updateScreenPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
+            GameManager.score += 200;
             isExist = false;
         }
     }
@@ -77,10 +78,14 @@ public class Balloon extends Character {
     public void render(GraphicsContext gc) {
         if (!isDying) {
             gc.drawImage(getFrame(movingFrame[stepDirection.ordinal() < 2 ? 0 : 1], GameManager.elapsedTime,
-                    Balloon.FrameType.MOVING), screenPos.x, screenPos.y);
+                    FrameType.MOVING), screenPos.x, screenPos.y);
         } else {
-            gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime,
-                    Balloon.FrameType.DYING), screenPos.x, screenPos.y);
+            if (GameManager.elapsedTime - deadTime < frameDuration[FrameType.INJURED.ordinal()]) {
+                gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime, FrameType.INJURED), screenPos.x, screenPos.y);
+            } else {
+                gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime,
+                        FrameType.DYING), screenPos.x, screenPos.y);
+            }
         }
     }
 }

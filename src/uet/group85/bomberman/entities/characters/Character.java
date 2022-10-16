@@ -85,14 +85,19 @@ public abstract class Character extends Entity {
 
     public void checkDirection(List<Tile> tiles) {
         Coordinate thisUnitPos = mapPos.divide(Sprite.SCALED_SIZE);
+
         isBlocked[Direction.UP.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y - 1)
                 + (thisUnitPos.x))).isPassable();
+
         isBlocked[Direction.DOWN.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y + 1)
                 + (thisUnitPos.x))).isPassable();
+
         isBlocked[Direction.LEFT.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
                 + (thisUnitPos.x - 1))).isPassable();
+
         isBlocked[Direction.RIGHT.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
                 + (thisUnitPos.x + 1))).isPassable();
+
         isBlocked[Direction.NONE.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
                 + (thisUnitPos.x))).isPassable();
     }
@@ -105,12 +110,9 @@ public abstract class Character extends Entity {
     protected Image getFrame(Image[] frame, double time, FrameType type) {
         int index = 0;
         switch (type) {
-            case MOVING -> {
-                index = (int) ((time % (frame.length * frameDuration[type.ordinal()])) / frameDuration[type.ordinal()]);
-            }
-            case DYING -> {
-                index = (int) (((time - deadTime) % DYING_PERIOD) / frameDuration[type.ordinal()]);
-            }
+            case MOVING -> index = (int) ((time % (frame.length * frameDuration[type.ordinal()]))
+                    / frameDuration[type.ordinal()]);
+            case DYING -> index = (int) (((time - deadTime) % DYING_PERIOD) / frameDuration[type.ordinal()]);
         }
         return frame[index];
     }

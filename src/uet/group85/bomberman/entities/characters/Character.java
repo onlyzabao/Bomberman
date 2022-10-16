@@ -54,7 +54,8 @@ public abstract class Character extends Entity {
     }
 
     public boolean isCollided(Block other) {
-        Coordinate unitPos = this.mapPos.add(solidArea.w / 2, solidArea.h / 2).divide(Sprite.SCALED_SIZE);
+        Coordinate unitPos = this.mapPos.add(solidArea.x + solidArea.w / 2,
+                solidArea.y + solidArea.h / 2).divide(Sprite.SCALED_SIZE);
         return unitPos.equals(other.getMapPos().divide(Sprite.SCALED_SIZE));
     }
 

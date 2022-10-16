@@ -260,7 +260,11 @@ public class Bomber extends Character {
 
     @Override
     public void update() {
-        if (!isDying) {
+        if (!isExist) {
+            if (GameManager.elapsedTime - deadTime > DYING_PERIOD + 2.0) {
+                GameManager.status = GameManager.Status.LOSE;
+            }
+        } else if (!isDying) {
             updateMapPos();
             updateScreenPos();
             updateBomb();
@@ -271,6 +275,9 @@ public class Bomber extends Character {
 
     @Override
     public void render(GraphicsContext gc) {
+        if (!isExist) {
+            return;
+        }
         if (!isDying) {
             if (isMoving) {
                 gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], GameManager.elapsedTime, FrameType.MOVING),

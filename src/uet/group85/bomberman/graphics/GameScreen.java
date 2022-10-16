@@ -7,7 +7,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import uet.group85.bomberman.BombermanGame;
+import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.managers.GameManager;
+import uet.group85.bomberman.managers.MapManager;
 import uet.group85.bomberman.managers.ScreenManager;
 
 import java.io.FileNotFoundException;
@@ -56,7 +58,10 @@ public class GameScreen implements Screen {
             ScreenManager.root.getChildren().add(scoreText);
             ScreenManager.root.getChildren().add(levelText);
 
-            GameManager.create(score, level);
+            GameManager.score = score;
+            GameManager.level = level;
+            new MapManager(level);
+
             startedTime = time;
             pausedTime = startedTime;
         } catch (FileNotFoundException e) {
@@ -110,11 +115,21 @@ public class GameScreen implements Screen {
     @Override
     public void update() {
         if (BombermanGame.elapsedTime - startedTime > INIT_PERIOD) {
-            double elapsedTime = BombermanGame.elapsedTime - INIT_PERIOD - startedTime;
-            timeText.setText(String.format("Time  %.0f", 200.0 - elapsedTime));
+            if (GameManager.status == GameManager.Status.WIN) {
+                return;
+            }
+            if (GameManager.status == GameManager.Status.LOSE) {
+                return;
+            }
+            GameManager.elapsedTime = BombermanGame.elapsedTime - INIT_PERIOD - startedTime;
+            timeText.setText(String.format("Time  %.0f", 200.0 - GameManager.elapsedTime));
             scoreText.setText(String.format("Score  %d", GameManager.score));
             levelText.setText(String.format("Stage  %d", GameManager.level));
-            GameManager.update(elapsedTime);
+
+            GameManager.bomber.update();
+            GameManager.enemies.removeIf(enemy -> !enemy.isExist());
+            GameManager.enemies.forEach(Entity::update);
+            GameManager.tiles.forEach(Entity::update);
         }
     }
 
@@ -126,7 +141,17 @@ public class GameScreen implements Screen {
             gc.setFill(Color.WHITE);
             gc.fillText(String.format("Stage  %d", GameManager.level), 240, 240);
         } else {
-            GameManager.render(gc);
+            GameManager.tiles.forEach(block -> {
+                if (block.isVisible()) {
+                    block.render(gc);
+                }
+            });
+            GameManager.enemies.forEach(enemy -> {
+                if (enemy.isVisible()) {
+                    enemy.render(gc);
+                }
+            });
+            GameManager.bomber.render(gc);
             gc.setFill(Color.color(0.65, 0.65, 0.65));
             gc.fillRect(0,0, ScreenManager.WIDTH, TRANSLATED_Y);
         }

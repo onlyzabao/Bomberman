@@ -101,8 +101,7 @@ public class Balloon extends Character {
             if (GameManager.elapsedTime - deadTime < frameDuration[FrameType.INJURED.ordinal()]) {
                 gc.drawImage(getFrame(defaultFrame, GameManager.elapsedTime, FrameType.INJURED), screenPos.x, screenPos.y);
             } else {
-                gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime,
-                        FrameType.DYING), screenPos.x, screenPos.y);
+                gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime, FrameType.DYING), screenPos.x, screenPos.y);
             }
         }
     }

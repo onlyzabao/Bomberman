@@ -5,67 +5,57 @@ import javafx.scene.image.Image;
 
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
-import uet.group85.bomberman.entities.tiles.Tile;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 
-import java.util.List;
-import java.util.Random;
-
 public class Balloon extends Character {
-    // Specifications
     enum FrameType {
-        MOVING, DYING
+        MOVING, INJURED, DYING
     }
+    private boolean isMoving;
 
     public Balloon(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(2, 2, 28, 28), 2, 3, true);
+        super(mapPos, screenPos, new Rectangle(0, 0, 32, 32), 2, 3, true);
 
+        defaultFrame = new Image[] {
+                Sprite.balloom_dead.getFxImage()
+        };
         dyingFrame = new Image[] {
-                Sprite.balloom_dead.getFxImage(),
                 Sprite.mob_dead1.getFxImage() ,
                 Sprite.mob_dead2.getFxImage(),
                 Sprite.mob_dead3.getFxImage()
-                // TODO: Get more sprites
         };
-
         movingFrame = new Image[][] {
                 {Sprite.balloom_left1.getFxImage(), Sprite.balloom_left2.getFxImage(), Sprite.balloom_left3.getFxImage()},
                 {Sprite.balloom_right1.getFxImage(), Sprite.balloom_right2.getFxImage(), Sprite.balloom_right3.getFxImage()}
         };
+        frameDuration = new double[] {0.2, 0.3, 1.0};
 
-        frameDuration = new double[] {0.2, 1.0};
+        isMoving = true;
     }
 
-    private void move() {
-        Random random = new Random();
-        int dir = random.nextInt(4);
-        switch (dir) {
-            case 0:
-                Direction down = Direction.DOWN;
-                break;
-            case 1:
-                Direction UP = Direction.UP;
-                break;
-            case 2:
-                Direction left = Direction.LEFT;
-                break;
-            case 3:
-                Direction right = Direction.RIGHT;
-                break;
-        }
-        if (!isCollided((Tile) GameManager.tiles)) {
+    private void updateMapPos() {
+        if (++stepCounter == stepDuration) {
+            this.hitBox.update(mapPos, solidArea);
+            if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
+                checkDirection(GameManager.tiles);
+                if (isBlocked[stepDirection.ordinal()] || isBlocked[Direction.NONE.ordinal()]) {
+                    for (int i = 0; i < 4; i++) {
+                        if (!isBlocked[i]) {
+                            stepDirection = Direction.values()[i];
+                            break;
+                        }
+                    }
+                }
+            }
             step();
+            stepCounter = 0;
         }
-        if(isCollided((List<Tile>) GameManager.bomber)){
-            isDying = true ;
-        }
+    }
 
-
-
-        // TODO: Select direction (stepDirection attribute in Character class) randomly
-        // TODO: Handle collision with map (use isCollided(GameManager.blocks))
-        // TODO: Handle collision with bomber (use isCollided(GameManager.bomberman))
+    private void updateScreenPos() {
+        this.screenPos.x = mapPos.x - GameManager.bomber.getMapPos().x + GameManager.bomber.getScreenPos().x;
+        this.screenPos.y = mapPos.y - GameManager.bomber.getMapPos().y + GameManager.bomber.getScreenPos().y;
     }
 
     private void step() {
@@ -80,8 +70,9 @@ public class Balloon extends Character {
     @Override
     public void update() {
         if (isExist) {
-            if (isDying) {
-                move();
+            if (!isDying) {
+                updateMapPos();
+                updateScreenPos();
             } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
                 GameManager.enemies.remove(this);
             }
@@ -90,16 +81,15 @@ public class Balloon extends Character {
 
     @Override
     public void render(GraphicsContext gc) {
-        if (isExist) {
-            if (isDying) {
-                // TODO: Render base on stepDirection
-                gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], GameManager.elapsedTime,
-                        frameDuration[Balloon.FrameType.MOVING.ordinal()]), screenPos.x, screenPos.y);
-            } else {
-                // TODO: Render dead frame
-                gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime,
-                        frameDuration[Balloon.FrameType.DYING.ordinal()]), screenPos.x, screenPos.y);
+        if (!isDying) {
+            if (isMoving) {
+                gc.drawImage(getFrame(movingFrame[stepDirection.ordinal() < 2 ? 0 : 1], GameManager.elapsedTime,
+                    frameDuration[Balloon.FrameType.MOVING.ordinal()]), screenPos.x, screenPos.y);
             }
+        } else {
+            // TODO: Render dead frame
+            gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime,
+                    frameDuration[Balloon.FrameType.DYING.ordinal()]), screenPos.x, screenPos.y);
         }
     }
 }

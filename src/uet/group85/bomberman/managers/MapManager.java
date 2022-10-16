@@ -5,6 +5,7 @@ import uet.group85.bomberman.entities.blocks.*;
 import uet.group85.bomberman.entities.blocks.BombItem;
 import uet.group85.bomberman.entities.blocks.FlameItem;
 import uet.group85.bomberman.entities.blocks.SpeedItem;
+import uet.group85.bomberman.entities.characters.Balloon;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Wall;
 import uet.group85.bomberman.graphics.Sprite;
@@ -65,6 +66,7 @@ public class MapManager {
 
     private void initBalloon(Coordinate mapPos) {
         initGrass(mapPos);
+        GameManager.enemies.add(new Balloon(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
 
     private void initOneal(Coordinate mapPos) {

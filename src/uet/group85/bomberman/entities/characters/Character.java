@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class Character extends Entity {
     public enum Direction {
-        UP, DOWN, LEFT, RIGHT, TOTAL
+        UP, DOWN, LEFT, RIGHT, NONE, TOTAL
     }
     protected final double DYING_PERIOD = 1.2;
     protected boolean isDying;
@@ -24,9 +24,7 @@ public abstract class Character extends Entity {
     protected int stepDuration;
     protected int stepCounter;
     protected Direction stepDirection;
-    protected Tile obstacle1;
-    protected Tile obstacle2;
-
+    protected boolean[] isBlocked;
     protected Image[] defaultFrame;
     protected Image[][] movingFrame;
     protected Image[] dyingFrame;
@@ -44,15 +42,19 @@ public abstract class Character extends Entity {
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
 
-        isDying = false;
+        isBlocked = new boolean[Direction.TOTAL.ordinal()];
 
-        obstacle1 = null;
-        obstacle2 = null;
+        isDying = false;
 
         this.isExist = isExist;
     }
 
-    public boolean isCollided(Tile other) {
+    public boolean isCollided(Block other) {
+        Coordinate unitPos = this.mapPos.add(solidArea.w / 2, solidArea.h / 2).divide(Sprite.SCALED_SIZE);
+        return unitPos.equals(other.getMapPos().divide(Sprite.SCALED_SIZE));
+    }
+
+    public boolean isCollided(Character other) {
         Border otherHitBox = other.getHitBox();
         // Check top side
         if ((hitBox.topY < otherHitBox.bottomY && hitBox.topY > otherHitBox.topY)
@@ -77,48 +79,18 @@ public abstract class Character extends Entity {
         return false;
     }
 
-    public boolean isCollided(Block other) {
-        Coordinate unitPos = this.mapPos.add(solidArea.w / 2, solidArea.h / 2).divide(Sprite.SCALED_SIZE);
-        return unitPos.equals(other.getMapPos().divide(Sprite.SCALED_SIZE));
-    }
-
-    public boolean isCollided(List<Tile> tiles) {
-        this.hitBox.update(mapPos, solidArea);
-        // Detect obstacles
-        switch (stepDirection) {
-            case UP -> {
-                hitBox.topY -= stepLength;
-                obstacle1 = tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
-                        + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
-                obstacle2 = tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-            }
-            case DOWN -> {
-                hitBox.bottomY += stepLength;
-                obstacle1 = tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-            }
-            case LEFT -> {
-                hitBox.leftX -= stepLength;
-                obstacle1 = tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
-            }
-            case RIGHT -> {
-                hitBox.rightX += stepLength;
-                obstacle1 = tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-                obstacle2 = tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-            }
-        }
-        assert obstacle1 != null;
-        assert obstacle2 != null;
-        return isCollided(obstacle1) && (!obstacle1.isPassable())
-                || isCollided(obstacle2) && (!obstacle2.isPassable());
+    public void checkDirection(List<Tile> tiles) {
+        Coordinate thisUnitPos = mapPos.divide(Sprite.SCALED_SIZE);
+        isBlocked[Direction.UP.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y - 1)
+                + (thisUnitPos.x))).isPassable();
+        isBlocked[Direction.DOWN.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y + 1)
+                + (thisUnitPos.x))).isPassable();
+        isBlocked[Direction.LEFT.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
+                + (thisUnitPos.x - 1))).isPassable();
+        isBlocked[Direction.RIGHT.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
+                + (thisUnitPos.x + 1))).isPassable();
+        isBlocked[Direction.NONE.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
+                + (thisUnitPos.x))).isPassable();
     }
 
     public void eliminateNow(double deadTime) {

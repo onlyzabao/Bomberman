@@ -3,10 +3,12 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
+import uet.group85.bomberman.auxilities.Border;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.blocks.Bomb;
+import uet.group85.bomberman.entities.tiles.Tile;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.ScreenManager;
@@ -28,10 +30,12 @@ public class Bomber extends Character {
     private boolean isCoolingDown;
     private double bombTime;
     private boolean isMoving;
+    protected Tile obstacle1;
+    protected Tile obstacle2;
 
     public Bomber() {
         super(new Coordinate(0, 0), new Coordinate(0, 0),
-                new Rectangle(0, 0, 24, 32), 2, 3, true);
+                new Rectangle(0, 0, (Sprite.SCALED_SIZE * 3) / 4, Sprite.SCALED_SIZE), 2, 3, true);
 
         defaultFrame = new Image[]{
                 Sprite.player_up.getFxImage(),
@@ -52,21 +56,86 @@ public class Bomber extends Character {
         };
         frameDuration = new double[] {0.2, 0.4};
 
-        isMoving = false;
         isCoolingDown = false;
+        isMoving = false;
+        obstacle1 = null;
+        obstacle2 = null;
 
         bombs.add(new Bomb(1));
     }
 
+    private boolean isCollided(Tile other) {
+        Border otherHitBox = other.getHitBox();
+        // Check top side
+        if ((hitBox.topY < otherHitBox.bottomY && hitBox.topY > otherHitBox.topY)
+                && !((hitBox.leftX >= otherHitBox.rightX) || (hitBox.rightX <= otherHitBox.leftX))) {
+            return true;
+        }
+        // Check bottom side
+        if ((hitBox.bottomY > otherHitBox.topY && hitBox.bottomY < otherHitBox.bottomY)
+                && !((hitBox.leftX >= otherHitBox.rightX) || (hitBox.rightX <= otherHitBox.leftX))) {
+            return true;
+        }
+        // Check left side
+        if ((hitBox.leftX < otherHitBox.rightX && hitBox.leftX > otherHitBox.leftX)
+                && !((hitBox.topY >= otherHitBox.bottomY) || (hitBox.bottomY <= otherHitBox.topY))) {
+            return true;
+        }
+        // Check right side
+        if ((hitBox.rightX > otherHitBox.leftX && hitBox.rightX < otherHitBox.rightX)
+                && !((hitBox.topY >= otherHitBox.bottomY) || (hitBox.bottomY <= otherHitBox.topY))) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isCollided() {
+        this.hitBox.update(mapPos, solidArea);
+        // Detect obstacles
+        switch (stepDirection) {
+            case UP -> {
+                hitBox.topY -= stepLength;
+                obstacle1 = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
+                        + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
+                obstacle2 = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                        + (hitBox.rightX / Sprite.SCALED_SIZE));
+            }
+            case DOWN -> {
+                hitBox.bottomY += stepLength;
+                obstacle1 = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                        + (hitBox.leftX / Sprite.SCALED_SIZE));
+                obstacle2 = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                        + (hitBox.rightX / Sprite.SCALED_SIZE));
+            }
+            case LEFT -> {
+                hitBox.leftX -= stepLength;
+                obstacle1 = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                        + (hitBox.leftX / Sprite.SCALED_SIZE));
+                obstacle2 = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                        + (hitBox.leftX / Sprite.SCALED_SIZE));
+            }
+            case RIGHT -> {
+                hitBox.rightX += stepLength;
+                obstacle1 = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                        + (hitBox.rightX / Sprite.SCALED_SIZE));
+                obstacle2 = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                        + (hitBox.rightX / Sprite.SCALED_SIZE));
+            }
+        }
+        assert obstacle1 != null;
+        assert obstacle2 != null;
+        return isCollided(obstacle1) && (!obstacle1.isPassable())
+                || isCollided(obstacle2) && (!obstacle2.isPassable());
+    }
+
     private void updateMapPos() {
         if (++stepCounter == stepDuration) {
-            this.hitBox.update(mapPos, solidArea);
             isMoving = false;
-            for (int i = 0; i < Direction.TOTAL.ordinal(); i++) {
+            for (int i = Direction.UP.ordinal(); i <= Direction.RIGHT.ordinal(); i++) {
                 if (GameManager.events[i]) {
                     stepDirection = Direction.values()[i];
                     isMoving = true;
-                    if (!isCollided(GameManager.tiles)) {
+                    if (!isCollided()) {
                         step();
                     } else {
                         if (obstacle1.isPassable() ^ obstacle2.isPassable()) {
@@ -76,6 +145,24 @@ public class Bomber extends Character {
                 }
             }
             stepCounter = 0;
+        }
+    }
+
+    private void updateScreenPos() {
+        if (mapPos.x < screenMid.x) {
+            screenPos.x = mapPos.x + GameScreen.TRANSLATED_X;
+        } else if ((GameManager.mapCols - 1) * Sprite.SCALED_SIZE - mapPos.x < screenMid.x) {
+            screenPos.x = ScreenManager.WIDTH - GameManager.mapCols * Sprite.SCALED_SIZE + mapPos.x;
+        } else {
+            screenPos.x = screenMid.x + GameScreen.TRANSLATED_X;
+        }
+
+        if (mapPos.y < screenMid.y) {
+            screenPos.y = mapPos.y + GameScreen.TRANSLATED_Y;
+        } else if ((GameManager.mapRows - 1) * Sprite.SCALED_SIZE - mapPos.y < screenMid.y) {
+            screenPos.y = ScreenManager.HEIGHT - GameManager.mapRows * Sprite.SCALED_SIZE + mapPos.y;
+        } else {
+            screenPos.y = screenMid.y + GameScreen.TRANSLATED_Y;
         }
     }
 
@@ -125,23 +212,6 @@ public class Bomber extends Character {
                     }
                 }
             }
-        }
-    }
-    private void updateScreenPos() {
-        if (mapPos.x < screenMid.x) {
-            screenPos.x = mapPos.x + GameScreen.TRANSLATED_X;
-        } else if ((GameManager.mapCols - 1) * Sprite.SCALED_SIZE - mapPos.x < screenMid.x) {
-            screenPos.x = ScreenManager.WIDTH - GameManager.mapCols * Sprite.SCALED_SIZE + mapPos.x;
-        } else {
-            screenPos.x = screenMid.x + GameScreen.TRANSLATED_X;
-        }
-
-        if (mapPos.y < screenMid.y) {
-            screenPos.y = mapPos.y + GameScreen.TRANSLATED_Y;
-        } else if ((GameManager.mapRows - 1) * Sprite.SCALED_SIZE - mapPos.y < screenMid.y) {
-            screenPos.y = ScreenManager.HEIGHT - GameManager.mapRows * Sprite.SCALED_SIZE + mapPos.y;
-        } else {
-            screenPos.y = screenMid.y + GameScreen.TRANSLATED_Y;
         }
     }
 

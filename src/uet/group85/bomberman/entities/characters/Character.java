@@ -17,7 +17,10 @@ public abstract class Character extends Entity {
     public enum Direction {
         UP, DOWN, LEFT, RIGHT, NONE, TOTAL
     }
-    protected final double DYING_PERIOD = 1.2;
+    enum FrameType {
+        MOVING, INJURED, DYING
+    }
+    protected final double DYING_PERIOD = 1.5;
     protected boolean isDying;
     protected double deadTime;
     protected int stepLength;
@@ -42,8 +45,9 @@ public abstract class Character extends Entity {
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
 
-        isBlocked = new boolean[Direction.TOTAL.ordinal()];
+        frameDuration = new double[]{0.2, 0.3, 1.0};
 
+        isBlocked = new boolean[Direction.TOTAL.ordinal()];
         isDying = false;
 
         this.isExist = isExist;
@@ -98,8 +102,16 @@ public abstract class Character extends Entity {
         isDying = true;
     }
 
-    protected Image getFrame(Image[] frame, double time, double frameDuration) {
-        int index = (int) ((time % (frame.length * frameDuration)) / frameDuration);
+    protected Image getFrame(Image[] frame, double time, FrameType type) {
+        int index = 0;
+        switch (type) {
+            case MOVING -> {
+                index = (int) ((time % (frame.length * frameDuration[type.ordinal()])) / frameDuration[type.ordinal()]);
+            }
+            case DYING -> {
+                index = (int) (((time - deadTime) % DYING_PERIOD) / frameDuration[type.ordinal()]);
+            }
+        }
         return frame[index];
     }
 

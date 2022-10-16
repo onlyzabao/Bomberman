@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bomber extends Character {
-    enum FrameType {
-        MOVING, DYING
-    }
+
     public static final Coordinate screenMid = new Coordinate(
             ((ScreenManager.WIDTH - GameScreen.TRANSLATED_X) - Sprite.SCALED_SIZE) / 2,
             ((ScreenManager.HEIGHT - GameScreen.TRANSLATED_Y) - Sprite.SCALED_SIZE) / 2
@@ -58,7 +56,6 @@ public class Bomber extends Character {
                 {Sprite.player_left_1.getFxImage(), Sprite.player_left_2.getFxImage()},
                 {Sprite.player_right_1.getFxImage(), Sprite.player_right_2.getFxImage()}
         };
-        frameDuration = new double[] {0.2, 0.4};
 
         isCoolingDown = false;
         isMoving = false;
@@ -162,11 +159,7 @@ public class Bomber extends Character {
         if (++stepCounter == stepDuration) {
             Coordinate unitPos = mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
             Grass belowGrass = (Grass) GameManager.tiles.get(GameManager.mapCols * (unitPos.y) + (unitPos.x));
-            if (belowGrass.hasOverlay()) {
-                canPassBomb = true;
-            } else {
-                canPassBomb = false;
-            }
+            canPassBomb = belowGrass.hasOverlay();
             isMoving = false;
             for (int i = Direction.UP.ordinal(); i <= Direction.RIGHT.ordinal(); i++) {
                 if (GameManager.events[i]) {
@@ -280,14 +273,13 @@ public class Bomber extends Character {
     public void render(GraphicsContext gc) {
         if (!isDying) {
             if (isMoving) {
-                gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], GameManager.elapsedTime,
-                        frameDuration[FrameType.MOVING.ordinal()]), screenPos.x, screenPos.y);
+                gc.drawImage(getFrame(movingFrame[stepDirection.ordinal()], GameManager.elapsedTime, FrameType.MOVING),
+                        screenPos.x, screenPos.y);
             } else {
                 gc.drawImage(defaultFrame[stepDirection.ordinal()], screenPos.x, screenPos.y);
             }
         } else {
-            gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime,
-                    frameDuration[FrameType.DYING.ordinal()]), screenPos.x, screenPos.y);
+            gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime, FrameType.DYING), screenPos.x, screenPos.y);
         }
     }
 }

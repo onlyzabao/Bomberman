@@ -15,7 +15,7 @@ public class Balloon extends Character {
     private boolean isMoving;
 
     public Balloon(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(0, 0, 32, 32), 2, 3, true);
+        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 3, true);
 
         defaultFrame = new Image[] {
                 Sprite.balloom_dead.getFxImage()
@@ -37,6 +37,9 @@ public class Balloon extends Character {
     private void updateMapPos() {
         if (++stepCounter == stepDuration) {
             this.hitBox.update(mapPos, solidArea);
+            if (isCollided(GameManager.bomber)) {
+                GameManager.bomber.eliminateNow(GameManager.elapsedTime);
+            }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
                 checkDirection(GameManager.tiles);
                 if (isBlocked[stepDirection.ordinal()] || isBlocked[Direction.NONE.ordinal()]) {
@@ -69,13 +72,11 @@ public class Balloon extends Character {
 
     @Override
     public void update() {
-        if (isExist) {
-            if (!isDying) {
-                updateMapPos();
-                updateScreenPos();
-            } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-                GameManager.enemies.remove(this);
-            }
+        if (!isDying) {
+            updateMapPos();
+            updateScreenPos();
+        } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
+            isExist = false;
         }
     }
 

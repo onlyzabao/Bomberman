@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
+import uet.group85.bomberman.entities.characters.Character;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 
@@ -24,7 +25,11 @@ public class Flame extends Block {
         if (GameManager.bomber.isCollided(this)) {
             GameManager.bomber.eliminateNow(GameManager.elapsedTime);
         }
-        // TODO: Check with enemies
+        for (Character enemy : GameManager.enemies) {
+            if (enemy.isCollided(this)) {
+                enemy.eliminateNow(GameManager.elapsedTime);
+            }
+        }
     }
 
     private Image getFrame(Image[] frame, double time) {

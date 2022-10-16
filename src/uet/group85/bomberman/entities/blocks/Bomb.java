@@ -82,12 +82,6 @@ public class Bomb extends Block {
     private void countDown() {
         if (GameManager.elapsedTime - countDownTime > COUNTDOWN_PERIOD) {
             isCountingDown = false;
-        } else {
-            Coordinate bomberUnitPos = GameManager.bomber.getMapPos().add(12, 16).divide(Sprite.SCALED_SIZE);
-            if (bomberUnitPos.equals(this.mapPos.divide(Sprite.SCALED_SIZE))) {
-                Tile belowTile = GameManager.tiles.get(GameManager.mapCols * (bomberUnitPos.y) + (bomberUnitPos.x));
-                belowTile.setPassable(true);
-            }
         }
     }
 

@@ -6,6 +6,8 @@ import javafx.scene.image.Image;
 import uet.group85.bomberman.auxilities.Border;
 import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
+import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Brick;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.blocks.Bomb;
 import uet.group85.bomberman.entities.tiles.Tile;
@@ -30,6 +32,8 @@ public class Bomber extends Character {
     private boolean isCoolingDown;
     private double bombTime;
     private boolean isMoving;
+    private boolean canPassBrick;
+    private boolean canPassBomb;
     protected Tile obstacle1;
     protected Tile obstacle2;
 
@@ -58,6 +62,8 @@ public class Bomber extends Character {
 
         isCoolingDown = false;
         isMoving = false;
+        canPassBrick = false;
+        canPassBomb = false;
         obstacle1 = null;
         obstacle2 = null;
 
@@ -124,12 +130,43 @@ public class Bomber extends Character {
         }
         assert obstacle1 != null;
         assert obstacle2 != null;
-        return isCollided(obstacle1) && (!obstacle1.isPassable())
-                || isCollided(obstacle2) && (!obstacle2.isPassable());
+
+        boolean isBlocked1 = isCollided(obstacle1) && (!obstacle1.isPassable());
+        boolean isBlocked2 = isCollided(obstacle2) && (!obstacle2.isPassable());
+
+        if (obstacle1 instanceof Grass) {
+            if (((Grass) obstacle1).hasOverlay()) {
+                Block layer = ((Grass) obstacle1).getLayer();
+                if (layer instanceof Bomb) {
+                    isBlocked1 = isBlocked1 && !canPassBomb;
+                } else if (layer instanceof Brick) {
+                    isBlocked1 = isBlocked1 && !canPassBrick;
+                }
+            }
+        }
+        if (obstacle2 instanceof Grass) {
+            if (((Grass) obstacle2).hasOverlay()) {
+                Block layer = ((Grass) obstacle2).getLayer();
+                if (layer instanceof Bomb) {
+                    isBlocked2 = isBlocked2 && !canPassBomb;
+                } else if (layer instanceof Brick) {
+                    isBlocked2 = isBlocked2 && !canPassBrick;
+                }
+            }
+        }
+
+        return isBlocked1 || isBlocked2;
     }
 
     private void updateMapPos() {
         if (++stepCounter == stepDuration) {
+            Coordinate unitPos = mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
+            Grass belowGrass = (Grass) GameManager.tiles.get(GameManager.mapCols * (unitPos.y) + (unitPos.x));
+            if (belowGrass.hasOverlay()) {
+                canPassBomb = true;
+            } else {
+                canPassBomb = false;
+            }
             isMoving = false;
             for (int i = Direction.UP.ordinal(); i <= Direction.RIGHT.ordinal(); i++) {
                 if (GameManager.events[i]) {

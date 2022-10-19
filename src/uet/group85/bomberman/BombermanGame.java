@@ -17,7 +17,7 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
-        ScreenManager.init();
+        ScreenManager screen = new ScreenManager();
 
         // Manage frames
         final long startNanoTime = System.nanoTime();
@@ -25,13 +25,13 @@ public class BombermanGame extends Application {
             @Override
             public void handle(long currentNanoTime) {
                 elapsedTime = (currentNanoTime - startNanoTime) / 1000000000.0;
-                ScreenManager.update();
-                ScreenManager.render();
+                screen.update();
+                screen.render();
             }
         };
         timer.start();
 
-        stage.setScene(ScreenManager.scene);
+        stage.setScene(screen.scene);
         stage.show();
     }
 }

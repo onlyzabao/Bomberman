@@ -34,7 +34,7 @@ public class Balloon extends Character {
     private void chooseDirection() {
         List<Integer> directionChoices = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
-            if (!isBlocked[i]) {
+            if (passableDirection[i]) {
                 directionChoices.add(i);
             }
         }
@@ -42,7 +42,7 @@ public class Balloon extends Character {
             stepDirection = Direction.NONE;
             return;
         }
-        if (!isBlocked[stepDirection.ordinal()] && !isBlocked[Direction.NONE.ordinal()]) {
+        if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
             if (directionChoices.size() < 3) {
                 return;
             }

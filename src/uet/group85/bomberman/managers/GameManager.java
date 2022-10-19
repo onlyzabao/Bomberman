@@ -12,7 +12,7 @@ public class GameManager {
         MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, BOMB, TOTAL
     }
     public enum Status {
-        PLAYING, WIN, LOSE
+        PLAYING, WON, LOST
     }
     public static final boolean[] events = new boolean[Event.TOTAL.ordinal()];
 
@@ -25,6 +25,7 @@ public class GameManager {
     public static Status status;
     public static int score;
     public static int level;
+    public static int chance;
 
     public static double elapsedTime;
 }

@@ -24,7 +24,7 @@ public class Portal extends Block {
     public void update() {
         if (isFinished) {
             if (GameManager.elapsedTime - waitedTime > WAITING_PERIOD) {
-                GameManager.status = GameManager.Status.WIN;
+                GameManager.status = GameManager.Status.WON;
             }
             return;
         }

@@ -4,14 +4,16 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import uet.group85.bomberman.managers.ScreenManager;
 
 public class MenuScreen implements Screen {
-    public MenuScreen(Canvas canvas) {
-
+    public ScreenManager manager;
+    public MenuScreen(ScreenManager manager) {
+        this.manager = manager;
     }
 
     @Override
-    public void handleEvent(Scene scene) {
+    public void handleEvent() {
 
     }
 
@@ -20,8 +22,8 @@ public class MenuScreen implements Screen {
     }
 
     @Override
-    public void render(GraphicsContext gc) {
-        gc.setFill(Color.BLACK);
-        gc.fillText("Hello", 32, 32);
+    public void render() {
+        manager.gc.setFill(Color.BLACK);
+        manager.gc.fillText("Hello", 32, 32);
     }
 }

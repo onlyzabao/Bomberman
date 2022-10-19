@@ -24,18 +24,18 @@ public class MapManager {
     private final char BOMB_ITEM = 'b';
     private final char FLAME_ITEM = 'f';
     private final char SPEED_ITEM = 's';
-
     private final char WALLPASS_ITEM = 'w';
 
 
-    public MapManager(int score, int level) throws FileNotFoundException {
+    public MapManager(int score, int level, int chances, int[] items) throws FileNotFoundException {
         GameManager.status = GameManager.Status.PLAYING;
         GameManager.score = score;
         GameManager.level = level;
+        GameManager.chance = chances;
 
-        GameManager.tiles.clear();
+        GameManager.bomber.reset(items);
         GameManager.enemies.clear();
-        GameManager.bomber.reset();
+        GameManager.tiles.clear();
 
         loadMap(level);
     }
@@ -107,10 +107,10 @@ public class MapManager {
                 new Brick(mapPos, screenPos)
         });
     }
-    private void initwallPassItem(Coordinate mapPos) {
+    private void initWallPassItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{
-                new wallPassItem(mapPos, screenPos),
+                new WallPassItem(mapPos, screenPos),
                 new Brick(mapPos, screenPos)
         });
     }
@@ -126,7 +126,7 @@ public class MapManager {
             String line = myReader.nextLine();
             for (int i = 0; i < GameManager.mapCols; i++) {
                 switch (line.charAt(i)) {
-                    // Blocks
+                    // Blocks & Tiles
                     case WALL -> initWall(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case BRICK -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case PORTAL -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
@@ -138,7 +138,8 @@ public class MapManager {
                     case BOMB_ITEM -> initBombItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case FLAME_ITEM -> initFlameItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case SPEED_ITEM -> initSpeedItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case WALLPASS_ITEM -> initwallPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case WALLPASS_ITEM -> initWallPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    // Grass as default
                     default -> initGrass(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                 }
             }

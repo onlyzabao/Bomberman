@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 
 public interface Screen {
-    void handleEvent(Scene scene);
+    void handleEvent();
     void update();
-    void render(GraphicsContext gc);
+    void render();
 }

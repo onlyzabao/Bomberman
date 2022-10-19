@@ -27,7 +27,7 @@ public abstract class Character extends Entity {
     protected int stepDuration;
     protected int stepCounter;
     protected Direction stepDirection;
-    protected boolean[] isBlocked;
+    protected boolean[] passableDirection;
     protected Image[] defaultFrame;
     protected Image[][] movingFrame;
     protected Image[] dyingFrame;
@@ -47,7 +47,7 @@ public abstract class Character extends Entity {
 
         frameDuration = new double[]{0.2, 0.3, 1.0};
 
-        isBlocked = new boolean[Direction.TOTAL.ordinal()];
+        passableDirection = new boolean[Direction.TOTAL.ordinal()];
         isDying = false;
 
         this.isExist = isExist;
@@ -87,19 +87,19 @@ public abstract class Character extends Entity {
     public void checkDirection(List<Tile> tiles) {
         Coordinate thisUnitPos = mapPos.divide(Sprite.SCALED_SIZE);
 
-        isBlocked[Direction.UP.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y - 1)
+        passableDirection[Direction.UP.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y - 1)
                 + (thisUnitPos.x))).isPassable();
 
-        isBlocked[Direction.DOWN.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y + 1)
+        passableDirection[Direction.DOWN.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y + 1)
                 + (thisUnitPos.x))).isPassable();
 
-        isBlocked[Direction.LEFT.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
+        passableDirection[Direction.LEFT.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y)
                 + (thisUnitPos.x - 1))).isPassable();
 
-        isBlocked[Direction.RIGHT.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
+        passableDirection[Direction.RIGHT.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y)
                 + (thisUnitPos.x + 1))).isPassable();
 
-        isBlocked[Direction.NONE.ordinal()] = !(tiles.get(GameManager.mapCols * (thisUnitPos.y)
+        passableDirection[Direction.NONE.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y)
                 + (thisUnitPos.x))).isPassable();
     }
 

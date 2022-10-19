@@ -26,16 +26,16 @@ public class Bomber extends Character {
             ((ScreenManager.HEIGHT - GameScreen.TRANSLATED_Y) - Sprite.SCALED_SIZE) / 2
     );
     // Manage bombs
-    public static final List<Bomb> bombs = new ArrayList<>();
+    private List<Bomb> bombs = new ArrayList<>();
     private final double COOLDOWN_PERIOD = 0.25;
     private boolean isCoolingDown;
     private double bombTime;
     // Manage movement
     private boolean isMoving;
-    public boolean canPassBrick;
+    private boolean canPassBrick;
     private boolean canPassBomb;
-    protected Tile obstacle1;
-    protected Tile obstacle2;
+    private Tile[] obstacle;
+    private boolean[] isBlocked;
 
     public Bomber() {
         super(new Coordinate(0, 0), new Coordinate(0, 0),
@@ -66,8 +66,8 @@ public class Bomber extends Character {
         isMoving = false;
         canPassBrick = false;
         canPassBomb = false;
-        obstacle1 = null;
-        obstacle2 = null;
+        obstacle = new Tile[2];
+        isBlocked = new boolean[2];
     }
 
     private boolean isCollided(Tile other) {
@@ -101,70 +101,59 @@ public class Bomber extends Character {
         switch (stepDirection) {
             case UP -> {
                 hitBox.topY -= stepLength;
-                obstacle1 = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
+                obstacle[0] = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
                         + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
-                obstacle2 = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle[1] = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case DOWN -> {
                 hitBox.bottomY += stepLength;
-                obstacle1 = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle[0] = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle[1] = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
             case LEFT -> {
                 hitBox.leftX -= stepLength;
-                obstacle1 = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle[0] = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle2 = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle[1] = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.leftX / Sprite.SCALED_SIZE));
             }
             case RIGHT -> {
                 hitBox.rightX += stepLength;
-                obstacle1 = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
+                obstacle[0] = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
-                obstacle2 = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
+                obstacle[1] = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
                         + (hitBox.rightX / Sprite.SCALED_SIZE));
             }
         }
-        assert obstacle1 != null;
-        assert obstacle2 != null;
-        // Check if obstacles are passable
-        boolean isBlocked1 = isCollided(obstacle1) && (!obstacle1.isPassable());
-        boolean isBlocked2 = isCollided(obstacle2) && (!obstacle2.isPassable());
-        // Check if bomber have ability to pass obstacles
-        if (obstacle1 instanceof Grass) {
-            if (((Grass) obstacle1).hasOverlay()) {
-                Block layer = ((Grass) obstacle1).getLayer();
-                if (layer instanceof Bomb) {
-                    isBlocked1 = isBlocked1 && !canPassBomb;
-                } else if (layer instanceof Brick) {
-                    isBlocked1 = isBlocked1 && !canPassBrick;
+        Coordinate unitPos = mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
+        for (int i = 0; i < 2; i++) {
+            assert obstacle[i] != null;
+            // Check if obstacles are passable
+            isBlocked[i] = isCollided(obstacle[i]) && (!obstacle[i].isPassable());
+            // Check if bomber have ability to pass obstacles
+            if (obstacle[i] instanceof Grass) {
+                if (((Grass) obstacle[i]).hasOverlay()) {
+                    Block layer = ((Grass) obstacle[i]).getLayer();
+                    if (layer instanceof Bomb) {
+                        if (unitPos.equals(layer.getMapPos().divide(Sprite.SCALED_SIZE))) {
+                            isBlocked[i] = false;
+                        } else {
+                            isBlocked[i] = isBlocked[i] && !canPassBomb;
+                        }
+                    } else if (layer instanceof Brick) {
+                        isBlocked[i] = isBlocked[i] && !canPassBrick;
+                    }
                 }
             }
         }
-        if (obstacle2 instanceof Grass) {
-            if (((Grass) obstacle2).hasOverlay()) {
-                Block layer = ((Grass) obstacle2).getLayer();
-                if (layer instanceof Bomb) {
-                    isBlocked2 = isBlocked2 && !canPassBomb;
-                } else if (layer instanceof Brick) {
-                    isBlocked2 = isBlocked2 && !canPassBrick;
-                }
-            }
-        }
-
-        return isBlocked1 || isBlocked2;
+        return isBlocked[0] || isBlocked[1];
     }
 
     private void updateMapPos() {
         if (++stepCounter == stepDuration) {
-            // Fix bomb blocking bug
-            Coordinate unitPos = mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
-            Grass belowGrass = (Grass) GameManager.tiles.get(GameManager.mapCols * (unitPos.y) + (unitPos.x));
-            canPassBomb = belowGrass.hasOverlay();
-            // Move
             isMoving = false;
             for (int i = Direction.UP.ordinal(); i <= Direction.RIGHT.ordinal(); i++) {
                 if (GameManager.events[i]) {
@@ -173,7 +162,7 @@ public class Bomber extends Character {
                     if (!isCollided()) {
                         step();
                     } else {
-                        if (obstacle1.isPassable() ^ obstacle2.isPassable()) {
+                        if (isBlocked[0] ^ isBlocked[1]) {
                             autoStep();
                         }
                     }
@@ -214,17 +203,17 @@ public class Bomber extends Character {
     private void autoStep() {
         if (stepDirection == Direction.UP || stepDirection == Direction.DOWN) {
             // Vertical check
-            if ((hitBox.leftX + 12) / Sprite.SCALED_SIZE == obstacle1.getMapPos().x / Sprite.SCALED_SIZE) {
-                mapPos.x += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
+            if ((hitBox.leftX + 12) / Sprite.SCALED_SIZE == obstacle[0].getMapPos().x / Sprite.SCALED_SIZE) {
+                mapPos.x += (isBlocked[0] ? 0 : -1) * stepLength / 2;
             } else {
-                mapPos.x += (obstacle2.isPassable() ? 1 : 0) * stepLength / 2;
+                mapPos.x += (isBlocked[1] ? 0 : 1) * stepLength / 2;
             }
         } else {
             // Horizontal check
-            if ((hitBox.topY + 16) / Sprite.SCALED_SIZE == obstacle1.getMapPos().y / Sprite.SCALED_SIZE) {
-                mapPos.y += (obstacle1.isPassable() ? -1 : 0) * stepLength / 2;
+            if ((hitBox.topY + 16) / Sprite.SCALED_SIZE == obstacle[0].getMapPos().y / Sprite.SCALED_SIZE) {
+                mapPos.y += (isBlocked[0] ? 0 : -1) * stepLength / 2;
             } else {
-                mapPos.y += (obstacle2.isPassable() ? 1 : 0) * stepLength / 2;
+                mapPos.y += (isBlocked[1] ? 0 : 1) * stepLength / 2;
             }
         }
     }
@@ -266,7 +255,15 @@ public class Bomber extends Character {
         bombs.forEach(Bomb::increaseFlameLen);
     }
 
-    public void reset() {
+    public void setCanPassBrick(boolean canPassBrick) {
+        this.canPassBrick = canPassBrick;
+    }
+
+    public void setCanPassBomb(boolean canPassBomb) {
+        this.canPassBomb = canPassBomb;
+    }
+
+    public void reset(int[] items) {
         isExist = true;
         isDying = false;
         isCoolingDown = false;
@@ -278,14 +275,16 @@ public class Bomber extends Character {
     public void update() {
         if (!isExist) {
             if (GameManager.elapsedTime - deadTime > DYING_PERIOD + 2.0) {
-                GameManager.status = GameManager.Status.LOSE;
+                GameManager.status = GameManager.Status.LOST;
             }
-        } else if (!isDying) {
-            updateMapPos();
-            updateScreenPos();
-            updateBomb();
-        } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-            isExist = false;
+        } else {
+            if (!isDying) {
+                updateMapPos();
+                updateScreenPos();
+                updateBomb();
+            } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
+                isExist = false;
+            }
         }
     }
 

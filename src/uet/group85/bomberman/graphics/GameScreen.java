@@ -1,7 +1,5 @@
 package uet.group85.bomberman.graphics;
 
-import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -15,6 +13,10 @@ import uet.group85.bomberman.managers.ScreenManager;
 import java.io.FileNotFoundException;
 
 public class GameScreen implements Screen {
+    public final ScreenManager manager;
+    public enum Status {
+        START, PAUSED, RESUME, NEXT, RESTART
+    }
     public final double INIT_PERIOD = 2.0;
     // Button events
     private static final int UP = 0;
@@ -27,20 +29,21 @@ public class GameScreen implements Screen {
     // Nodes
     private final Text timeText = new Text();
     private final Text scoreText = new Text();
-    private final Text levelText = new Text();
+    private final Text chanceText = new Text();
     // Time
     private double startedTime;
     private double pausedTime;
 
-    public GameScreen(double time, int score, int level) {
+    public GameScreen(ScreenManager manager, double time, int score, int level, int chance, int[] items) {
+        this.manager = manager;
         // Create nodes
-        timeText.setFont(ScreenManager.gc.getFont());
-        scoreText.setFont(ScreenManager.gc.getFont());
-        levelText.setFont(ScreenManager.gc.getFont());
+        timeText.setFont(manager.gc.getFont());
+        scoreText.setFont(manager.gc.getFont());
+        chanceText.setFont(manager.gc.getFont());
 
         timeText.setFill(Color.WHITE);
         scoreText.setFill(Color.WHITE);
-        levelText.setFill(Color.WHITE);
+        chanceText.setFill(Color.WHITE);
 
         DropShadow ds = new DropShadow();
         ds.setRadius(0.5);
@@ -48,21 +51,21 @@ public class GameScreen implements Screen {
         ds.setOffsetY(2.0);
         timeText.setEffect(ds);
         scoreText.setEffect(ds);
-        levelText.setEffect(ds);
+        chanceText.setEffect(ds);
 
         timeText.setX(32);
         timeText.setY(40);
-        scoreText.setX(224);
+        scoreText.setX(240);
         scoreText.setY(40);
-        levelText.setX(480);
-        levelText.setY(40);
+        chanceText.setX(488);
+        chanceText.setY(40);
 
-        ScreenManager.root.getChildren().add(timeText);
-        ScreenManager.root.getChildren().add(scoreText);
-        ScreenManager.root.getChildren().add(levelText);
+        manager.root.getChildren().add(timeText);
+        manager.root.getChildren().add(scoreText);
+        manager.root.getChildren().add(chanceText);
         // Create playground
         try {
-            new MapManager(score, level);
+            new MapManager(score, level, chance, items);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -88,9 +91,21 @@ public class GameScreen implements Screen {
         return pausedTime;
     }
 
+    public void hide() {
+        timeText.toBack();
+        scoreText.toBack();
+        chanceText.toBack();
+    }
+
+    public void show() {
+        timeText.toFront();
+        scoreText.toFront();
+        chanceText.toFront();
+    }
+
     @Override
-    public void handleEvent(Scene scene) {
-        scene.setOnKeyPressed(
+    public void handleEvent() {
+        manager.scene.setOnKeyPressed(
                 keyEvent -> {
                     switch (keyEvent.getCode()) {
                         case UP -> GameManager.events[UP] = true;
@@ -98,11 +113,11 @@ public class GameScreen implements Screen {
                         case LEFT -> GameManager.events[LEFT] = true;
                         case RIGHT -> GameManager.events[RIGHT] = true;
                         case X -> GameManager.events[BOMB] = true;
-                        case ESCAPE -> ScreenManager.switchScreen(ScreenManager.ScreenType.PAUSE);
+                        case ESCAPE -> manager.switchScreen(ScreenManager.ScreenType.PAUSE);
                     }
                 }
         );
-        scene.setOnKeyReleased(
+        manager.scene.setOnKeyReleased(
                 keyEvent -> {
                     switch (keyEvent.getCode()) {
                         case UP -> GameManager.events[UP] = false;
@@ -122,13 +137,13 @@ public class GameScreen implements Screen {
                 // Update time
                 GameManager.elapsedTime = BombermanGame.elapsedTime - INIT_PERIOD - startedTime;
                 if (GameManager.elapsedTime > 200) {
-                    GameManager.status = GameManager.Status.LOSE;
+                    GameManager.status = GameManager.Status.LOST;
                     return;
                 }
                 // Update status board
                 timeText.setText(String.format("Time  %.0f", 200.0 - GameManager.elapsedTime));
                 scoreText.setText(String.format("Score  %d", GameManager.score));
-                levelText.setText(String.format("Stage  %d", GameManager.level));
+                chanceText.setText(String.format("Left  %d", GameManager.chance));
                 // Update playground
                 GameManager.bomber.update();
                 GameManager.enemies.removeIf(enemy -> !enemy.isExist());
@@ -136,43 +151,45 @@ public class GameScreen implements Screen {
                 GameManager.tiles.forEach(Entity::update);
             } else {
                 // Remove nodes
-                ScreenManager.root.getChildren().remove(timeText);
-                ScreenManager.root.getChildren().remove(scoreText);
-                ScreenManager.root.getChildren().remove(levelText);
+                manager.root.getChildren().remove(timeText);
+                manager.root.getChildren().remove(scoreText);
+                manager.root.getChildren().remove(chanceText);
                 // Switch screen
-                if (GameManager.status == GameManager.Status.WIN) {
-                    ScreenManager.switchScreen(ScreenManager.ScreenType.NEXT_GAME);
+                if (GameManager.status == GameManager.Status.WON) {
+                    manager.switchScreen(ScreenManager.ScreenType.NEXT_GAME);
                 } else {
-                    ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
+                    if (--GameManager.chance == 0) {
+                        manager.switchScreen(ScreenManager.ScreenType.MENU);
+                    }
                 }
             }
         }
     }
 
     @Override
-    public void render(GraphicsContext gc) {
+    public void render() {
         if (BombermanGame.elapsedTime - startedTime < INIT_PERIOD) {
             // Render beginning screen
-            gc.setFill(Color.BLACK);
-            gc.fillRect(0, 0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
-            gc.setFill(Color.WHITE);
-            gc.fillText(String.format("Stage  %d", GameManager.level), 240, 240);
+            manager.gc.setFill(Color.BLACK);
+            manager.gc.fillRect(0, 0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
+            manager.gc.setFill(Color.WHITE);
+            manager.gc.fillText(String.format("Stage  %d", GameManager.level), 240, 240);
         } else {
             // Render playground
             GameManager.tiles.forEach(block -> {
                 if (block.isVisible()) {
-                    block.render(gc);
+                    block.render(manager.gc);
                 }
             });
             GameManager.enemies.forEach(enemy -> {
                 if (enemy.isVisible()) {
-                    enemy.render(gc);
+                    enemy.render(manager.gc);
                 }
             });
-            GameManager.bomber.render(gc);
+            GameManager.bomber.render(manager.gc);
             // Render status board
-            gc.setFill(Color.color(0.65, 0.65, 0.65));
-            gc.fillRect(0, 0, ScreenManager.WIDTH, TRANSLATED_Y);
+            manager.gc.setFill(Color.color(0.65, 0.65, 0.65));
+            manager.gc.fillRect(0, 0, ScreenManager.WIDTH, TRANSLATED_Y);
         }
     }
 }

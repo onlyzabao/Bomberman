@@ -30,7 +30,7 @@ public class ScreenManager {
     public static void init() throws FileNotFoundException {
         gc.setFont(Font.loadFont(new FileInputStream("res/fonts/RetroGaming.ttf"), 32));
         root.getChildren().add(canvas);
-        switchScreen(ScreenType.GAME);
+        switchScreen(ScreenType.MENU);
     }
 
     public static void switchScreen(ScreenType type) {
@@ -51,7 +51,6 @@ public class ScreenManager {
             case MENU -> screen = new MenuScreen();
         }
         screen.handleEvent();
-        System.out.println(ScreenManager.root.getChildren().size());
     }
 
     public static void update() {

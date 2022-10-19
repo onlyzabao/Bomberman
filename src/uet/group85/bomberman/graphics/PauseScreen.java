@@ -67,7 +67,7 @@ public class PauseScreen implements Screen {
         int n = ButtonType.TOTAL.ordinal();
         for (int i = 0; i < n; i++) {
             if (pointer == i) {
-                buttons[i].setFill(Color.INDIANRED);
+                buttons[i].setFill(Color.color(0.85, 0.18, 0.06));
             } else {
                 buttons[i].setFill(Color.WHITE);
             }

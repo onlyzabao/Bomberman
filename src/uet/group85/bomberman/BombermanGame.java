@@ -17,6 +17,7 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) throws FileNotFoundException {
+        stage.setTitle("Bomberman");
         ScreenManager.init();
         // Manage frames
         final long startNanoTime = System.nanoTime();

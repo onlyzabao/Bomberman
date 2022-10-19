@@ -32,7 +32,7 @@ public class Bomber extends Character {
     private double bombTime;
     // Manage movement
     private boolean isMoving;
-    private boolean canPassBrick;
+    public boolean canPassBrick;
     private boolean canPassBomb;
     protected Tile obstacle1;
     protected Tile obstacle2;

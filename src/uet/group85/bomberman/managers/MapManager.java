@@ -27,6 +27,9 @@ public class MapManager {
     private final char SPEED_ITEM = 's';
     private final char WALLPASS_ITEM = 'w';
 
+    private final char BOMBPASS_ITEM = 'q';
+
+
 
     public MapManager(int[] data) throws FileNotFoundException {
         GameManager.status = GameManager.Status.PLAYING;
@@ -111,6 +114,13 @@ public class MapManager {
                 new Brick(mapPos, screenPos)
         });
     }
+    private void initBombPassItem(Coordinate mapPos) {
+        Coordinate screenPos = new Coordinate(mapPos);
+        initGrass(mapPos, screenPos, new Block[]{
+                new BombPassItem(mapPos, screenPos),
+                new Brick(mapPos, screenPos)
+        });
+    }
 
     public void loadMap(int level) throws FileNotFoundException {
         GameManager.enemies.clear();
@@ -136,6 +146,7 @@ public class MapManager {
                     case FLAME_ITEM -> initFlameItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case SPEED_ITEM -> initSpeedItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case WALLPASS_ITEM -> initWallPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case BOMBPASS_ITEM -> initBombPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Grass as default
                     default -> initGrass(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                 }

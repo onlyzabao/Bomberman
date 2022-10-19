@@ -44,16 +44,14 @@ public class ScreenManager {
                 screen.show();
             }
             case PAUSE -> {
-                bufferScreen = screen;
                 screen.hide();
+                bufferScreen = screen;
                 screen = new PauseScreen();
             }
-            case MENU -> {
-                screen = new MenuScreen();
-                System.out.println("Menu");
-            }
+            case MENU -> screen = new MenuScreen();
         }
         screen.handleEvent();
+        System.out.println(ScreenManager.root.getChildren().size());
     }
 
     public static void update() {

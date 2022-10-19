@@ -177,9 +177,7 @@ public class GameScreen implements Screen {
                     startedTime = BombermanGame.elapsedTime;
                     pausedTime = startedTime;
                 } else {
-                    ScreenManager.root.getChildren().remove(timeText);
-                    ScreenManager.root.getChildren().remove(scoreText);
-                    ScreenManager.root.getChildren().remove(chanceText);
+                    clear();
                     ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
                 }
             }
@@ -213,5 +211,12 @@ public class GameScreen implements Screen {
             ScreenManager.gc.setFill(Color.color(0.65, 0.65, 0.65));
             ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, TRANSLATED_Y);
         }
+    }
+
+    @Override
+    public void clear() {
+        ScreenManager.root.getChildren().remove(timeText);
+        ScreenManager.root.getChildren().remove(scoreText);
+        ScreenManager.root.getChildren().remove(chanceText);
     }
 }

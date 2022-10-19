@@ -34,4 +34,9 @@ public class MenuScreen implements Screen {
         ScreenManager.gc.setFill(Color.BLACK);
         ScreenManager.gc.fillText("Hello", 32, 32);
     }
+
+    @Override
+    public void clear() {
+
+    }
 }

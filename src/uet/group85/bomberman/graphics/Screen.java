@@ -6,4 +6,5 @@ public interface Screen {
     void handleEvent();
     void update();
     void render();
+    void clear();
 }

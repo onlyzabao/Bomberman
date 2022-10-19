@@ -26,7 +26,7 @@ public class Bomber extends Character {
             ((ScreenManager.HEIGHT - GameScreen.TRANSLATED_Y) - Sprite.SCALED_SIZE) / 2
     );
     // Manage bombs
-    private List<Bomb> bombs = new ArrayList<>();
+    private final List<Bomb> bombs = new ArrayList<>();
     private final double COOLDOWN_PERIOD = 0.25;
     private boolean isCoolingDown;
     private double bombTime;
@@ -35,8 +35,8 @@ public class Bomber extends Character {
     private int bonusSpeed;
     private boolean canPassBrick;
     private boolean canPassBomb;
-    private Tile[] obstacle;
-    private boolean[] isBlocked;
+    private final Tile[] obstacle;
+    private final boolean[] isBlocked;
 
     public Bomber(int[] data) {
         super(new Coordinate(0, 0), new Coordinate(0, 0),

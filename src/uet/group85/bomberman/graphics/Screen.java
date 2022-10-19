@@ -1,9 +1,8 @@
 package uet.group85.bomberman.graphics;
 
-import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
-
 public interface Screen {
+    void show();
+    void hide();
     void handleEvent();
     void update();
     void render();

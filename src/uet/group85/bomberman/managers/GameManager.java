@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
+    public enum Data {
+        SCORE, LEVEL, CHANCE, BONUS_BOMBS, FLAME_LEN, SPEED, BOMB_PASS, WALL_PASS, TOTAL
+    }
     public enum Event {
         MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, BOMB, TOTAL
     }
@@ -19,7 +22,7 @@ public class GameManager {
     public static final List<Tile> tiles = new ArrayList<>();
     public static final List<Character> enemies = new ArrayList<>();
 
-    public static final Bomber bomber = new Bomber();
+    public static Bomber bomber;
     public static int mapCols;
     public static int mapRows;
     public static Status status;

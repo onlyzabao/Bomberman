@@ -16,22 +16,21 @@ public class BombermanGame extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
-        ScreenManager screen = new ScreenManager();
-
+    public void start(Stage stage) throws FileNotFoundException {
+        ScreenManager.init();
         // Manage frames
         final long startNanoTime = System.nanoTime();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long currentNanoTime) {
                 elapsedTime = (currentNanoTime - startNanoTime) / 1000000000.0;
-                screen.update();
-                screen.render();
+                ScreenManager.update();
+                ScreenManager.render();
             }
         };
         timer.start();
 
-        stage.setScene(screen.scene);
+        stage.setScene(ScreenManager.scene);
         stage.show();
     }
 }

@@ -32,12 +32,13 @@ public class Bomber extends Character {
     private double bombTime;
     // Manage movement
     private boolean isMoving;
+    private int bonusSpeed;
     private boolean canPassBrick;
     private boolean canPassBomb;
     private Tile[] obstacle;
     private boolean[] isBlocked;
 
-    public Bomber() {
+    public Bomber(int[] data) {
         super(new Coordinate(0, 0), new Coordinate(0, 0),
                 new Rectangle(0, 0, (Sprite.SCALED_SIZE * 3) / 4, Sprite.SCALED_SIZE),
                 2, 3, true);
@@ -59,13 +60,21 @@ public class Bomber extends Character {
                 {Sprite.player_left_1.getFxImage(), Sprite.player_left_2.getFxImage()},
                 {Sprite.player_right_1.getFxImage(), Sprite.player_right_2.getFxImage()}
         };
-        // Init bombs
-        bombs.add(new Bomb(1));
         // Setup specifications
         isCoolingDown = false;
+        for (int i = 0; i < data[GameManager.Data.BONUS_BOMBS.ordinal()]; i++) {
+            bombs.add(new Bomb(data[GameManager.Data.FLAME_LEN.ordinal()]));
+        }
+
+        bonusSpeed = data[GameManager.Data.SPEED.ordinal()] * 2;
+        stepLength += bonusSpeed;
+        stepDuration += bonusSpeed;
+
+        canPassBomb = data[GameManager.Data.BOMB_PASS.ordinal()] != 0;
+
+        canPassBrick = data[GameManager.Data.WALL_PASS.ordinal()] != 0;
+
         isMoving = false;
-        canPassBrick = false;
-        canPassBomb = false;
         obstacle = new Tile[2];
         isBlocked = new boolean[2];
     }
@@ -243,8 +252,9 @@ public class Bomber extends Character {
     }
 
     public void increaseSpeed() {
-        this.stepLength += 2;
-        this.stepDuration += 2;
+        bonusSpeed += 2;
+        stepLength += bonusSpeed;
+        stepDuration += bonusSpeed;
     }
 
     public void increaseBomb() {
@@ -263,12 +273,24 @@ public class Bomber extends Character {
         this.canPassBomb = canPassBomb;
     }
 
-    public void reset(int[] items) {
-        isExist = true;
-        isDying = false;
-        isCoolingDown = false;
-        deadTime = 0.0;
-        bombTime = 0.0;
+    public int getNumOfBombs() {
+        return bombs.size();
+    }
+
+    public int getFlameLen() {
+        return bombs.get(0).getFlameLen();
+    }
+
+    public int getBonusSpeed() {
+        return bonusSpeed;
+    }
+
+    public int getCanPassBomb() {
+        return (canPassBomb ? 1 : 0);
+    }
+
+    public int getCanPassBrick() {
+        return (canPassBrick ? 1 : 0);
     }
 
     @Override

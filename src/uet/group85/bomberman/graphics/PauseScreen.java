@@ -5,16 +5,30 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import uet.group85.bomberman.managers.ScreenManager;
 
+import java.io.FileNotFoundException;
+
 public class PauseScreen implements Screen {
-    public final ScreenManager manager;
-    public PauseScreen(ScreenManager manager) {
-        this.manager = manager;
+    public PauseScreen() {
+
     }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+
+
     @Override
     public void handleEvent() {
-        manager.scene.setOnKeyPressed(keyEvent -> {
+        ScreenManager.scene.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ESCAPE) {
-                manager.switchScreen(ScreenManager.ScreenType.NEW_GAME);
+                ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
             }
         });
     }
@@ -26,7 +40,7 @@ public class PauseScreen implements Screen {
 
     @Override
     public void render() {
-        manager.gc.setFill(Color.color(0.65, 0.65, 0.65));
-        manager.gc.fillRect(0, 0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
+        ScreenManager.gc.setFill(Color.color(0.65, 0.65, 0.65));
+        ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
     }
 }

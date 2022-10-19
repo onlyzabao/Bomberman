@@ -6,6 +6,7 @@ import uet.group85.bomberman.entities.blocks.BombItem;
 import uet.group85.bomberman.entities.blocks.FlameItem;
 import uet.group85.bomberman.entities.blocks.SpeedItem;
 import uet.group85.bomberman.entities.characters.Balloon;
+import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Wall;
 import uet.group85.bomberman.graphics.Sprite;
@@ -27,17 +28,13 @@ public class MapManager {
     private final char WALLPASS_ITEM = 'w';
 
 
-    public MapManager(int score, int level, int chances, int[] items) throws FileNotFoundException {
+    public MapManager(int[] data) throws FileNotFoundException {
         GameManager.status = GameManager.Status.PLAYING;
-        GameManager.score = score;
-        GameManager.level = level;
-        GameManager.chance = chances;
-
-        GameManager.bomber.reset(items);
-        GameManager.enemies.clear();
-        GameManager.tiles.clear();
-
-        loadMap(level);
+        GameManager.score = data[GameManager.Data.SCORE.ordinal()];
+        GameManager.level = data[GameManager.Data.LEVEL.ordinal()];
+        GameManager.chance = data[GameManager.Data.CHANCE.ordinal()];
+        GameManager.bomber = new Bomber(data);
+        loadMap(GameManager.level);
     }
 
     private void initWall(Coordinate mapPos) {
@@ -116,14 +113,14 @@ public class MapManager {
     }
 
     public void loadMap(int level) throws FileNotFoundException {
-        String path = String.format("res/levels/Level%d.txt", level);
-        File myFile = new File(path);
-        Scanner myReader = new Scanner(myFile);
-        GameManager.mapRows = myReader.nextInt();
-        GameManager.mapCols = myReader.nextInt();
-        myReader.nextLine();
+        GameManager.enemies.clear();
+        GameManager.tiles.clear();
+        Scanner sc = new Scanner(new File(String.format("res/levels/Level%d.txt", level)));
+        GameManager.mapRows = sc.nextInt();
+        GameManager.mapCols = sc.nextInt();
+        sc.nextLine();
         for (int j = 0; j < GameManager.mapRows; j++) {
-            String line = myReader.nextLine();
+            String line = sc.nextLine();
             for (int i = 0; i < GameManager.mapCols; i++) {
                 switch (line.charAt(i)) {
                     // Blocks & Tiles
@@ -144,6 +141,6 @@ public class MapManager {
                 }
             }
         }
-        myReader.close();
+        sc.close();
     }
 }

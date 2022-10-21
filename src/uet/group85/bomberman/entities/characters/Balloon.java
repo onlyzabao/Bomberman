@@ -15,7 +15,7 @@ import java.util.Random;
 public class Balloon extends Character {
 
     public Balloon(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 3, true);
+        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
 
         defaultFrame = new Image[]{
                 Sprite.balloom_dead.getFxImage()
@@ -43,7 +43,7 @@ public class Balloon extends Character {
             return;
         }
         if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
-            if (directionChoices.size() < 3) {
+            if (directionChoices.size() < 4) {
                 return;
             }
         }

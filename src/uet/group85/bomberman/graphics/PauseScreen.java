@@ -73,7 +73,6 @@ public class PauseScreen implements Screen {
             }
         }
         if (isChosen) {
-            clear();
             switch (pointer) {
                 case 0 -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
                 case 1 -> {

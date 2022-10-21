@@ -177,7 +177,6 @@ public class GameScreen implements Screen {
                     startedTime = BombermanGame.elapsedTime;
                     pausedTime = startedTime;
                 } else {
-                    clear();
                     ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
                 }
             }
@@ -192,7 +191,7 @@ public class GameScreen implements Screen {
             ScreenManager.gc.setFill(Color.BLACK);
             ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
             ScreenManager.gc.setFill(Color.WHITE);
-            ScreenManager.gc.fillText(String.format("Stage  %d", GameManager.level), 240, 240);
+            ScreenManager.gc.fillText(String.format("Stage  %d", GameManager.level), 320, 240);
         } else {
             ScreenManager.canvas.toBack();
             // Render playground

@@ -5,32 +5,32 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.ScreenManager;
 
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class MenuScreen implements Screen {
     private enum ButtonType {
         START, CONTINUE, SETTING, TOTAL
     }
+
     private final int topScore;
     private final ImageView title;
     private final Text[] buttons = new Text[ButtonType.TOTAL.ordinal()];
     private int pointer;
     private boolean isChosen;
+
     public MenuScreen() {
-        topScore = 0;
         try {
             title = new ImageView(new Image(new FileInputStream("res/textures/general.png")));
+            BufferedReader rd = new BufferedReader(new FileReader("res/data/history.txt"));
+            topScore = Integer.parseInt(rd.readLine());
+            rd.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         title.setX(100);
-        title.setY(50);
+        title.setY(40);
         title.setFitWidth(440);
         title.setFitHeight(240);
 
@@ -44,30 +44,34 @@ public class MenuScreen implements Screen {
 
         buttons[ButtonType.START.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
         buttons[ButtonType.START.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.START.ordinal()].setY(360);
+        buttons[ButtonType.START.ordinal()].setY(330);
 
         buttons[ButtonType.CONTINUE.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
         buttons[ButtonType.CONTINUE.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.CONTINUE.ordinal()].setY(400);
+        buttons[ButtonType.CONTINUE.ordinal()].setY(370);
 
         buttons[ButtonType.SETTING.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
         buttons[ButtonType.SETTING.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.SETTING.ordinal()].setY(440);
+        buttons[ButtonType.SETTING.ordinal()].setY(410);
 
         ScreenManager.root.getChildren().add(title);
         ScreenManager.root.getChildren().add(buttons[ButtonType.START.ordinal()]);
         ScreenManager.root.getChildren().add(buttons[ButtonType.CONTINUE.ordinal()]);
         ScreenManager.root.getChildren().add(buttons[ButtonType.SETTING.ordinal()]);
 
+        ScreenManager.gc.setTextAlign(TextAlignment.CENTER);
+
         pointer = 0;
         isChosen = false;
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
 
     @Override
@@ -92,7 +96,6 @@ public class MenuScreen implements Screen {
             }
         }
         if (isChosen) {
-            clear();
             switch (pointer) {
                 case 0 -> {
                     try {
@@ -120,6 +123,8 @@ public class MenuScreen implements Screen {
     public void render() {
         ScreenManager.gc.setFill(Color.BLACK);
         ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
+        ScreenManager.gc.setFill(Color.WHITE);
+        ScreenManager.gc.fillText(String.format("Top\t%d", topScore), 320, 450);
     }
 
     @Override

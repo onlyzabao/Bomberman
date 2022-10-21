@@ -282,7 +282,7 @@ public class Bomber extends Character {
     }
 
     public int getBonusSpeed() {
-        return bonusSpeed;
+        return bonusSpeed / 2;
     }
 
     public int getCanPassBomb() {

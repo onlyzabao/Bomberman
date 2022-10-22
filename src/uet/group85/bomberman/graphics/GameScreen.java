@@ -7,7 +7,6 @@ import javafx.scene.text.Text;
 import uet.group85.bomberman.BombermanGame;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.managers.GameManager;
-import uet.group85.bomberman.managers.MapManager;
 import uet.group85.bomberman.managers.ScreenManager;
 import uet.group85.bomberman.managers.SoundManager;
 
@@ -57,8 +56,10 @@ public class GameScreen implements Screen {
             ScreenManager.root.getChildren().add(Text);
         });
 
-        SoundManager.loadGameSound();
         loadData();
+        SoundManager.loadGameSound();
+        GameManager.init(data);
+
         startedTime = time;
         pausedTime = startedTime;
     }
@@ -75,7 +76,6 @@ public class GameScreen implements Screen {
             data.put("BombPass", Integer.parseInt(rd.readLine()));
             data.put("WallPass", Integer.parseInt(rd.readLine()));
             rd.close();
-            new MapManager(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -216,5 +216,6 @@ public class GameScreen implements Screen {
         logs.forEach((String, Text) -> ScreenManager.root.getChildren().remove(Text));
         logs.clear();
         SoundManager.clearGameSound();
+        GameManager.clear();
     }
 }

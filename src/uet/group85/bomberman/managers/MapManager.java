@@ -6,38 +6,16 @@ import uet.group85.bomberman.entities.blocks.BombItem;
 import uet.group85.bomberman.entities.blocks.FlameItem;
 import uet.group85.bomberman.entities.blocks.SpeedItem;
 import uet.group85.bomberman.entities.characters.Balloon;
-import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Wall;
 import uet.group85.bomberman.graphics.Sprite;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Map;
 import java.util.Scanner;
 
 public class MapManager {
-    private final char WALL = '#';
-    private final char BRICK = '*';
-    private final char PORTAL = 'x';
-    private final char BOMBER = 'p';
-    private final char BALLOON = '1';
-    private final char ONEAL = '2';
-    private final char BOMB_ITEM = 'b';
-    private final char FLAME_ITEM = 'f';
-    private final char SPEED_ITEM = 's';
-    private final char WALLPASS_ITEM = 'w';
-
-    private final char BOMBPASS_ITEM = 'q';
-
-
-
-    public MapManager(Map<String, Integer> data) throws FileNotFoundException {
-        GameManager.status = GameManager.Status.PLAYING;
-        GameManager.score = data.get("Score");
-        GameManager.level = data.get("Level");
-        GameManager.chance = data.get("Chance");
-        GameManager.bomber = new Bomber(data);
+    public MapManager() throws FileNotFoundException {
         loadMap(GameManager.level);
     }
 
@@ -95,7 +73,7 @@ public class MapManager {
 
     private void initFlameItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
-        initGrass(mapPos, screenPos,new Block[]{
+        initGrass(mapPos, screenPos, new Block[]{
                 new FlameItem(mapPos, screenPos),
                 new Brick(mapPos, screenPos)
         });
@@ -108,6 +86,7 @@ public class MapManager {
                 new Brick(mapPos, screenPos)
         });
     }
+
     private void initWallPassItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{
@@ -115,6 +94,7 @@ public class MapManager {
                 new Brick(mapPos, screenPos)
         });
     }
+
     private void initBombPassItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{
@@ -124,8 +104,6 @@ public class MapManager {
     }
 
     public void loadMap(int level) throws FileNotFoundException {
-        GameManager.enemies.clear();
-        GameManager.tiles.clear();
         Scanner sc = new Scanner(new File(String.format("res/levels/Level%d.txt", level)));
         GameManager.mapRows = sc.nextInt();
         GameManager.mapCols = sc.nextInt();
@@ -135,19 +113,19 @@ public class MapManager {
             for (int i = 0; i < GameManager.mapCols; i++) {
                 switch (line.charAt(i)) {
                     // Blocks & Tiles
-                    case WALL -> initWall(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case BRICK -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case PORTAL -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '#' -> initWall(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Characters
-                    case BOMBER -> initBomber(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case BALLOON -> initBalloon(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case ONEAL -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 'p' -> initBomber(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '1' -> initBalloon(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '2' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Items
-                    case BOMB_ITEM -> initBombItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case FLAME_ITEM -> initFlameItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case SPEED_ITEM -> initSpeedItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case WALLPASS_ITEM -> initWallPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case BOMBPASS_ITEM -> initBombPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 'b' -> initBombItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 'f' -> initFlameItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 's' -> initSpeedItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 'w' -> initWallPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 'q' -> initBombPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Grass as default
                     default -> initGrass(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                 }

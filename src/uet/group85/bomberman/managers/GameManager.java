@@ -4,20 +4,17 @@ import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
 import uet.group85.bomberman.entities.tiles.Tile;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GameManager {
-    public enum Data {
-        SCORE, LEVEL, CHANCE, BONUS_BOMBS, FLAME_LEN, SPEED, BOMB_PASS, WALL_PASS, TOTAL
-    }
-    public enum Event {
-        MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, BOMB, TOTAL
-    }
     public enum Status {
         PLAYING, WON, LOST
     }
-    public static final boolean[] events = new boolean[Event.TOTAL.ordinal()];
+
+    public static final boolean[] events = new boolean[5];
 
     public static final List<Tile> tiles = new ArrayList<>();
     public static final List<Character> enemies = new ArrayList<>();
@@ -31,4 +28,23 @@ public class GameManager {
     public static int chance;
 
     public static double elapsedTime;
+
+    public static void init(Map<String, Integer> data) {
+        GameManager.status = GameManager.Status.PLAYING;
+        GameManager.score = data.get("Score");
+        GameManager.level = data.get("Level");
+        GameManager.chance = data.get("Chance");
+        GameManager.bomber = new Bomber(data);
+        try {
+            new MapManager();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void clear() {
+        GameManager.bomber = null;
+        GameManager.enemies.clear();
+        GameManager.tiles.clear();
+    }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class GameScreen implements Screen {
     // ------------- Specifications --------------
-    public final double WAIT_PERIOD = 2.0;
+    public final double WAIT_PERIOD = 2.2;
     // ------------- Key Event -------------------
     private static final int UP = 0;
     private static final int DOWN = 1;
@@ -59,11 +59,9 @@ public class GameScreen implements Screen {
             Text.setEffect(ds);
             ScreenManager.root.getChildren().add(Text);
         });
-
-        // -------- Temp -----------
+        // Load game music & sounds
         SoundManager.loadGameSound();
-        // -------------------------
-
+        // Start game
         start();
     }
 
@@ -241,14 +239,17 @@ public class GameScreen implements Screen {
     public void render() {
         if (GameManager.status == GameManager.Status.WON && isEnding) {
             renderWaitScreen("You won!");
+            SoundManager.playGameSound("Won", true);
             return;
         }
         if (GameManager.status == GameManager.Status.LOST && isEnding) {
             renderWaitScreen("You lost!");
+            SoundManager.playGameSound("Lost", true);
             return;
         }
         if (BombermanGame.elapsedTime - startedTime < WAIT_PERIOD) {
             renderWaitScreen(String.format("Stage  %d", GameManager.level));
+            SoundManager.playGameSound("Stage_start", true);
         } else {
             renderPlayScreen();
         }

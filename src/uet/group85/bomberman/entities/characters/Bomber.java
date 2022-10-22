@@ -169,9 +169,6 @@ public class Bomber extends Character {
                             autoStep();
                         }
                     }
-                    if (!SoundManager.gameSounds.get(SoundManager.GameSound.STEP).isPlaying()) {
-                        SoundManager.gameSounds.get(SoundManager.GameSound.STEP).play();
-                    }
                 }
             }
             stepCounter = 0;
@@ -304,9 +301,7 @@ public class Bomber extends Character {
             } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
                 isExist = false;
             } else {
-                if (!SoundManager.gameSounds.get(SoundManager.GameSound.LOST).isPlaying()) {
-                    SoundManager.gameSounds.get(SoundManager.GameSound.LOST).play();
-                }
+                SoundManager.playGameSound("Bomber_dead", true);
             }
         }
     }

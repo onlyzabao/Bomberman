@@ -20,7 +20,7 @@ public class BombPassItem extends Block {
     public void update() {
         if (GameManager.bomber.isCollided(this)) {
             GameManager.bomber.setCanPassBomb(true);
-            SoundManager.gameSounds.get(SoundManager.GameSound.POWER_UP).play();
+            SoundManager.playGameSound("Power_up", false);
             isExist = false;
         }
     }

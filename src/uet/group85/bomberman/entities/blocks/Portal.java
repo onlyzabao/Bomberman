@@ -32,7 +32,7 @@ public class Portal extends Block {
         if (GameManager.bomber.isCollided(this)) {
             if (GameManager.bomber.isExist() && GameManager.enemies.isEmpty()) {
                 waitedTime = GameManager.elapsedTime;
-                SoundManager.gameSounds.get(SoundManager.GameSound.WON).play();
+                SoundManager.playGameSound("Stage_finished", true);
                 isFinished = true;
             }
         }

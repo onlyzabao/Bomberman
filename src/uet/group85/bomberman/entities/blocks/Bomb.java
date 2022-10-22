@@ -73,7 +73,7 @@ public class Bomb extends Block {
     }
 
     public void create(Coordinate mapPos, Coordinate screenPos) {
-        SoundManager.gameSounds.get(SoundManager.GameSound.BOMB).play();
+        SoundManager.playGameSound("Bomb", false);
         this.mapPos = mapPos;
         this.screenPos = screenPos;
         isExist = true;
@@ -83,7 +83,7 @@ public class Bomb extends Block {
 
     private void countDown() {
         if (GameManager.elapsedTime - countDownTime > COUNTDOWN_PERIOD) {
-            SoundManager.gameSounds.get(SoundManager.GameSound.EXPLOSION).play();
+            SoundManager.playGameSound("Explosion", false);
             isCountingDown = false;
         }
     }

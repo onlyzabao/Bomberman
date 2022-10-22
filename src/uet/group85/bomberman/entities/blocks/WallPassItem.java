@@ -20,7 +20,7 @@ public class WallPassItem extends Block {
     public void update() {
         if (GameManager.bomber.isCollided(this)) {
             GameManager.bomber.setCanPassBrick(true);
-            SoundManager.gameSounds.get(SoundManager.GameSound.POWER_UP).play();
+            SoundManager.playGameSound("Power_up", false);
             isExist = false;
         }
     }

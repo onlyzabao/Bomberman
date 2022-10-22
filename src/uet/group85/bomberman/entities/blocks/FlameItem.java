@@ -6,6 +6,7 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
+import uet.group85.bomberman.managers.SoundManager;
 
 public class FlameItem extends Block {
     private final Image img;
@@ -19,6 +20,7 @@ public class FlameItem extends Block {
     public void update() {
         if (GameManager.bomber.isCollided(this)) {
             GameManager.bomber.increaseFlame();
+            SoundManager.gameSounds.get(SoundManager.GameSound.POWER_UP).play();
             isExist = false;
         }
     }

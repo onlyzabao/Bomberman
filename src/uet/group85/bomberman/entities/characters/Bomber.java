@@ -15,6 +15,7 @@ import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.ScreenManager;
 import uet.group85.bomberman.graphics.GameScreen;
+import uet.group85.bomberman.managers.SoundManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,6 +176,9 @@ public class Bomber extends Character {
                             autoStep();
                         }
                     }
+                    if (!SoundManager.gameSounds.get(SoundManager.GameSound.STEP).isPlaying()) {
+                        SoundManager.gameSounds.get(SoundManager.GameSound.STEP).play();
+                    }
                 }
             }
             stepCounter = 0;
@@ -306,6 +310,10 @@ public class Bomber extends Character {
                 updateBomb();
             } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
                 isExist = false;
+            } else {
+                if (!SoundManager.gameSounds.get(SoundManager.GameSound.LOST).isPlaying()) {
+                    SoundManager.gameSounds.get(SoundManager.GameSound.LOST).play();
+                }
             }
         }
     }

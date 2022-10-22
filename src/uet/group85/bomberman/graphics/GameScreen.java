@@ -9,6 +9,7 @@ import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.MapManager;
 import uet.group85.bomberman.managers.ScreenManager;
+import uet.group85.bomberman.managers.SoundManager;
 
 import java.io.*;
 
@@ -63,6 +64,7 @@ public class GameScreen implements Screen {
         ScreenManager.root.getChildren().add(scoreText);
         ScreenManager.root.getChildren().add(chanceText);
 
+        SoundManager.loadGameSound();
         loadData();
         startedTime = time;
         pausedTime = startedTime;
@@ -217,5 +219,6 @@ public class GameScreen implements Screen {
         ScreenManager.root.getChildren().remove(timeText);
         ScreenManager.root.getChildren().remove(scoreText);
         ScreenManager.root.getChildren().remove(chanceText);
+        SoundManager.loadGameSound();
     }
 }

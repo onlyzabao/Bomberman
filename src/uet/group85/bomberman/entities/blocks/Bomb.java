@@ -10,6 +10,7 @@ import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Tile;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
+import uet.group85.bomberman.managers.SoundManager;
 
 public class Bomb extends Block {
     private final double COUNTDOWN_PERIOD = 2.0;
@@ -72,6 +73,7 @@ public class Bomb extends Block {
     }
 
     public void create(Coordinate mapPos, Coordinate screenPos) {
+        SoundManager.gameSounds.get(SoundManager.GameSound.BOMB).play();
         this.mapPos = mapPos;
         this.screenPos = screenPos;
         isExist = true;
@@ -81,6 +83,7 @@ public class Bomb extends Block {
 
     private void countDown() {
         if (GameManager.elapsedTime - countDownTime > COUNTDOWN_PERIOD) {
+            SoundManager.gameSounds.get(SoundManager.GameSound.EXPLOSION).play();
             isCountingDown = false;
         }
     }

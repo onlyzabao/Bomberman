@@ -7,6 +7,7 @@ import uet.group85.bomberman.auxilities.Coordinate;
 import uet.group85.bomberman.auxilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
+import uet.group85.bomberman.managers.SoundManager;
 
 public class Portal extends Block {
     private final double WAITING_PERIOD = 2.0;
@@ -31,6 +32,7 @@ public class Portal extends Block {
         if (GameManager.bomber.isCollided(this)) {
             if (GameManager.bomber.isExist() && GameManager.enemies.isEmpty()) {
                 waitedTime = GameManager.elapsedTime;
+                SoundManager.gameSounds.get(SoundManager.GameSound.WON).play();
                 isFinished = true;
             }
         }

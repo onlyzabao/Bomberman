@@ -1,4 +1,4 @@
-package uet.group85.bomberman.auxilities;
+package uet.group85.bomberman.auxiliaries;
 
 public class Rectangle {
     public int x;

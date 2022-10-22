@@ -2,14 +2,13 @@ package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxilities.Border;
-import uet.group85.bomberman.auxilities.Coordinate;
-import uet.group85.bomberman.auxilities.Rectangle;
+import uet.group85.bomberman.auxiliaries.Border;
+import uet.group85.bomberman.auxiliaries.Coordinate;
+import uet.group85.bomberman.auxiliaries.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.tiles.Tile;
 import uet.group85.bomberman.graphics.Sprite;
-import uet.group85.bomberman.managers.GameManager;
 
 import java.util.List;
 

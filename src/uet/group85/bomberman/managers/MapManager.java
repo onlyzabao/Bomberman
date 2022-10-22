@@ -1,6 +1,6 @@
 package uet.group85.bomberman.managers;
 
-import uet.group85.bomberman.auxilities.Coordinate;
+import uet.group85.bomberman.auxiliaries.Coordinate;
 import uet.group85.bomberman.entities.blocks.*;
 import uet.group85.bomberman.entities.blocks.BombItem;
 import uet.group85.bomberman.entities.blocks.FlameItem;
@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MapManager {
+    // Current row
     private int j;
-    public MapManager() throws FileNotFoundException {
-        loadMap(GameManager.level);
-    }
+
+    public MapManager() {}
 
     private void initWall(Coordinate mapPos) {
         GameManager.tiles.get(j).add(new Wall(mapPos, new Coordinate(mapPos)));
@@ -115,15 +115,15 @@ public class MapManager {
             GameManager.tiles.add(new ArrayList<>());
             for (int i = 0; i < GameManager.mapCols; i++) {
                 switch (line.charAt(i)) {
-                    // Blocks & Tiles
+                    // Tiles
                     case '#' -> initWall(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Characters
                     case 'p' -> initBomber(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '1' -> initBalloon(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '2' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    // Items
+                    // Blocks
+                    case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case 'b' -> initBombItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case 'f' -> initFlameItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case 's' -> initSpeedItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));

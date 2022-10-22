@@ -5,7 +5,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import uet.group85.bomberman.BombermanGame;
-import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.ScreenManager;
 import uet.group85.bomberman.managers.SoundManager;
@@ -15,42 +14,45 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameScreen implements Screen {
+    // ------------- Specifications --------------
     public final double WAIT_PERIOD = 2.0;
-    // Button events
+    // ------------- Key Event -------------------
     private static final int UP = 0;
     private static final int DOWN = 1;
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
     public static final int BOMB = 4;
+    // ------------- Playground Position -----------
     public static final int TRANSLATED_X = 0;
     public static final int TRANSLATED_Y = 64;
-    // Data
+    // ------------- Game data ---------------------
     private final Map<String, Integer> data = new HashMap<>(8);
-    // Nodes
+    // ------------- Logs --------------------------
     private final Map<String, Text> logs = new HashMap<>(3);
-    // Time
+    // ------------- Timeline ----------------------
     private double startedTime;
     private double pausedTime;
     private double endedTime;
     private boolean isEnding;
 
     public GameScreen() {
+        // Time left log
         logs.put("Time", new Text());
-        logs.put("Score", new Text());
-        logs.put("Chance", new Text());
-
         logs.get("Time").setX(32);
         logs.get("Time").setY(40);
+        // Score log
+        logs.put("Score", new Text());
         logs.get("Score").setX(240);
         logs.get("Score").setY(40);
+        // Player's chances log
+        logs.put("Chance", new Text());
         logs.get("Chance").setX(488);
         logs.get("Chance").setY(40);
-
+        // Set font & effect
         DropShadow ds = new DropShadow();
         ds.setRadius(0.5);
         ds.setOffsetX(2.0);
         ds.setOffsetY(2.0);
-
         logs.forEach((String, Text) -> {
             Text.setFont(ScreenManager.gc.getFont());
             Text.setFill(Color.WHITE);
@@ -58,20 +60,35 @@ public class GameScreen implements Screen {
             ScreenManager.root.getChildren().add(Text);
         });
 
+        // -------- Temp -----------
         SoundManager.loadGameSound();
-        init();
+        // -------------------------
+
+        start();
     }
 
-    public void init() {
-        loadData();
-        GameManager.clear();
-        GameManager.init(data);
-        startedTime = BombermanGame.elapsedTime;
-        pausedTime = startedTime;
-        endedTime = startedTime;
-        isEnding = false;
+    /**
+     * Start game.
+     */
+    public void start() {
+        try {
+            loadData();
+            GameManager.clear();
+            GameManager.init(data);
+            startedTime = BombermanGame.elapsedTime;
+            pausedTime = startedTime;
+            endedTime = startedTime;
+            isEnding = false;
+        } catch (FileNotFoundException e) {
+            GameManager.status = GameManager.Status.WON;
+            endedTime = BombermanGame.elapsedTime;
+            isEnding = true;
+        }
     }
 
+    /**
+     * Load game data from previous play.
+     */
     public void loadData() {
         try {
             BufferedReader rd = new BufferedReader(new FileReader("res/data/history.txt"));
@@ -89,6 +106,9 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Save game data to disk.
+     */
     public void saveData() {
         try {
             BufferedWriter wt = new BufferedWriter(new FileWriter("res/data/history.txt"));
@@ -106,18 +126,27 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Hide game screen.
+     */
     @Override
     public void hide() {
         logs.forEach((String, Text) -> Text.toBack());
         pausedTime = BombermanGame.elapsedTime;
     }
 
+    /**
+     * Show game screen.
+     */
     @Override
     public void show() {
         logs.forEach((String, Text) -> Text.toFront());
         startedTime = BombermanGame.elapsedTime - (pausedTime - startedTime);
     }
 
+    /**
+     * Set event handler.
+     */
     @Override
     public void handleEvent() {
         ScreenManager.scene.setOnKeyPressed(
@@ -147,56 +176,65 @@ public class GameScreen implements Screen {
 
     @Override
     public void update() {
-        if (BombermanGame.elapsedTime - startedTime > WAIT_PERIOD) {
-            if (GameManager.status == GameManager.Status.PLAYING) {
-                updatePlayingScreen();
-            } else {
-                // Switch screen
-                if (isEnding) {
-                    if (BombermanGame.elapsedTime - endedTime > WAIT_PERIOD) {
-                        ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
-                    }
-                } else {
-                    if (GameManager.status == GameManager.Status.WON) {
-                        data.replace("Score", GameManager.score);
-                        data.replace("Level", ++GameManager.level);
-                        data.replace("Chance", GameManager.chance);
-                        data.replace("Bomb", GameManager.bomber.getNumOfBombs());
-                        data.replace("Flame", GameManager.bomber.getFlameLen());
-                        data.replace("Speed", GameManager.bomber.getBonusSpeed());
-                        data.replace("BombPass", GameManager.bomber.getCanPassBomb());
-                        data.replace("WallPass", GameManager.bomber.getCanPassBrick());
-                    } else {
-                        data.replace("Chance", --GameManager.chance);
-                    }
-                    saveData();
-                    if (GameManager.chance > 0) {
-                        init();
-                    } else {
-                        endedTime = BombermanGame.elapsedTime;
-                        isEnding = true;
-                    }
-                }
-            }
-        }
-    }
-
-    private void updatePlayingScreen() {
-        // Update time
-        GameManager.elapsedTime = BombermanGame.elapsedTime - WAIT_PERIOD - startedTime;
-        if (GameManager.elapsedTime > 200) {
-            GameManager.status = GameManager.Status.LOST;
+        // Do not update at wait screen
+        if (BombermanGame.elapsedTime - startedTime < WAIT_PERIOD) {
             return;
         }
-        // Update status board
-        logs.get("Time").setText(String.format("Time  %.0f", 200.0 - GameManager.elapsedTime));
-        logs.get("Score").setText(String.format("Score  %d", GameManager.score));
-        logs.get("Chance").setText(String.format("Left  %d", GameManager.chance));
-        // Update playground
-        GameManager.bomber.update();
-        GameManager.enemies.removeIf(enemy -> !enemy.isExist());
-        GameManager.enemies.forEach(Entity::update);
-        GameManager.tiles.forEach(tile -> tile.forEach(Entity::update));
+        // Update logs and game objects if the game is on going
+        if (GameManager.status == GameManager.Status.PLAYING) {
+            GameManager.elapsedTime = BombermanGame.elapsedTime - WAIT_PERIOD - startedTime;
+            if (GameManager.elapsedTime > 200) {
+                GameManager.status = GameManager.Status.LOST;
+                return;
+            }
+            // Update logs
+            logs.get("Time").setText(String.format("Time  %.0f", 200.0 - GameManager.elapsedTime));
+            logs.get("Score").setText(String.format("Score  %d", GameManager.score));
+            logs.get("Chance").setText(String.format("Left  %d", GameManager.chance));
+            // Update game
+            GameManager.update();
+            return;
+        }
+        // Switch screen
+        if (isEnding) {
+            if (BombermanGame.elapsedTime - endedTime > WAIT_PERIOD) {
+                ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
+            }
+            return;
+        }
+        if (GameManager.status == GameManager.Status.WON) {
+            data.replace("Score", GameManager.score);
+            data.replace("Level", ++GameManager.level);
+            data.replace("Chance", GameManager.chance);
+            data.replace("Bomb", GameManager.bomber.getNumOfBombs());
+            data.replace("Flame", GameManager.bomber.getFlameLen());
+            data.replace("Speed", GameManager.bomber.getBonusSpeed());
+            data.replace("BombPass", GameManager.bomber.getCanPassBomb());
+            data.replace("WallPass", GameManager.bomber.getCanPassBrick());
+
+            saveData();
+            start();
+            return;
+        }
+        if (GameManager.status == GameManager.Status.LOST) {
+            if (--GameManager.chance > 0) {
+                data.replace("Chance", GameManager.chance);
+                saveData();
+                start();
+            } else {
+                data.replace("Score", 0);
+                data.replace("Level", 1);
+                data.replace("Chance", 3);
+                data.replace("Bomb", 1);
+                data.replace("Flame", 1);
+                data.replace("Speed", 0);
+                data.replace("BombPass", 0);
+                data.replace("WallPass", 0);
+                saveData();
+                endedTime = BombermanGame.elapsedTime;
+                isEnding = true;
+            }
+        }
     }
 
     @Override
@@ -212,24 +250,14 @@ public class GameScreen implements Screen {
         if (BombermanGame.elapsedTime - startedTime < WAIT_PERIOD) {
             renderWaitScreen(String.format("Stage  %d", GameManager.level));
         } else {
-            renderPlayingScreen();
+            renderPlayScreen();
         }
     }
 
-    private void renderPlayingScreen() {
+    private void renderPlayScreen() {
         ScreenManager.canvas.toBack();
         // Render playground
-        GameManager.tiles.forEach(tile -> tile.forEach(block -> {
-            if (block.isVisible()) {
-                block.render(ScreenManager.gc);
-            }
-        }));
-        GameManager.enemies.forEach(enemy -> {
-            if (enemy.isVisible()) {
-                enemy.render(ScreenManager.gc);
-            }
-        });
-        GameManager.bomber.render(ScreenManager.gc);
+        GameManager.render();
         // Render status board
         ScreenManager.gc.setFill(Color.color(0.65, 0.65, 0.65));
         ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, TRANSLATED_Y);
@@ -246,8 +274,9 @@ public class GameScreen implements Screen {
     @Override
     public void clear() {
         logs.forEach((String, Text) -> ScreenManager.root.getChildren().remove(Text));
-        logs.clear();
+        // --------- Temp ------------
         SoundManager.clearGameSound();
+        // ---------------------------
         GameManager.clear();
     }
 }

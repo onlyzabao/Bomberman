@@ -5,56 +5,50 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import uet.group85.bomberman.managers.ScreenManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PauseScreen implements Screen {
-    private enum ButtonType {
-        RESUME, RESTART, EXIT, TOTAL
-    }
-    private final Text[] buttons = new Text[ButtonType.TOTAL.ordinal()];
+    // -------------- Buttons ------------------
+    private final Map<String, Text> buttons = new HashMap<>(3);
+    // --------- Event Handle Auxiliaries --------
     private int pointer;
     private boolean isChosen;
+
     public PauseScreen() {
-        buttons[ButtonType.RESUME.ordinal()] = new Text("Resume");
-        buttons[ButtonType.RESTART.ordinal()] = new Text("Restart");
-        buttons[ButtonType.EXIT.ordinal()] = new Text("Exit");
+        buttons.put("Resume", new Text("Resume"));
+        buttons.get("Resume").setY(200);
 
-        buttons[ButtonType.RESUME.ordinal()].setFont(ScreenManager.gc.getFont());
-        buttons[ButtonType.RESTART.ordinal()].setFont(ScreenManager.gc.getFont());
-        buttons[ButtonType.EXIT.ordinal()].setFont(ScreenManager.gc.getFont());
+        buttons.put("Restart", new Text("Restart"));
+        buttons.get("Restart").setY(240);
 
-        buttons[ButtonType.RESUME.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
-        buttons[ButtonType.RESUME.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.RESUME.ordinal()].setY(200);
+        buttons.put("Exit", new Text("Exit"));
+        buttons.get("Exit").setY(280);
 
-        buttons[ButtonType.RESTART.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
-        buttons[ButtonType.RESTART.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.RESTART.ordinal()].setY(240);
-
-        buttons[ButtonType.EXIT.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
-        buttons[ButtonType.EXIT.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.EXIT.ordinal()].setY(280);
-
-        ScreenManager.root.getChildren().add(buttons[ButtonType.RESUME.ordinal()]);
-        ScreenManager.root.getChildren().add(buttons[ButtonType.RESTART.ordinal()]);
-        ScreenManager.root.getChildren().add(buttons[ButtonType.EXIT.ordinal()]);
+        buttons.forEach((String, Text) -> {
+            Text.setFont(ScreenManager.gc.getFont());
+            Text.setWrappingWidth(ScreenManager.WIDTH);
+            Text.setTextAlignment(TextAlignment.CENTER);
+            ScreenManager.root.getChildren().add(Text);
+        });
 
         pointer = 0;
         isChosen = false;
-   }
+    }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
     public void handleEvent() {
         ScreenManager.scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
-                case ESCAPE -> {
-                    clear();
-                    ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
-                }
+                case ESCAPE -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
                 case UP -> pointer = pointer > 0 ? --pointer : 2;
                 case DOWN -> pointer = pointer < 2 ? ++pointer : 0;
                 case X -> isChosen = true;
@@ -64,27 +58,37 @@ public class PauseScreen implements Screen {
 
     @Override
     public void update() {
-        int n = ButtonType.TOTAL.ordinal();
-        for (int i = 0; i < n; i++) {
-            if (pointer == i) {
-                buttons[i].setFill(Color.color(0.85, 0.18, 0.06));
-            } else {
-                buttons[i].setFill(Color.WHITE);
+        switch (pointer) {
+            case 0 -> {
+                buttons.get("Resume").setFill(Color.color(0.85, 0.18, 0.06));
+                buttons.get("Restart").setFill(Color.WHITE);
+                buttons.get("Exit").setFill(Color.WHITE);
+            }
+            case 1 -> {
+                buttons.get("Resume").setFill(Color.WHITE);
+                buttons.get("Restart").setFill(Color.color(0.85, 0.18, 0.06));
+                buttons.get("Exit").setFill(Color.WHITE);
+            }
+            case 2 -> {
+                buttons.get("Resume").setFill(Color.WHITE);
+                buttons.get("Restart").setFill(Color.WHITE);
+                buttons.get("Exit").setFill(Color.color(0.85, 0.18, 0.06));
             }
         }
-        if (isChosen) {
-            switch (pointer) {
-                case 0 -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
-                case 1 -> {
-                    ScreenManager.bufferScreen.clear();
-                    ScreenManager.bufferScreen = null;
-                    ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
-                }
-                case 2 -> {
-                    ScreenManager.bufferScreen.clear();
-                    ScreenManager.bufferScreen = null;
-                    ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
-                }
+        if (!isChosen) {
+            return;
+        }
+        switch (pointer) {
+            case 0 -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
+            case 1 -> {
+                ScreenManager.bufferScreen.clear();
+                ScreenManager.bufferScreen = null;
+                ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
+            }
+            case 2 -> {
+                ScreenManager.bufferScreen.clear();
+                ScreenManager.bufferScreen = null;
+                ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
             }
         }
     }
@@ -97,8 +101,6 @@ public class PauseScreen implements Screen {
 
     @Override
     public void clear() {
-        ScreenManager.root.getChildren().remove(buttons[ButtonType.RESUME.ordinal()]);
-        ScreenManager.root.getChildren().remove(buttons[ButtonType.RESTART.ordinal()]);
-        ScreenManager.root.getChildren().remove(buttons[ButtonType.EXIT.ordinal()]);
+        buttons.forEach((String, Text) -> ScreenManager.root.getChildren().remove(Text));
     }
 }

@@ -1,9 +1,9 @@
 package uet.group85.bomberman.entities;
 
 import javafx.scene.canvas.GraphicsContext;
-import uet.group85.bomberman.auxilities.Border;
-import uet.group85.bomberman.auxilities.Coordinate;
-import uet.group85.bomberman.auxilities.Rectangle;
+import uet.group85.bomberman.auxiliaries.Border;
+import uet.group85.bomberman.auxiliaries.Coordinate;
+import uet.group85.bomberman.auxiliaries.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.ScreenManager;
 import uet.group85.bomberman.graphics.GameScreen;

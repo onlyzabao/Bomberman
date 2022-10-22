@@ -8,61 +8,67 @@ import javafx.scene.text.TextAlignment;
 import uet.group85.bomberman.managers.ScreenManager;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MenuScreen implements Screen {
-    private enum ButtonType {
-        START, CONTINUE, SETTING, TOTAL
-    }
-
-    private final int topScore;
+    // -------- Specifications ------------
+    public int topScore;
+    // -------- Patterns & Buttons --------
     private final ImageView title;
-    private final Text[] buttons = new Text[ButtonType.TOTAL.ordinal()];
+    private final Map<String, Text> buttons = new HashMap<>(3);
+    // --------- Event Handle Auxiliaries --------
     private int pointer;
     private boolean isChosen;
 
     public MenuScreen() {
         try {
             title = new ImageView(new Image(new FileInputStream("res/textures/general.png")));
-            BufferedReader rd = new BufferedReader(new FileReader("res/data/history.txt"));
-            topScore = Integer.parseInt(rd.readLine());
-            rd.close();
+            title.setX(100);
+            title.setY(40);
+            title.setFitWidth(440);
+            title.setFitHeight(240);
+            ScreenManager.root.getChildren().add(title);
+
+            buttons.put("Start", new Text("Start"));
+            buttons.get("Start").setY(330);
+
+            buttons.put("Continue", new Text("Continue"));
+            buttons.get("Continue").setY(370);
+
+            buttons.put("Setting", new Text("Setting"));
+            buttons.get("Setting").setY(410);
+
+            buttons.forEach((String, Text) -> {
+                Text.setFont(ScreenManager.gc.getFont());
+                Text.setWrappingWidth(ScreenManager.WIDTH);
+                Text.setTextAlignment(TextAlignment.CENTER);
+                ScreenManager.root.getChildren().add(Text);
+            });
+            ScreenManager.gc.setTextAlign(TextAlignment.CENTER);
+
+            BufferedReader rd1 = new BufferedReader(new FileReader("res/data/record.txt"));
+            int oldTopScore = Integer.parseInt(rd1.readLine());
+            rd1.close();
+
+            BufferedReader rd2 = new BufferedReader(new FileReader("res/data/history.txt"));
+            int newTopScore = Integer.parseInt(rd2.readLine());
+            rd2.close();
+
+            if (oldTopScore >= newTopScore) {
+                topScore = oldTopScore;
+            } else {
+                BufferedWriter wt = new BufferedWriter(new FileWriter("res/data/record.txt"));
+                wt.write(String.format("%d\n", newTopScore));
+                wt.close();
+                topScore = newTopScore;
+            }
+
+            pointer = 0;
+            isChosen = false;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        title.setX(100);
-        title.setY(40);
-        title.setFitWidth(440);
-        title.setFitHeight(240);
-
-        buttons[ButtonType.START.ordinal()] = new Text("Start");
-        buttons[ButtonType.CONTINUE.ordinal()] = new Text("Continue");
-        buttons[ButtonType.SETTING.ordinal()] = new Text("Setting");
-
-        buttons[ButtonType.START.ordinal()].setFont(ScreenManager.gc.getFont());
-        buttons[ButtonType.CONTINUE.ordinal()].setFont(ScreenManager.gc.getFont());
-        buttons[ButtonType.SETTING.ordinal()].setFont(ScreenManager.gc.getFont());
-
-        buttons[ButtonType.START.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
-        buttons[ButtonType.START.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.START.ordinal()].setY(330);
-
-        buttons[ButtonType.CONTINUE.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
-        buttons[ButtonType.CONTINUE.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.CONTINUE.ordinal()].setY(370);
-
-        buttons[ButtonType.SETTING.ordinal()].setWrappingWidth(ScreenManager.WIDTH);
-        buttons[ButtonType.SETTING.ordinal()].setTextAlignment(TextAlignment.CENTER);
-        buttons[ButtonType.SETTING.ordinal()].setY(410);
-
-        ScreenManager.root.getChildren().add(title);
-        ScreenManager.root.getChildren().add(buttons[ButtonType.START.ordinal()]);
-        ScreenManager.root.getChildren().add(buttons[ButtonType.CONTINUE.ordinal()]);
-        ScreenManager.root.getChildren().add(buttons[ButtonType.SETTING.ordinal()]);
-
-        ScreenManager.gc.setTextAlign(TextAlignment.CENTER);
-
-        pointer = 0;
-        isChosen = false;
     }
 
     @Override
@@ -87,35 +93,45 @@ public class MenuScreen implements Screen {
 
     @Override
     public void update() {
-        int n = ButtonType.TOTAL.ordinal();
-        for (int i = 0; i < n; i++) {
-            if (pointer == i) {
-                buttons[i].setFill(Color.color(0.85, 0.18, 0.06));
-            } else {
-                buttons[i].setFill(Color.WHITE);
+        switch (pointer) {
+            case 0 -> {
+                buttons.get("Start").setFill(Color.color(0.85, 0.18, 0.06));
+                buttons.get("Continue").setFill(Color.WHITE);
+                buttons.get("Setting").setFill(Color.WHITE);
+            }
+            case 1 -> {
+                buttons.get("Start").setFill(Color.WHITE);
+                buttons.get("Continue").setFill(Color.color(0.85, 0.18, 0.06));
+                buttons.get("Setting").setFill(Color.WHITE);
+            }
+            case 2 -> {
+                buttons.get("Start").setFill(Color.WHITE);
+                buttons.get("Continue").setFill(Color.WHITE);
+                buttons.get("Setting").setFill(Color.color(0.85, 0.18, 0.06));
             }
         }
-        if (isChosen) {
-            switch (pointer) {
-                case 0 -> {
-                    try {
-                        BufferedWriter wt = new BufferedWriter(new FileWriter("res/data/history.txt"));
-                        wt.write("0\n");
-                        wt.write("1\n");
-                        wt.write("3\n");
-                        wt.write("1\n");
-                        wt.write("1\n");
-                        wt.write("0\n");
-                        wt.write("0\n");
-                        wt.write("0\n");
-                        wt.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
+        if (!isChosen) {
+            return;
+        }
+        switch (pointer) {
+            case 0 -> {
+                try {
+                    BufferedWriter wt = new BufferedWriter(new FileWriter("res/data/history.txt"));
+                    wt.write("0\n");
+                    wt.write("1\n");
+                    wt.write("3\n");
+                    wt.write("1\n");
+                    wt.write("1\n");
+                    wt.write("0\n");
+                    wt.write("0\n");
+                    wt.write("0\n");
+                    wt.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-                case 1 -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
+                ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
             }
+            case 1 -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
         }
     }
 
@@ -130,8 +146,6 @@ public class MenuScreen implements Screen {
     @Override
     public void clear() {
         ScreenManager.root.getChildren().remove(title);
-        ScreenManager.root.getChildren().remove(buttons[MenuScreen.ButtonType.START.ordinal()]);
-        ScreenManager.root.getChildren().remove(buttons[MenuScreen.ButtonType.CONTINUE.ordinal()]);
-        ScreenManager.root.getChildren().remove(buttons[MenuScreen.ButtonType.SETTING.ordinal()]);
+        buttons.forEach((String, Text) -> ScreenManager.root.getChildren().remove(Text));
     }
 }

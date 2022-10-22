@@ -96,7 +96,7 @@ public class Bomb extends Block {
                 int y = (i % 2 == 0 ? 1 : -1) * (i <= 2 ? 1 : 0);
 
                 Coordinate tmpUnitPos = new Coordinate(thisUnitPos.x + (j * x), thisUnitPos.y + (j * y));
-                Grass belowTile = (Grass) GameManager.tiles.get(GameManager.mapCols * (tmpUnitPos.y) + (tmpUnitPos.x));
+                Grass belowTile = (Grass) GameManager.tiles.get(tmpUnitPos.y).get(tmpUnitPos.x);
                 if (j == 0 && i == 1) {
                     belowTile.addLayer(new Flame(belowTile.getMapPos(), belowTile.getScreenPos(), explodingImg[6])); // Middle flame
                 } else if (0 < j && j < flameLen) {
@@ -105,7 +105,7 @@ public class Bomb extends Block {
                     belowTile.addLayer(new Flame(belowTile.getMapPos(), belowTile.getScreenPos(), explodingImg[i - 1])); // Last flame
                 }
 
-                Tile nextTile = GameManager.tiles.get(GameManager.mapCols * (tmpUnitPos.y + y) + (tmpUnitPos.x + x));
+                Tile nextTile = GameManager.tiles.get(tmpUnitPos.y + y).get(tmpUnitPos.x + x);
                 if (!nextTile.isPassable() && j != flameLen) {
                     if (nextTile instanceof Grass) {
                         Entity layer = ((Grass) nextTile).getLayer();

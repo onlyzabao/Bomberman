@@ -84,23 +84,18 @@ public abstract class Character extends Entity {
         return false;
     }
 
-    public void checkDirection(List<Tile> tiles) {
+    public void checkDirection(List<List<Tile>> tiles) {
         Coordinate thisUnitPos = mapPos.divide(Sprite.SCALED_SIZE);
 
-        passableDirection[Direction.UP.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y - 1)
-                + (thisUnitPos.x))).isPassable();
+        passableDirection[Direction.UP.ordinal()] = (tiles.get(thisUnitPos.y - 1).get(thisUnitPos.x)).isPassable();
 
-        passableDirection[Direction.DOWN.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y + 1)
-                + (thisUnitPos.x))).isPassable();
+        passableDirection[Direction.DOWN.ordinal()] = (tiles.get(thisUnitPos.y + 1).get(thisUnitPos.x)).isPassable();
 
-        passableDirection[Direction.LEFT.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y)
-                + (thisUnitPos.x - 1))).isPassable();
+        passableDirection[Direction.LEFT.ordinal()] = (tiles.get(thisUnitPos.y).get(thisUnitPos.x - 1)).isPassable();
 
-        passableDirection[Direction.RIGHT.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y)
-                + (thisUnitPos.x + 1))).isPassable();
+        passableDirection[Direction.RIGHT.ordinal()] = (tiles.get(thisUnitPos.y).get(thisUnitPos.x + 1)).isPassable();
 
-        passableDirection[Direction.NONE.ordinal()] = (tiles.get(GameManager.mapCols * (thisUnitPos.y)
-                + (thisUnitPos.x))).isPassable();
+        passableDirection[Direction.NONE.ordinal()] = (tiles.get(thisUnitPos.y).get(thisUnitPos.x)).isPassable();
     }
 
     public void eliminateNow(double deadTime) {

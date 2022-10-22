@@ -41,7 +41,7 @@ public class ScreenManager {
                 if (bufferScreen != null) {
                     screen = bufferScreen;
                 } else {
-                    screen = new GameScreen(BombermanGame.elapsedTime);
+                    screen = new GameScreen();
                 }
                 screen.show();
             }

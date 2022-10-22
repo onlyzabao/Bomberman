@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameScreen implements Screen {
-    public final double INIT_PERIOD = 2.0;
+    public final double WAIT_PERIOD = 2.0;
     // Button events
     private static final int UP = 0;
     private static final int DOWN = 1;
@@ -31,8 +31,10 @@ public class GameScreen implements Screen {
     // Time
     private double startedTime;
     private double pausedTime;
+    private double endedTime;
+    private boolean isEnding;
 
-    public GameScreen(double time) {
+    public GameScreen() {
         logs.put("Time", new Text());
         logs.put("Score", new Text());
         logs.put("Chance", new Text());
@@ -56,12 +58,18 @@ public class GameScreen implements Screen {
             ScreenManager.root.getChildren().add(Text);
         });
 
-        loadData();
         SoundManager.loadGameSound();
-        GameManager.init(data);
+        init();
+    }
 
-        startedTime = time;
+    public void init() {
+        loadData();
+        GameManager.clear();
+        GameManager.init(data);
+        startedTime = BombermanGame.elapsedTime;
         pausedTime = startedTime;
+        endedTime = startedTime;
+        isEnding = false;
     }
 
     public void loadData() {
@@ -139,76 +147,100 @@ public class GameScreen implements Screen {
 
     @Override
     public void update() {
-        if (BombermanGame.elapsedTime - startedTime > INIT_PERIOD) {
+        if (BombermanGame.elapsedTime - startedTime > WAIT_PERIOD) {
             if (GameManager.status == GameManager.Status.PLAYING) {
-                // Update time
-                GameManager.elapsedTime = BombermanGame.elapsedTime - INIT_PERIOD - startedTime;
-                if (GameManager.elapsedTime > 200) {
-                    GameManager.status = GameManager.Status.LOST;
-                    return;
-                }
-                // Update status board
-                logs.get("Time").setText(String.format("Time  %.0f", 200.0 - GameManager.elapsedTime));
-                logs.get("Score").setText(String.format("Score  %d", GameManager.score));
-                logs.get("Chance").setText(String.format("Left  %d", GameManager.chance));
-                // Update playground
-                GameManager.bomber.update();
-                GameManager.enemies.removeIf(enemy -> !enemy.isExist());
-                GameManager.enemies.forEach(Entity::update);
-                GameManager.tiles.forEach(Entity::update);
+                updatePlayingScreen();
             } else {
                 // Switch screen
-                if (GameManager.status == GameManager.Status.WON) {
-                    data.replace("Score", GameManager.score);
-                    data.replace("Level", ++GameManager.level);
-                    data.replace("Chance", GameManager.chance);
-                    data.replace("Bomb", GameManager.bomber.getNumOfBombs());
-                    data.replace("Flame", GameManager.bomber.getFlameLen());
-                    data.replace("Speed", GameManager.bomber.getBonusSpeed());
-                    data.replace("BombPass", GameManager.bomber.getCanPassBomb());
-                    data.replace("WallPass", GameManager.bomber.getCanPassBrick());
+                if (isEnding) {
+                    if (BombermanGame.elapsedTime - endedTime > WAIT_PERIOD) {
+                        ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
+                    }
                 } else {
-                    data.replace("Chance", --GameManager.chance);
-                }
-                saveData();
-                if (GameManager.chance > 0) {
-                    loadData();
-                    startedTime = BombermanGame.elapsedTime;
-                    pausedTime = startedTime;
-                } else {
-                    ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
+                    if (GameManager.status == GameManager.Status.WON) {
+                        data.replace("Score", GameManager.score);
+                        data.replace("Level", ++GameManager.level);
+                        data.replace("Chance", GameManager.chance);
+                        data.replace("Bomb", GameManager.bomber.getNumOfBombs());
+                        data.replace("Flame", GameManager.bomber.getFlameLen());
+                        data.replace("Speed", GameManager.bomber.getBonusSpeed());
+                        data.replace("BombPass", GameManager.bomber.getCanPassBomb());
+                        data.replace("WallPass", GameManager.bomber.getCanPassBrick());
+                    } else {
+                        data.replace("Chance", --GameManager.chance);
+                    }
+                    saveData();
+                    if (GameManager.chance > 0) {
+                        init();
+                    } else {
+                        endedTime = BombermanGame.elapsedTime;
+                        isEnding = true;
+                    }
                 }
             }
         }
     }
 
+    private void updatePlayingScreen() {
+        // Update time
+        GameManager.elapsedTime = BombermanGame.elapsedTime - WAIT_PERIOD - startedTime;
+        if (GameManager.elapsedTime > 200) {
+            GameManager.status = GameManager.Status.LOST;
+            return;
+        }
+        // Update status board
+        logs.get("Time").setText(String.format("Time  %.0f", 200.0 - GameManager.elapsedTime));
+        logs.get("Score").setText(String.format("Score  %d", GameManager.score));
+        logs.get("Chance").setText(String.format("Left  %d", GameManager.chance));
+        // Update playground
+        GameManager.bomber.update();
+        GameManager.enemies.removeIf(enemy -> !enemy.isExist());
+        GameManager.enemies.forEach(Entity::update);
+        GameManager.tiles.forEach(tile -> tile.forEach(Entity::update));
+    }
+
     @Override
     public void render() {
-        if (BombermanGame.elapsedTime - startedTime < INIT_PERIOD) {
-            ScreenManager.canvas.toFront();
-            // Render beginning screen
-            ScreenManager.gc.setFill(Color.BLACK);
-            ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
-            ScreenManager.gc.setFill(Color.WHITE);
-            ScreenManager.gc.fillText(String.format("Stage  %d", GameManager.level), 320, 240);
-        } else {
-            ScreenManager.canvas.toBack();
-            // Render playground
-            GameManager.tiles.forEach(block -> {
-                if (block.isVisible()) {
-                    block.render(ScreenManager.gc);
-                }
-            });
-            GameManager.enemies.forEach(enemy -> {
-                if (enemy.isVisible()) {
-                    enemy.render(ScreenManager.gc);
-                }
-            });
-            GameManager.bomber.render(ScreenManager.gc);
-            // Render status board
-            ScreenManager.gc.setFill(Color.color(0.65, 0.65, 0.65));
-            ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, TRANSLATED_Y);
+        if (GameManager.status == GameManager.Status.WON && isEnding) {
+            renderWaitScreen("You won!");
+            return;
         }
+        if (GameManager.status == GameManager.Status.LOST && isEnding) {
+            renderWaitScreen("You lost!");
+            return;
+        }
+        if (BombermanGame.elapsedTime - startedTime < WAIT_PERIOD) {
+            renderWaitScreen(String.format("Stage  %d", GameManager.level));
+        } else {
+            renderPlayingScreen();
+        }
+    }
+
+    private void renderPlayingScreen() {
+        ScreenManager.canvas.toBack();
+        // Render playground
+        GameManager.tiles.forEach(tile -> tile.forEach(block -> {
+            if (block.isVisible()) {
+                block.render(ScreenManager.gc);
+            }
+        }));
+        GameManager.enemies.forEach(enemy -> {
+            if (enemy.isVisible()) {
+                enemy.render(ScreenManager.gc);
+            }
+        });
+        GameManager.bomber.render(ScreenManager.gc);
+        // Render status board
+        ScreenManager.gc.setFill(Color.color(0.65, 0.65, 0.65));
+        ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, TRANSLATED_Y);
+    }
+
+    private void renderWaitScreen(String message) {
+        ScreenManager.canvas.toFront();
+        ScreenManager.gc.setFill(Color.BLACK);
+        ScreenManager.gc.fillRect(0, 0, ScreenManager.WIDTH, ScreenManager.HEIGHT);
+        ScreenManager.gc.setFill(Color.WHITE);
+        ScreenManager.gc.fillText(message, 320, 240);
     }
 
     @Override

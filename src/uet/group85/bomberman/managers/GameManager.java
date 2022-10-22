@@ -16,7 +16,7 @@ public class GameManager {
 
     public static final boolean[] events = new boolean[5];
 
-    public static final List<Tile> tiles = new ArrayList<>();
+    public static final List<List<Tile>> tiles = new ArrayList<>();
     public static final List<Character> enemies = new ArrayList<>();
 
     public static Bomber bomber;
@@ -45,6 +45,7 @@ public class GameManager {
     public static void clear() {
         GameManager.bomber = null;
         GameManager.enemies.clear();
+        GameManager.tiles.forEach(List::clear);
         GameManager.tiles.clear();
     }
 }

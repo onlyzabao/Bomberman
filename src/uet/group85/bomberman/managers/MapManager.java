@@ -12,19 +12,21 @@ import uet.group85.bomberman.graphics.Sprite;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MapManager {
+    private int j;
     public MapManager() throws FileNotFoundException {
         loadMap(GameManager.level);
     }
 
     private void initWall(Coordinate mapPos) {
-        GameManager.tiles.add(new Wall(mapPos, new Coordinate(mapPos)));
+        GameManager.tiles.get(j).add(new Wall(mapPos, new Coordinate(mapPos)));
     }
 
     private void initGrass(Coordinate mapPos) {
-        GameManager.tiles.add(new Grass(mapPos, new Coordinate(mapPos)));
+        GameManager.tiles.get(j).add(new Grass(mapPos, new Coordinate(mapPos)));
     }
 
     private void initGrass(Coordinate mapPos, Coordinate screenPos, Block[] layers) {
@@ -32,7 +34,7 @@ public class MapManager {
         for (Block layer : layers) {
             belowBlock.addLayer(layer);
         }
-        GameManager.tiles.add(belowBlock);
+        GameManager.tiles.get(j).add(belowBlock);
     }
 
     private void initBrick(Coordinate mapPos) {
@@ -108,8 +110,9 @@ public class MapManager {
         GameManager.mapRows = sc.nextInt();
         GameManager.mapCols = sc.nextInt();
         sc.nextLine();
-        for (int j = 0; j < GameManager.mapRows; j++) {
+        for (j = 0; j < GameManager.mapRows; j++) {
             String line = sc.nextLine();
+            GameManager.tiles.add(new ArrayList<>());
             for (int i = 0; i < GameManager.mapCols; i++) {
                 switch (line.charAt(i)) {
                     // Blocks & Tiles

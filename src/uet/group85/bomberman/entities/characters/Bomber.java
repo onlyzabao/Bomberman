@@ -112,31 +112,23 @@ public class Bomber extends Character {
         switch (stepDirection) {
             case UP -> {
                 hitBox.topY -= stepLength;
-                obstacle[0] = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE) // Row size multiply Row index
-                        + (hitBox.leftX / Sprite.SCALED_SIZE)); // add Column index -> One dimension index
-                obstacle[1] = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
+                obstacle[0] = GameManager.tiles.get(hitBox.topY / Sprite.SCALED_SIZE).get(hitBox.leftX / Sprite.SCALED_SIZE); // add Column index -> One dimension index
+                obstacle[1] = GameManager.tiles.get(hitBox.topY / Sprite.SCALED_SIZE).get(hitBox.rightX / Sprite.SCALED_SIZE);
             }
             case DOWN -> {
                 hitBox.bottomY += stepLength;
-                obstacle[0] = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle[1] = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
+                obstacle[0] = GameManager.tiles.get(hitBox.bottomY / Sprite.SCALED_SIZE).get(hitBox.leftX / Sprite.SCALED_SIZE);
+                obstacle[1] = GameManager.tiles.get(hitBox.bottomY / Sprite.SCALED_SIZE).get(hitBox.rightX / Sprite.SCALED_SIZE);
             }
             case LEFT -> {
                 hitBox.leftX -= stepLength;
-                obstacle[0] = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
-                obstacle[1] = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.leftX / Sprite.SCALED_SIZE));
+                obstacle[0] = GameManager.tiles.get(hitBox.topY / Sprite.SCALED_SIZE).get(hitBox.leftX / Sprite.SCALED_SIZE);
+                obstacle[1] = GameManager.tiles.get(hitBox.bottomY / Sprite.SCALED_SIZE).get(hitBox.leftX / Sprite.SCALED_SIZE);
             }
             case RIGHT -> {
                 hitBox.rightX += stepLength;
-                obstacle[0] = GameManager.tiles.get(GameManager.mapCols * (hitBox.topY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
-                obstacle[1] = GameManager.tiles.get(GameManager.mapCols * (hitBox.bottomY / Sprite.SCALED_SIZE)
-                        + (hitBox.rightX / Sprite.SCALED_SIZE));
+                obstacle[0] = GameManager.tiles.get(hitBox.topY / Sprite.SCALED_SIZE).get(hitBox.rightX / Sprite.SCALED_SIZE);
+                obstacle[1] = GameManager.tiles.get(hitBox.bottomY / Sprite.SCALED_SIZE).get(hitBox.rightX / Sprite.SCALED_SIZE);
             }
         }
         Coordinate unitPos = mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
@@ -242,7 +234,7 @@ public class Bomber extends Character {
                 for (Bomb bomb : bombs) {
                     if (!bomb.isExist()) {
                         Coordinate bomberUnitPos = this.mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
-                        Grass grass = (Grass) GameManager.tiles.get(GameManager.mapCols * (bomberUnitPos.y) + (bomberUnitPos.x));
+                        Grass grass = (Grass) GameManager.tiles.get(bomberUnitPos.y).get(bomberUnitPos.x);
                         if (!grass.hasOverlay()) {
                             bomb.create(grass.getMapPos(), grass.getScreenPos());
                             grass.addLayer(bomb);

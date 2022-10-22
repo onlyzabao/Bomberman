@@ -19,6 +19,7 @@ import uet.group85.bomberman.managers.SoundManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Bomber extends Character {
     // Screen center position
@@ -39,7 +40,7 @@ public class Bomber extends Character {
     private final Tile[] obstacle;
     private final boolean[] isBlocked;
 
-    public Bomber(int[] data) {
+    public Bomber(Map<String, Integer> data) {
         super(new Coordinate(0, 0), new Coordinate(0, 0),
                 new Rectangle(0, 0, (Sprite.SCALED_SIZE * 3) / 4, Sprite.SCALED_SIZE),
                 2, 3, true);
@@ -63,17 +64,17 @@ public class Bomber extends Character {
         };
         // Setup specifications
         isCoolingDown = false;
-        for (int i = 0; i < data[GameManager.Data.BONUS_BOMBS.ordinal()]; i++) {
-            bombs.add(new Bomb(data[GameManager.Data.FLAME_LEN.ordinal()]));
+        for (int i = 0; i < data.get("Bomb"); i++) {
+            bombs.add(new Bomb(data.get("Flame")));
         }
 
-        bonusSpeed = data[GameManager.Data.SPEED.ordinal()] * 2;
+        bonusSpeed = data.get("Speed") * 2;
         stepLength += bonusSpeed;
         stepDuration += bonusSpeed;
 
-        canPassBomb = data[GameManager.Data.BOMB_PASS.ordinal()] != 0;
+        canPassBomb = data.get("BombPass") != 0;
 
-        canPassBrick = data[GameManager.Data.WALL_PASS.ordinal()] != 0;
+        canPassBrick = data.get("WallPass") != 0;
 
         isMoving = false;
         obstacle = new Tile[2];

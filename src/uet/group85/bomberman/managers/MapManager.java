@@ -13,6 +13,7 @@ import uet.group85.bomberman.graphics.Sprite;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Map;
 import java.util.Scanner;
 
 public class MapManager {
@@ -31,11 +32,11 @@ public class MapManager {
 
 
 
-    public MapManager(int[] data) throws FileNotFoundException {
+    public MapManager(Map<String, Integer> data) throws FileNotFoundException {
         GameManager.status = GameManager.Status.PLAYING;
-        GameManager.score = data[GameManager.Data.SCORE.ordinal()];
-        GameManager.level = data[GameManager.Data.LEVEL.ordinal()];
-        GameManager.chance = data[GameManager.Data.CHANCE.ordinal()];
+        GameManager.score = data.get("Score");
+        GameManager.level = data.get("Level");
+        GameManager.chance = data.get("Chance");
         GameManager.bomber = new Bomber(data);
         loadMap(GameManager.level);
     }

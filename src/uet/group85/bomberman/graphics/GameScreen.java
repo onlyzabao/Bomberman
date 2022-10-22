@@ -12,11 +12,10 @@ import uet.group85.bomberman.managers.ScreenManager;
 import uet.group85.bomberman.managers.SoundManager;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameScreen implements Screen {
-    public enum Status {
-        START, PAUSED, RESUME, NEXT, RESTART
-    }
     public final double INIT_PERIOD = 2.0;
     // Button events
     private static final int UP = 0;
@@ -27,42 +26,36 @@ public class GameScreen implements Screen {
     public static final int TRANSLATED_X = 0;
     public static final int TRANSLATED_Y = 64;
     // Data
-    private final int[] data = new int[GameManager.Data.TOTAL.ordinal()];
+    private final Map<String, Integer> data = new HashMap<>(8);
     // Nodes
-    private final Text timeText = new Text();
-    private final Text scoreText = new Text();
-    private final Text chanceText = new Text();
+    private final Map<String, Text> logs = new HashMap<>(3);
     // Time
     private double startedTime;
     private double pausedTime;
 
     public GameScreen(double time) {
-        timeText.setFont(ScreenManager.gc.getFont());
-        scoreText.setFont(ScreenManager.gc.getFont());
-        chanceText.setFont(ScreenManager.gc.getFont());
+        logs.put("Time", new Text());
+        logs.put("Score", new Text());
+        logs.put("Chance", new Text());
 
-        timeText.setFill(Color.WHITE);
-        scoreText.setFill(Color.WHITE);
-        chanceText.setFill(Color.WHITE);
+        logs.get("Time").setX(32);
+        logs.get("Time").setY(40);
+        logs.get("Score").setX(240);
+        logs.get("Score").setY(40);
+        logs.get("Chance").setX(488);
+        logs.get("Chance").setY(40);
 
         DropShadow ds = new DropShadow();
         ds.setRadius(0.5);
         ds.setOffsetX(2.0);
         ds.setOffsetY(2.0);
-        timeText.setEffect(ds);
-        scoreText.setEffect(ds);
-        chanceText.setEffect(ds);
 
-        timeText.setX(32);
-        timeText.setY(40);
-        scoreText.setX(240);
-        scoreText.setY(40);
-        chanceText.setX(488);
-        chanceText.setY(40);
-
-        ScreenManager.root.getChildren().add(timeText);
-        ScreenManager.root.getChildren().add(scoreText);
-        ScreenManager.root.getChildren().add(chanceText);
+        logs.forEach((String, Text) -> {
+            Text.setFont(ScreenManager.gc.getFont());
+            Text.setFill(Color.WHITE);
+            Text.setEffect(ds);
+            ScreenManager.root.getChildren().add(Text);
+        });
 
         SoundManager.loadGameSound();
         loadData();
@@ -73,10 +66,14 @@ public class GameScreen implements Screen {
     public void loadData() {
         try {
             BufferedReader rd = new BufferedReader(new FileReader("res/data/history.txt"));
-            int n = GameManager.Data.TOTAL.ordinal();
-            for (int i = 0; i < n; i++) {
-                data[i] = Integer.parseInt(rd.readLine());
-            }
+            data.put("Score", Integer.parseInt(rd.readLine()));
+            data.put("Level", Integer.parseInt(rd.readLine()));
+            data.put("Chance", Integer.parseInt(rd.readLine()));
+            data.put("Bomb", Integer.parseInt(rd.readLine()));
+            data.put("Flame", Integer.parseInt(rd.readLine()));
+            data.put("Speed", Integer.parseInt(rd.readLine()));
+            data.put("BombPass", Integer.parseInt(rd.readLine()));
+            data.put("WallPass", Integer.parseInt(rd.readLine()));
             rd.close();
             new MapManager(data);
         } catch (IOException e) {
@@ -87,10 +84,14 @@ public class GameScreen implements Screen {
     public void saveData() {
         try {
             BufferedWriter wt = new BufferedWriter(new FileWriter("res/data/history.txt"));
-            int n = GameManager.Data.TOTAL.ordinal();
-            for (int i = 0; i < n; i++) {
-                wt.write(String.format("%d\n", data[i]));
-            }
+            wt.write(String.format("%d\n", data.get("Score")));
+            wt.write(String.format("%d\n", data.get("Level")));
+            wt.write(String.format("%d\n", data.get("Chance")));
+            wt.write(String.format("%d\n", data.get("Bomb")));
+            wt.write(String.format("%d\n", data.get("Flame")));
+            wt.write(String.format("%d\n", data.get("Speed")));
+            wt.write(String.format("%d\n", data.get("BombPass")));
+            wt.write(String.format("%d\n", data.get("WallPass")));
             wt.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -99,17 +100,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
-        timeText.toBack();
-        scoreText.toBack();
-        chanceText.toBack();
+        logs.forEach((String, Text) -> Text.toBack());
         pausedTime = BombermanGame.elapsedTime;
     }
 
     @Override
     public void show() {
-        timeText.toFront();
-        scoreText.toFront();
-        chanceText.toFront();
+        logs.forEach((String, Text) -> Text.toFront());
         startedTime = BombermanGame.elapsedTime - (pausedTime - startedTime);
     }
 
@@ -151,9 +148,9 @@ public class GameScreen implements Screen {
                     return;
                 }
                 // Update status board
-                timeText.setText(String.format("Time  %.0f", 200.0 - GameManager.elapsedTime));
-                scoreText.setText(String.format("Score  %d", GameManager.score));
-                chanceText.setText(String.format("Left  %d", GameManager.chance));
+                logs.get("Time").setText(String.format("Time  %.0f", 200.0 - GameManager.elapsedTime));
+                logs.get("Score").setText(String.format("Score  %d", GameManager.score));
+                logs.get("Chance").setText(String.format("Left  %d", GameManager.chance));
                 // Update playground
                 GameManager.bomber.update();
                 GameManager.enemies.removeIf(enemy -> !enemy.isExist());
@@ -162,16 +159,16 @@ public class GameScreen implements Screen {
             } else {
                 // Switch screen
                 if (GameManager.status == GameManager.Status.WON) {
-                    data[GameManager.Data.SCORE.ordinal()] = GameManager.score;
-                    data[GameManager.Data.LEVEL.ordinal()] = ++GameManager.level;
-                    data[GameManager.Data.CHANCE.ordinal()] = GameManager.chance;
-                    data[GameManager.Data.BONUS_BOMBS.ordinal()] = GameManager.bomber.getNumOfBombs();
-                    data[GameManager.Data.FLAME_LEN.ordinal()] = GameManager.bomber.getFlameLen();
-                    data[GameManager.Data.SPEED.ordinal()] = GameManager.bomber.getBonusSpeed();
-                    data[GameManager.Data.BOMB_PASS.ordinal()] = GameManager.bomber.getCanPassBomb();
-                    data[GameManager.Data.WALL_PASS.ordinal()] = GameManager.bomber.getCanPassBrick();
+                    data.replace("Score", GameManager.score);
+                    data.replace("Level", ++GameManager.level);
+                    data.replace("Chance", GameManager.chance);
+                    data.replace("Bomb", GameManager.bomber.getNumOfBombs());
+                    data.replace("Flame", GameManager.bomber.getFlameLen());
+                    data.replace("Speed", GameManager.bomber.getBonusSpeed());
+                    data.replace("BombPass", GameManager.bomber.getCanPassBomb());
+                    data.replace("WallPass", GameManager.bomber.getCanPassBrick());
                 } else {
-                    data[GameManager.Data.CHANCE.ordinal()] = --GameManager.chance;;
+                    data.replace("Chance", --GameManager.chance);
                 }
                 saveData();
                 if (GameManager.chance > 0) {
@@ -216,9 +213,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void clear() {
-        ScreenManager.root.getChildren().remove(timeText);
-        ScreenManager.root.getChildren().remove(scoreText);
-        ScreenManager.root.getChildren().remove(chanceText);
-        SoundManager.loadGameSound();
+        logs.forEach((String, Text) -> ScreenManager.root.getChildren().remove(Text));
+        logs.clear();
+        SoundManager.clearGameSound();
     }
 }

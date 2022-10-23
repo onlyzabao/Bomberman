@@ -278,9 +278,7 @@ public class GameScreen implements Screen {
     @Override
     public void clear() {
         logs.forEach((String, Text) -> ScreenManager.root.getChildren().remove(Text));
-        // --------- Temp ------------
         SoundManager.clearGameSound();
-        // ---------------------------
         GameManager.clear();
     }
 }

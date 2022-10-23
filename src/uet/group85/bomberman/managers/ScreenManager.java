@@ -5,34 +5,33 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
-import uet.group85.bomberman.BombermanGame;
-import uet.group85.bomberman.graphics.GameScreen;
-import uet.group85.bomberman.graphics.MenuScreen;
-import uet.group85.bomberman.graphics.PauseScreen;
-import uet.group85.bomberman.graphics.Screen;
+import uet.group85.bomberman.graphics.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class ScreenManager {
     public enum ScreenType {
-        GAME, MENU, PAUSE
+        GAME, MENU, PAUSE, SETTING
     }
+    // ------------ Specifications ---------------
     public static final int WIDTH = 640;
     public static final int HEIGHT = 480;
+    // ------------ Root & Scene ----------------
     public static final Canvas canvas = new Canvas(WIDTH, HEIGHT);
     public static final GraphicsContext gc = canvas.getGraphicsContext2D();
     public static final Group root = new Group();
     public static final Scene scene = new Scene(root);
+    // ------------ Screen ----------------------
     public static Screen screen;
     public static Screen bufferScreen;
 
     public static void init() throws FileNotFoundException {
+        SoundManager.loadGameMusic();
         gc.setFont(Font.loadFont(new FileInputStream("res/fonts/RetroGaming.ttf"), 32));
         root.getChildren().add(canvas);
         screen = new MenuScreen();
         screen.handleEvent();
-        SoundManager.loadGameMusic();
     }
 
     public static void switchScreen(ScreenType type) {
@@ -55,6 +54,11 @@ public class ScreenManager {
             case MENU -> {
                 screen.clear();
                 screen = new MenuScreen();
+                screen.show();
+            }
+            case SETTING -> {
+                screen.clear();
+                screen = new SettingScreen();
                 screen.show();
             }
         }

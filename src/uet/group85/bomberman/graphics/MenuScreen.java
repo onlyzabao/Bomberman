@@ -71,12 +71,10 @@ public class MenuScreen implements Screen {
     }
 
     @Override
-    public void show() {
-    }
+    public void show() {}
 
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
 
     @Override
@@ -131,6 +129,7 @@ public class MenuScreen implements Screen {
                 ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
             }
             case 1 -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
+            case 2 -> ScreenManager.switchScreen(ScreenManager.ScreenType.SETTING);
         }
     }
 

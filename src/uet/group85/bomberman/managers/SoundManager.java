@@ -1,6 +1,9 @@
 package uet.group85.bomberman.managers;
 
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +13,7 @@ public class SoundManager {
     public static boolean isMusicMuted = false;
     public static double volume = 1.0;
     private static final Map<String, AudioClip> gameSounds = new HashMap<>();
-    private static final Map<String, AudioClip> gameMusic = new HashMap<>();
+    private static final Map<String, MediaPlayer> gameMusic = new HashMap<>();
 
     public static void loadGameSound() {
         gameSounds.put("Won", new AudioClip(SoundManager.class.getResource(
@@ -34,7 +37,14 @@ public class SoundManager {
     }
 
     public static void loadGameMusic() {
-
+        gameMusic.put("BGM", new MediaPlayer(new Media(SoundManager.class.getResource(
+                "/sounds/Main_BGM.mp3").toExternalForm())));
+        gameMusic.get("BGM").setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                gameMusic.get("BGM").seek(Duration.ZERO);
+            }
+        });
     }
 
     public static void playGameSound(String sound, boolean isDistinct) {
@@ -45,7 +55,29 @@ public class SoundManager {
         }
     }
 
+    public static void playGameMusic(String music) {
+        if (gameMusic.get(music).getStatus() != MediaPlayer.Status.PLAYING) {
+            gameMusic.get(music).play();
+        }
+    }
+
+    public static void stopGameMusic(String music) {
+        if (gameMusic.get(music).getStatus() != MediaPlayer.Status.STOPPED) {
+            gameMusic.get(music).stop();
+        }
+    }
+
+    public static void pauseGameMusic(String music) {
+        if (gameMusic.get(music).getStatus() != MediaPlayer.Status.PAUSED) {
+            gameMusic.get(music).pause();
+        }
+    }
+
     public static void clearGameSound() {
         gameSounds.clear();
+    }
+
+    public static void clearGameMusic() {
+        gameMusic.clear();
     }
 }

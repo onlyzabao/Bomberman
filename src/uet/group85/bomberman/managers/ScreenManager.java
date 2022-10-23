@@ -32,6 +32,7 @@ public class ScreenManager {
         root.getChildren().add(canvas);
         screen = new MenuScreen();
         screen.handleEvent();
+        SoundManager.loadGameMusic();
     }
 
     public static void switchScreen(ScreenType type) {
@@ -40,10 +41,10 @@ public class ScreenManager {
                 screen.clear();
                 if (bufferScreen != null) {
                     screen = bufferScreen;
+                    screen.show();
                 } else {
                     screen = new GameScreen();
                 }
-                screen.show();
             }
             case PAUSE -> {
                 screen.hide();

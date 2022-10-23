@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class GameScreen implements Screen {
     // ------------- Specifications --------------
-    public final double WAIT_PERIOD = 2.2;
+    public final double WAIT_PERIOD = 2.0;
     // ------------- Key Event -------------------
     private static final int UP = 0;
     private static final int DOWN = 1;
@@ -131,6 +131,7 @@ public class GameScreen implements Screen {
     public void hide() {
         logs.forEach((String, Text) -> Text.toBack());
         pausedTime = BombermanGame.elapsedTime;
+        SoundManager.pauseGameMusic("BGM");
     }
 
     /**
@@ -140,6 +141,7 @@ public class GameScreen implements Screen {
     public void show() {
         logs.forEach((String, Text) -> Text.toFront());
         startedTime = BombermanGame.elapsedTime - (pausedTime - startedTime);
+        SoundManager.playGameMusic("BGM");
     }
 
     /**
@@ -191,9 +193,11 @@ public class GameScreen implements Screen {
             logs.get("Chance").setText(String.format("Left  %d", GameManager.chance));
             // Update game
             GameManager.update();
+            SoundManager.playGameMusic("BGM");
             return;
         }
         // Switch screen
+        SoundManager.stopGameMusic("BGM");
         if (isEnding) {
             if (BombermanGame.elapsedTime - endedTime > WAIT_PERIOD) {
                 ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);
@@ -209,7 +213,6 @@ public class GameScreen implements Screen {
             data.replace("Speed", GameManager.bomber.getBonusSpeed());
             data.replace("BombPass", GameManager.bomber.getCanPassBomb());
             data.replace("WallPass", GameManager.bomber.getCanPassBrick());
-
             saveData();
             start();
             return;

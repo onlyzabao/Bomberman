@@ -35,8 +35,6 @@ public class Bomber extends Character {
     // Manage movement
     private boolean isMoving;
     private int bonusSpeed;
-    private boolean canPassBrick;
-    private boolean canPassBomb;
     private final Tile[] obstacle;
     private final boolean[] isBlocked;
 

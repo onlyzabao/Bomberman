@@ -30,6 +30,8 @@ public class Balloon extends Character {
                 {Sprite.balloom_left1.getFxImage(), Sprite.balloom_left2.getFxImage(), Sprite.balloom_left3.getFxImage()},
                 {Sprite.balloom_right1.getFxImage(), Sprite.balloom_right2.getFxImage(), Sprite.balloom_right3.getFxImage()}
         };
+        canPassBomb = false;
+        canPassBrick = false;
     }
 
     private void chooseDirection() {

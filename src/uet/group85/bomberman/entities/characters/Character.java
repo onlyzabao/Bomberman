@@ -7,6 +7,9 @@ import uet.group85.bomberman.auxiliaries.Coordinate;
 import uet.group85.bomberman.auxiliaries.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Bomb;
+import uet.group85.bomberman.entities.blocks.Brick;
+import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Tile;
 import uet.group85.bomberman.graphics.Sprite;
 
@@ -31,8 +34,9 @@ public abstract class Character extends Entity {
     protected Image[][] movingFrame;
     protected Image[] dyingFrame;
     protected double[] frameDuration;
-
     protected boolean isExist;
+    protected boolean canPassBrick;
+    protected boolean canPassBomb;
 
     public Character(Coordinate mapPos, Coordinate screenPos,
                      Rectangle solidArea,
@@ -84,17 +88,28 @@ public abstract class Character extends Entity {
     }
 
     public void checkDirection(List<List<Tile>> tiles) {
-        Coordinate thisUnitPos = mapPos.divide(Sprite.SCALED_SIZE);
-
-        passableDirection[Direction.UP.ordinal()] = (tiles.get(thisUnitPos.y - 1).get(thisUnitPos.x)).isPassable();
-
-        passableDirection[Direction.DOWN.ordinal()] = (tiles.get(thisUnitPos.y + 1).get(thisUnitPos.x)).isPassable();
-
-        passableDirection[Direction.LEFT.ordinal()] = (tiles.get(thisUnitPos.y).get(thisUnitPos.x - 1)).isPassable();
-
-        passableDirection[Direction.RIGHT.ordinal()] = (tiles.get(thisUnitPos.y).get(thisUnitPos.x + 1)).isPassable();
-
-        passableDirection[Direction.NONE.ordinal()] = (tiles.get(thisUnitPos.y).get(thisUnitPos.x)).isPassable();
+        Coordinate unitPos = mapPos.divide(Sprite.SCALED_SIZE);
+        Tile[] tile = new Tile[]{
+                tiles.get(unitPos.y - 1).get(unitPos.x),
+                tiles.get(unitPos.y + 1).get(unitPos.x),
+                tiles.get(unitPos.y).get(unitPos.x - 1),
+                tiles.get(unitPos.y).get(unitPos.x + 1),
+                tiles.get(unitPos.y).get(unitPos.x)
+        };
+        for (int i = 0; i < 5; i++) {
+            // Check if direction are passable
+            passableDirection[i] = tile[i].isPassable();
+            if (tile[i] instanceof Grass) {
+                if (((Grass) tile[i]).hasOverlay()) {
+                    Block layer = ((Grass) tile[i]).getLayer();
+                    if (layer instanceof Bomb) {
+                        passableDirection[i] = passableDirection[i] || canPassBomb;
+                    } else if (layer instanceof Brick) {
+                        passableDirection[i] = passableDirection[i] || canPassBrick;
+                    }
+                }
+            }
+        }
     }
 
     public void eliminateNow(double deadTime) {

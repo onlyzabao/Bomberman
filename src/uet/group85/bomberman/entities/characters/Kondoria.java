@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 
 import uet.group85.bomberman.auxiliaries.Coordinate;
 import uet.group85.bomberman.auxiliaries.Rectangle;
-import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 
@@ -13,11 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Kondoria extends Character{
-
-    private boolean canPassBrick;
-
-    public Kondoria (Coordinate mapPos, Coordinate screenPos) {
+public class Kondoria extends Character {
+    public Kondoria(Coordinate mapPos, Coordinate screenPos) {
         super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
 
         defaultFrame = new Image[]{
@@ -32,7 +28,10 @@ public class Kondoria extends Character{
                 {Sprite.kondoria_left1.getFxImage(), Sprite.kondoria_left2.getFxImage(), Sprite.kondoria_left3.getFxImage()},
                 {Sprite.kondoria_right1.getFxImage(), Sprite.kondoria_right2.getFxImage(), Sprite.kondoria_right3.getFxImage()}
         };
+        canPassBomb = false;
+        canPassBrick = true;
     }
+
     private void chooseDirection() {
         List<Integer> directionChoices = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
@@ -52,6 +51,7 @@ public class Kondoria extends Character{
         int randomDirection = new Random().nextInt(directionChoices.size());
         stepDirection = Direction.values()[directionChoices.get(randomDirection)];
     }
+
     private void updateMapPos() {
         if (++stepCounter == stepDuration) {
             this.hitBox.update(mapPos, solidArea);
@@ -60,9 +60,9 @@ public class Kondoria extends Character{
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
                 checkDirection(GameManager.tiles);
-                if(isCollided((Block) GameManager.tiles)){
-                    canPassBrick = true ;
-                }
+//                if(isCollided((Block) GameManager.tiles)){
+//                    canPassBrick = true ;
+//                }
                 chooseDirection();
             }
             step();

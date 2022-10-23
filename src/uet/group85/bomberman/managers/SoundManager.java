@@ -10,6 +10,7 @@ public class SoundManager {
     public static boolean isMusicMuted = false;
     public static double volume = 1.0;
     private static final Map<String, AudioClip> gameSounds = new HashMap<>();
+    private static final Map<String, AudioClip> gameMusic = new HashMap<>();
 
     public static void loadGameSound() {
         gameSounds.put("Won", new AudioClip(SoundManager.class.getResource(
@@ -28,6 +29,12 @@ public class SoundManager {
                 "/sounds/explosion.wav").toExternalForm()));
         gameSounds.put("Power_up", new AudioClip(SoundManager.class.getResource(
                 "/sounds/power_up.wav").toExternalForm()));
+        gameSounds.put("Mod_dead", new AudioClip(SoundManager.class.getResource(
+                "/sounds/mod_dead.mp3").toExternalForm()));
+    }
+
+    public static void loadGameMusic() {
+
     }
 
     public static void playGameSound(String sound, boolean isDistinct) {

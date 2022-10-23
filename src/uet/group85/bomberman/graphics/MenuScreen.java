@@ -63,7 +63,6 @@ public class MenuScreen implements Screen {
                 wt.close();
                 topScore = newTopScore;
             }
-
             pointer = 0;
             isChosen = false;
         } catch (IOException e) {

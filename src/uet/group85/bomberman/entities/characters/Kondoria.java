@@ -44,7 +44,7 @@ public class Kondoria extends Character {
             return;
         }
         if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
-            if (directionChoices.size() < 4) {
+            if (directionChoices.size() < 3) {
                 return;
             }
         }
@@ -60,9 +60,6 @@ public class Kondoria extends Character {
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
                 checkDirection(GameManager.tiles);
-//                if(isCollided((Block) GameManager.tiles)){
-//                    canPassBrick = true ;
-//                }
                 chooseDirection();
             }
             step();

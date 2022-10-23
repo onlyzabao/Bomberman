@@ -87,10 +87,8 @@ public class Kondoria extends Character {
         if (!isDying) {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-            GameManager.score += 200;
+            GameManager.score += 300;
             isExist = false;
-        } else {
-            SoundManager.playGameSound("Mod_dead", true);
         }
         updateScreenPos();
     }
@@ -103,6 +101,7 @@ public class Kondoria extends Character {
         } else {
             if (GameManager.elapsedTime - deadTime < frameDuration[FrameType.INJURED.ordinal()]) {
                 gc.drawImage(getFrame(defaultFrame, GameManager.elapsedTime, FrameType.INJURED), screenPos.x, screenPos.y);
+                SoundManager.playGameSound("Mod_dead", true);
             } else {
                 gc.drawImage(getFrame(dyingFrame, GameManager.elapsedTime, FrameType.DYING), screenPos.x, screenPos.y);
             }

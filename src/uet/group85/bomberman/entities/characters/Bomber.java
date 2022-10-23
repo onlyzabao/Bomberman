@@ -137,7 +137,7 @@ public class Bomber extends Character {
             // Check if bomber have ability to pass obstacles
             if (obstacle[i] instanceof Grass) {
                 if (((Grass) obstacle[i]).hasOverlay()) {
-                    Block layer = ((Grass) obstacle[i]).getLayer();
+                    Block layer = ((Grass) obstacle[i]).getTopLayer();
                     if (layer instanceof Bomb) {
                         if (unitPos.equals(layer.getMapPos().divide(Sprite.SCALED_SIZE))) {
                             isBlocked[i] = false;

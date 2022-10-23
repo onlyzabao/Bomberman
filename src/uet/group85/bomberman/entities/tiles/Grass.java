@@ -31,8 +31,12 @@ public class Grass extends Tile {
         this.overlay.add(layer);
     }
 
-    public Block getLayer() {
+    public Block getTopLayer() {
         return overlay.get(overlay.size() - 1);
+    }
+
+    public Block getBottomLayer() {
+        return overlay.get(0);
     }
 
     public boolean hasOverlay() {

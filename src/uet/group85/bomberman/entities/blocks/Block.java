@@ -14,4 +14,8 @@ public abstract class Block extends Entity {
     public boolean isExist() {
         return isExist;
     }
+
+    public void setExist(boolean exist) {
+        isExist = exist;
+    }
 }

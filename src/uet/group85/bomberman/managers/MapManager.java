@@ -125,8 +125,8 @@ public class MapManager {
                     // Characters
                     case 'p' -> initBomber(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '1' -> initBalloon(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case '2' -> initKondoria(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case '3' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '2' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '3' -> initKondoria(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Blocks
                     case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));

@@ -101,7 +101,7 @@ public abstract class Character extends Entity {
             passableDirection[i] = tile[i].isPassable();
             if (tile[i] instanceof Grass) {
                 if (((Grass) tile[i]).hasOverlay()) {
-                    Block layer = ((Grass) tile[i]).getLayer();
+                    Block layer = ((Grass) tile[i]).getTopLayer();
                     if (layer instanceof Bomb) {
                         passableDirection[i] = passableDirection[i] || canPassBomb;
                     } else if (layer instanceof Brick) {

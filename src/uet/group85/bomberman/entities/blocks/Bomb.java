@@ -108,7 +108,7 @@ public class Bomb extends Block {
                 Tile nextTile = GameManager.tiles.get(tmpUnitPos.y + y).get(tmpUnitPos.x + x);
                 if (!nextTile.isPassable() && j != flameLen) {
                     if (nextTile instanceof Grass) {
-                        Entity layer = ((Grass) nextTile).getLayer();
+                        Entity layer = ((Grass) nextTile).getTopLayer();
                         if (layer instanceof Brick) {
                             ((Brick) layer).eliminateNow(GameManager.elapsedTime);
                         }

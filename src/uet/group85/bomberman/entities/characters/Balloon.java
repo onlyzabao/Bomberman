@@ -98,7 +98,9 @@ public class Balloon extends Character {
     @Override
     public void render(GraphicsContext gc) {
         if (!isDying) {
-            gc.drawImage(getFrame(movingFrame[stepDirection.ordinal() < 2 ? stepDirection.ordinal() : stepDirection.ordinal() - 2],
+            gc.drawImage(getFrame(movingFrame[
+                    stepDirection.ordinal() < 2 ? stepDirection.ordinal() :
+                    stepDirection.ordinal() < 4 ? stepDirection.ordinal() - 2 : 0],
                     GameManager.elapsedTime, FrameType.MOVING), screenPos.x, screenPos.y);
         } else {
             if (GameManager.elapsedTime - deadTime < frameDuration[FrameType.INJURED.ordinal()]) {

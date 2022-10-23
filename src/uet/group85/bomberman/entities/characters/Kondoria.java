@@ -7,6 +7,7 @@ import uet.group85.bomberman.auxiliaries.Coordinate;
 import uet.group85.bomberman.auxiliaries.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
+import uet.group85.bomberman.managers.SoundManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +89,8 @@ public class Kondoria extends Character {
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
             GameManager.score += 200;
             isExist = false;
+        } else {
+            SoundManager.playGameSound("Mod_dead", true);
         }
         updateScreenPos();
     }

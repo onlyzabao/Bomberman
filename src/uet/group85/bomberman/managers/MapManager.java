@@ -6,6 +6,7 @@ import uet.group85.bomberman.entities.blocks.BombItem;
 import uet.group85.bomberman.entities.blocks.FlameItem;
 import uet.group85.bomberman.entities.blocks.SpeedItem;
 import uet.group85.bomberman.entities.characters.Balloon;
+import uet.group85.bomberman.entities.characters.Doll;
 import uet.group85.bomberman.entities.characters.Kondoria;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Wall;
@@ -65,7 +66,10 @@ public class MapManager {
         initGrass(mapPos);
         GameManager.enemies.add(new Kondoria(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
-
+    private void initDoll(Coordinate mapPos) {
+        initGrass(mapPos);
+        GameManager.enemies.add(new Doll(new Coordinate(mapPos), new Coordinate(mapPos)));
+    }
     private void initOneal(Coordinate mapPos) {
         initGrass(mapPos);
     }
@@ -109,6 +113,13 @@ public class MapManager {
                 new Brick(mapPos, screenPos)
         });
     }
+    private void initDetonatorItem(Coordinate mapPos) {
+        Coordinate screenPos = new Coordinate(mapPos);
+        initGrass(mapPos, screenPos, new Block[]{
+                new DetonatorItem(mapPos, screenPos),
+                new Brick(mapPos, screenPos)
+        });
+    }
 
     public void loadMap(int level) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(String.format("res/levels/Level%d.txt", level)));
@@ -127,6 +138,7 @@ public class MapManager {
                     case '1' -> initBalloon(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '2' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '3' -> initKondoria(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '4' -> initDoll(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Blocks
                     case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
@@ -135,6 +147,7 @@ public class MapManager {
                     case 's' -> initSpeedItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case 'w' -> initWallPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case 'q' -> initBombPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 'u' -> initDetonatorItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Grass as default
                     default -> initGrass(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                 }

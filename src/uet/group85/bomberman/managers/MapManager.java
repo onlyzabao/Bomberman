@@ -113,6 +113,13 @@ public class MapManager {
                 new Brick(mapPos, screenPos)
         });
     }
+    private void initDetonatorItem(Coordinate mapPos) {
+        Coordinate screenPos = new Coordinate(mapPos);
+        initGrass(mapPos, screenPos, new Block[]{
+                new DetonatorItem(mapPos, screenPos),
+                new Brick(mapPos, screenPos)
+        });
+    }
 
     public void loadMap(int level) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(String.format("res/levels/Level%d.txt", level)));
@@ -140,6 +147,7 @@ public class MapManager {
                     case 's' -> initSpeedItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case 'w' -> initWallPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case 'q' -> initBombPassItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case 'u' -> initDetonatorItem(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Grass as default
                     default -> initGrass(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                 }

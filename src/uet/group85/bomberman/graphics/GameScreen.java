@@ -22,11 +22,12 @@ public class GameScreen implements Screen {
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
     public static final int BOMB = 4;
+    public static final int DETONATE = 5;
     // ------------- Playground Position -----------
     public static final int TRANSLATED_X = 0;
     public static final int TRANSLATED_Y = 64;
     // ------------- Game data ---------------------
-    private final Map<String, Integer> data = new HashMap<>(8);
+    private final Map<String, Integer> data = new HashMap<>(9);
     // ------------- Logs --------------------------
     private final Map<String, Text> logs = new HashMap<>(3);
     // ------------- Timeline ----------------------
@@ -98,6 +99,7 @@ public class GameScreen implements Screen {
             data.put("Speed", Integer.parseInt(rd.readLine()));
             data.put("BombPass", Integer.parseInt(rd.readLine()));
             data.put("WallPass", Integer.parseInt(rd.readLine()));
+            data.put("Detonator", Integer.parseInt(rd.readLine()));
             rd.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -118,6 +120,7 @@ public class GameScreen implements Screen {
             wt.write(String.format("%d\n", data.get("Speed")));
             wt.write(String.format("%d\n", data.get("BombPass")));
             wt.write(String.format("%d\n", data.get("WallPass")));
+            wt.write(String.format("%d\n", data.get("Detonator")));
             wt.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -157,6 +160,7 @@ public class GameScreen implements Screen {
                         case LEFT -> GameManager.events[LEFT] = true;
                         case RIGHT -> GameManager.events[RIGHT] = true;
                         case X -> GameManager.events[BOMB] = true;
+                        case Z -> GameManager.events[DETONATE] = true;
                         case ESCAPE -> ScreenManager.switchScreen(ScreenManager.ScreenType.PAUSE);
                     }
                 }
@@ -168,6 +172,7 @@ public class GameScreen implements Screen {
                         case DOWN -> GameManager.events[DOWN] = false;
                         case LEFT -> GameManager.events[LEFT] = false;
                         case RIGHT -> GameManager.events[RIGHT] = false;
+                        case Z -> GameManager.events[DETONATE] = false;
                         case X -> GameManager.events[BOMB] = false;
                     }
                 }
@@ -211,8 +216,9 @@ public class GameScreen implements Screen {
             data.replace("Bomb", GameManager.bomber.getNumOfBombs());
             data.replace("Flame", GameManager.bomber.getFlameLen());
             data.replace("Speed", GameManager.bomber.getBonusSpeed());
-            data.replace("BombPass", GameManager.bomber.getCanPassBomb());
-            data.replace("WallPass", GameManager.bomber.getCanPassBrick());
+            data.replace("BombPass", GameManager.bomber.canPassBomb() ? 1 : 0);
+            data.replace("WallPass", GameManager.bomber.canPassBrick() ? 1 : 0);
+            data.replace("Detonator", GameManager.bomber.hasDetonator() ? 1 : 0);
             saveData();
             start();
             return;
@@ -231,6 +237,7 @@ public class GameScreen implements Screen {
                 data.replace("Speed", 0);
                 data.replace("BombPass", 0);
                 data.replace("WallPass", 0);
+                data.replace("Detonator", 0);
                 saveData();
                 endedTime = BombermanGame.elapsedTime;
                 isEnding = true;

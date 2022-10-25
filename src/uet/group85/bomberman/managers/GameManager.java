@@ -16,7 +16,7 @@ public class GameManager {
     }
 
     // ------------------ Control ----------------------
-    public static final boolean[] events = new boolean[5];
+    public static final boolean[] events = new boolean[6];
     // ------------------ Objects ----------------------
 
     public static final List<List<Tile>> tiles = new ArrayList<>();

@@ -8,6 +8,7 @@ import uet.group85.bomberman.auxiliaries.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Tile;
+import uet.group85.bomberman.graphics.GameScreen;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.SoundManager;
@@ -82,6 +83,13 @@ public class Bomb extends Block {
     }
 
     private void countDown() {
+        if (GameManager.bomber.hasDetonator()) {
+            if (GameManager.events[GameScreen.DETONATE]) {
+                SoundManager.playGameSound("Explosion", false);
+                isCountingDown = false;
+            }
+            return;
+        }
         if (GameManager.elapsedTime - countDownTime > COUNTDOWN_PERIOD) {
             SoundManager.playGameSound("Explosion", false);
             isCountingDown = false;

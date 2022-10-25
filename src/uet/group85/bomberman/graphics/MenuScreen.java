@@ -122,6 +122,7 @@ public class MenuScreen implements Screen {
                     wt.write("0\n");
                     wt.write("0\n");
                     wt.write("0\n");
+                    wt.write("0\n");
                     wt.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);

@@ -31,6 +31,7 @@ public class Bomber extends Character {
     private final List<Bomb> bombs = new ArrayList<>();
     private final double COOLDOWN_PERIOD = 0.25;
     private boolean isCoolingDown;
+    private boolean hasDetonator;
     private double bombTime;
     // Manage movement
     private boolean isMoving;
@@ -73,6 +74,8 @@ public class Bomber extends Character {
         canPassBomb = data.get("BombPass") != 0;
 
         canPassBrick = data.get("WallPass") != 0;
+
+        hasDetonator = data.get("Detonator") != 0;
 
         isMoving = false;
         obstacle = new Tile[2];
@@ -264,6 +267,9 @@ public class Bomber extends Character {
     public void setCanPassBomb(boolean canPassBomb) {
         this.canPassBomb = canPassBomb;
     }
+    public void setHasDetonator(boolean hasDetonator) {
+        this.hasDetonator = hasDetonator;
+    }
 
     public int getNumOfBombs() {
         return bombs.size();
@@ -277,12 +283,16 @@ public class Bomber extends Character {
         return bonusSpeed / 2;
     }
 
-    public int getCanPassBomb() {
-        return (canPassBomb ? 1 : 0);
+    public boolean canPassBomb() {
+        return canPassBomb;
     }
 
-    public int getCanPassBrick() {
-        return (canPassBrick ? 1 : 0);
+    public boolean canPassBrick() {
+        return canPassBrick;
+    }
+
+    public boolean hasDetonator() {
+        return hasDetonator;
     }
 
     @Override

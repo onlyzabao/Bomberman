@@ -6,6 +6,7 @@ import uet.group85.bomberman.entities.blocks.BombItem;
 import uet.group85.bomberman.entities.blocks.FlameItem;
 import uet.group85.bomberman.entities.blocks.SpeedItem;
 import uet.group85.bomberman.entities.characters.Balloon;
+import uet.group85.bomberman.entities.characters.Doll;
 import uet.group85.bomberman.entities.characters.Kondoria;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Wall;
@@ -65,7 +66,10 @@ public class MapManager {
         initGrass(mapPos);
         GameManager.enemies.add(new Kondoria(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
-
+    private void initDoll(Coordinate mapPos) {
+        initGrass(mapPos);
+        GameManager.enemies.add(new Doll(new Coordinate(mapPos), new Coordinate(mapPos)));
+    }
     private void initOneal(Coordinate mapPos) {
         initGrass(mapPos);
     }
@@ -127,6 +131,7 @@ public class MapManager {
                     case '1' -> initBalloon(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '2' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '3' -> initKondoria(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '4' -> initDoll(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Blocks
                     case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));

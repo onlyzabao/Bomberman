@@ -37,4 +37,8 @@ public class Coordinate {
     public boolean equals(Coordinate other) {
         return (this.x == other.x && this.y == other.y);
     }
+
+    public double distance(Coordinate other) {
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    }
 }

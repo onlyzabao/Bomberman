@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.Random;
 
 public class Balloon extends Character {
-
+    /*
+    Primarily moves in a slow and predictable back-and-forth pattern,
+    but will occasionally change direction - usually when Bomberman is nearby.
+     */
     public Balloon(Coordinate mapPos, Coordinate screenPos) {
         super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
 
@@ -46,7 +49,11 @@ public class Balloon extends Character {
             return;
         }
         if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
-            if (directionChoices.size() < 4) {
+            double disToBomber = GameManager.bomber.getMapPos().distance(this.mapPos);
+            if (disToBomber / Sprite.SCALED_SIZE > 5.0) {
+                return;
+            }
+            if (directionChoices.size() < 3) {
                 return;
             }
         }

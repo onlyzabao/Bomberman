@@ -18,7 +18,7 @@ public class DetonatorItem extends Block {
     @Override
     public void update() {
         if (GameManager.bomber.isCollided(this)) {
-            GameManager.bomber.setCanPassBomb(true);
+            GameManager.bomber.setHasDetonator(true);
             SoundManager.playGameSound("Power_up", false);
             isExist = false;
         }

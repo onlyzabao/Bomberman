@@ -4,6 +4,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.group85.bomberman.auxiliaries.Coordinate;
 import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Bomb;
+import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.SoundManager;
@@ -44,7 +47,7 @@ public class Doll extends Character {
             return;
         }
         if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
-            if (directionChoices.size() < 3) {
+            if (directionChoices.size() < 4) {
                 return;
             }
         }
@@ -59,6 +62,16 @@ public class Doll extends Character {
                 GameManager.bomber.eliminateNow(GameManager.elapsedTime);
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
+                // Eat bomb
+                Coordinate unitPos = this.mapPos.divide(Sprite.SCALED_SIZE);
+                Grass belowGrass = (Grass) GameManager.tiles.get(unitPos.y).get(unitPos.x);
+                if (belowGrass.hasOverlay()) {
+                    Block belowBlock = belowGrass.getTopLayer();
+                    if (belowBlock instanceof Bomb) {
+                        belowBlock.setExist(false);
+                    }
+                }
+                // Turn
                 checkDirection(GameManager.tiles);
                 chooseDirection();
             }

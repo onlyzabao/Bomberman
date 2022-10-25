@@ -87,7 +87,7 @@ public abstract class Character extends Entity {
         return false;
     }
 
-    public void checkDirection(List<List<Tile>> tiles) {
+    public Tile[] checkDirection(List<List<Tile>> tiles) {
         Coordinate unitPos = mapPos.divide(Sprite.SCALED_SIZE);
         Tile[] tile = new Tile[]{
                 tiles.get(unitPos.y - 1).get(unitPos.x),
@@ -110,6 +110,7 @@ public abstract class Character extends Entity {
                 }
             }
         }
+        return tile;
     }
 
     public void eliminateNow(double deadTime) {

@@ -28,6 +28,7 @@ public class ScreenManager {
 
     public static void init() throws FileNotFoundException {
         SoundManager.loadGameMusic();
+        SoundManager.loadGameSound();
         gc.setFont(Font.loadFont(new FileInputStream("res/fonts/RetroGaming.ttf"), 32));
         root.getChildren().add(canvas);
         screen = new MenuScreen();

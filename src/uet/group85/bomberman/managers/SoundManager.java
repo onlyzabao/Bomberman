@@ -45,6 +45,9 @@ public class SoundManager {
 
         gameSounds.put("Mod_dead", new AudioClip(Objects.requireNonNull(SoundManager.class.getResource(
                 "/sounds/mod_dead.mp3")).toExternalForm()));
+
+        gameSounds.put("Switch", new AudioClip(Objects.requireNonNull(SoundManager.class.getResource(
+                "/sounds/switch.mp3")).toExternalForm()));
     }
 
     public static void loadGameMusic() {
@@ -54,6 +57,15 @@ public class SoundManager {
             @Override
             public void run() {
                 gameMusic.get("BGM").seek(Duration.ZERO);
+            }
+        });
+
+        gameMusic.put("TM", new MediaPlayer(new Media(Objects.requireNonNull(SoundManager.class.getResource(
+                "/sounds/Title_music.mp3")).toExternalForm())));
+        gameMusic.get("TM").setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                gameMusic.get("TM").seek(Duration.ZERO);
             }
         });
     }
@@ -77,24 +89,14 @@ public class SoundManager {
     }
 
     public static void stopGameMusic(String music) {
-        if (isMusicMuted) {
-            return;
-        }
         if (gameMusic.get(music).getStatus() != MediaPlayer.Status.STOPPED) {
             gameMusic.get(music).stop();
         }
     }
 
     public static void pauseGameMusic(String music) {
-        if (isMusicMuted) {
-            return;
-        }
         if (gameMusic.get(music).getStatus() != MediaPlayer.Status.PAUSED) {
             gameMusic.get(music).pause();
         }
-    }
-
-    public static void clearGameSound() {
-        gameSounds.clear();
     }
 }

@@ -48,8 +48,14 @@ public class PauseScreen implements Screen {
         ScreenManager.scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
                 case ESCAPE -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
-                case UP -> pointer = pointer > 0 ? --pointer : 2;
-                case DOWN -> pointer = pointer < 2 ? ++pointer : 0;
+                case UP -> {
+                    SoundManager.playGameSound("Switch", false);
+                    pointer = pointer > 0 ? --pointer : 2;
+                }
+                case DOWN -> {
+                    SoundManager.playGameSound("Switch", false);
+                    pointer = pointer < 2 ? ++pointer : 0;
+                }
                 case X -> isChosen = true;
             }
         });

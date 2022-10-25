@@ -60,8 +60,6 @@ public class GameScreen implements Screen {
             Text.setEffect(ds);
             ScreenManager.root.getChildren().add(Text);
         });
-        // Load game music & sounds
-        SoundManager.loadGameSound();
         // Start game
         start();
     }
@@ -285,7 +283,6 @@ public class GameScreen implements Screen {
     @Override
     public void clear() {
         logs.forEach((String, Text) -> ScreenManager.root.getChildren().remove(Text));
-        SoundManager.clearGameSound();
         GameManager.clear();
     }
 }

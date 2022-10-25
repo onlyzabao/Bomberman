@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import uet.group85.bomberman.managers.ScreenManager;
+import uet.group85.bomberman.managers.SoundManager;
 
 import java.io.*;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class MenuScreen implements Screen {
     private boolean isChosen;
 
     public MenuScreen() {
+        SoundManager.playGameMusic("TM");
         try {
             title = new ImageView(new Image(new FileInputStream("res/textures/general.png")));
             title.setX(100);
@@ -81,8 +83,14 @@ public class MenuScreen implements Screen {
     public void handleEvent() {
         ScreenManager.scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
-                case UP -> pointer = pointer > 0 ? --pointer : 2;
-                case DOWN -> pointer = pointer < 2 ? ++pointer : 0;
+                case UP -> {
+                    SoundManager.playGameSound("Switch", false);
+                    pointer = pointer > 0 ? --pointer : 2;
+                }
+                case DOWN -> {
+                    SoundManager.playGameSound("Switch", false);
+                    pointer = pointer < 2 ? ++pointer : 0;
+                }
                 case X -> isChosen = true;
             }
         });
@@ -127,9 +135,13 @@ public class MenuScreen implements Screen {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                SoundManager.stopGameMusic("TM");
                 ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
             }
-            case 1 -> ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
+            case 1 -> {
+                SoundManager.stopGameMusic("TM");
+                ScreenManager.switchScreen(ScreenManager.ScreenType.GAME);
+            }
             case 2 -> ScreenManager.switchScreen(ScreenManager.ScreenType.SETTING);
         }
     }

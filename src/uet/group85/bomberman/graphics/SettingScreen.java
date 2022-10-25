@@ -17,10 +17,10 @@ public class SettingScreen implements Screen {
     private boolean isChosen;
 
     public SettingScreen() {
-        buttons.put("Sound", new Text("Sound  On"));
+        buttons.put("Sound", new Text(String.format("Sound  %s", SoundManager.isSoundMuted ? "Off" : "On")));
         buttons.get("Sound").setY(200);
 
-        buttons.put("Music", new Text("Music  On"));
+        buttons.put("Music", new Text(String.format("Music  %s", SoundManager.isMusicMuted ? "Off" : "On")));
         buttons.get("Music").setY(240);
 
         buttons.put("Exit", new Text("Exit"));
@@ -47,8 +47,14 @@ public class SettingScreen implements Screen {
     public void handleEvent() {
         ScreenManager.scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
-                case UP -> pointer = pointer > 0 ? --pointer : 2;
-                case DOWN -> pointer = pointer < 2 ? ++pointer : 0;
+                case UP -> {
+                    SoundManager.playGameSound("Switch", false);
+                    pointer = pointer > 0 ? --pointer : 2;
+                }
+                case DOWN -> {
+                    SoundManager.playGameSound("Switch", false);
+                    pointer = pointer < 2 ? ++pointer : 0;
+                }
                 case X -> isChosen = true;
             }
         });
@@ -83,6 +89,11 @@ public class SettingScreen implements Screen {
             }
             case 1 -> {
                 SoundManager.isMusicMuted = !SoundManager.isMusicMuted;
+                if (SoundManager.isMusicMuted) {
+                    SoundManager.pauseGameMusic("TM");
+                } else {
+                    SoundManager.playGameMusic("TM");
+                }
                 buttons.get("Music").setText(String.format("Music  %s", SoundManager.isMusicMuted ? "Off" : "On"));
             }
             case 2 -> ScreenManager.switchScreen(ScreenManager.ScreenType.MENU);

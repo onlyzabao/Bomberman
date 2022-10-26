@@ -32,7 +32,7 @@ public class DetonatorItem extends Block implements Item {
 
     @Override
     public void spawnEnemy() {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             GameManager.enemies.add(new Kondoria(new Coordinate(mapPos), new Coordinate(mapPos)));
         }
         isExist = false;

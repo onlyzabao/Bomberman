@@ -2,6 +2,7 @@ package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.group85.bomberman.uitilities.AStar;
 import uet.group85.bomberman.uitilities.Coordinate;
 import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.entities.blocks.Block;
@@ -36,23 +37,30 @@ public class Doll extends Character {
     }
 
     private void chooseDirection() {
-        List<Integer> directionChoices = new ArrayList<>(4);
-        for (int i = 0; i < 4; i++) {
-            if (passableDirection[i]) {
-                directionChoices.add(i);
-            }
-        }
-        if (directionChoices.isEmpty()) {
+//        List<Integer> directionChoices = new ArrayList<>(4);
+//        for (int i = 0; i < 4; i++) {
+//            if (passableDirection[i]) {
+//                directionChoices.add(i);
+//            }
+//        }
+//        if (directionChoices.isEmpty()) {
+//            stepDirection = Direction.NONE;
+//            return;
+//        }
+//        if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
+//            if (directionChoices.size() < 4) {
+//                return;
+//            }
+//        }
+//        int randomDirection = new Random().nextInt(directionChoices.size());
+//        stepDirection = Direction.values()[directionChoices.get(randomDirection)];
+        AStar aStar = new AStar(this, GameManager.bomber);
+        List<Direction> directions = aStar.findPath();
+        if (directions.isEmpty()) {
             stepDirection = Direction.NONE;
-            return;
+        } else {
+            stepDirection = directions.get(0);
         }
-        if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
-            if (directionChoices.size() < 4) {
-                return;
-            }
-        }
-        int randomDirection = new Random().nextInt(directionChoices.size());
-        stepDirection = Direction.values()[directionChoices.get(randomDirection)];
     }
 
     private void updateMapPos() {

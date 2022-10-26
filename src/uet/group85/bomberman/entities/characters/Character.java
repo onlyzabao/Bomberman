@@ -134,4 +134,20 @@ public abstract class Character extends Entity {
     public boolean isLiving() {
         return isLiving;
     }
+
+    public boolean canPassBomb() {
+        return canPassBomb;
+    }
+
+    public boolean canPassBrick() {
+        return canPassBrick;
+    }
+
+    public void setCanPassBrick(boolean canPassBrick) {
+        this.canPassBrick = canPassBrick;
+    }
+
+    public void setCanPassBomb(boolean canPassBomb) {
+        this.canPassBomb = canPassBomb;
+    }
 }

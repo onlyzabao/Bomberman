@@ -260,13 +260,6 @@ public class Bomber extends Character {
         bombs.forEach(Bomb::increaseFlameLen);
     }
 
-    public void setCanPassBrick(boolean canPassBrick) {
-        this.canPassBrick = canPassBrick;
-    }
-
-    public void setCanPassBomb(boolean canPassBomb) {
-        this.canPassBomb = canPassBomb;
-    }
     public void setHasDetonator(boolean hasDetonator) {
         this.hasDetonator = hasDetonator;
     }
@@ -281,14 +274,6 @@ public class Bomber extends Character {
 
     public int getBonusSpeed() {
         return bonusSpeed / 2;
-    }
-
-    public boolean canPassBomb() {
-        return canPassBomb;
-    }
-
-    public boolean canPassBrick() {
-        return canPassBrick;
     }
 
     public boolean hasDetonator() {

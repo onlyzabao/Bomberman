@@ -88,7 +88,7 @@ public class Kondoria extends Character {
         if (!isDying) {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-            GameManager.score += 600;
+            GameManager.score += 300;
             isLiving = false;
         }
         updateScreenPos();

@@ -6,6 +6,13 @@ public class Node implements Comparable<Node> {
     public int g;
     public int h;
 
+    public Node() {
+        this.parent = new Coordinate(-1, -1);
+        this.f = Integer.MAX_VALUE;
+        this.g = Integer.MAX_VALUE;
+        this.h = Integer.MAX_VALUE;
+    }
+
     public Node(Coordinate parent, int f, int g, int h) {
         this.parent = parent;
         this.f = f;

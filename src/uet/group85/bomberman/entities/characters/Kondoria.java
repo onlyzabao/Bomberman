@@ -15,7 +15,7 @@ import java.util.*;
 
 public class Kondoria extends Character {
     /*
-    The slowest enemy in the game, it will pursue Bomberman and can travel through soft blocks.
+    The slowest enemy in the game, it will pursue Bomberman and can travel through bombs & soft blocks.
      */
     public Kondoria(Coordinate mapPos, Coordinate screenPos) {
         super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 5, true);
@@ -32,7 +32,7 @@ public class Kondoria extends Character {
                 {Sprite.kondoria_left1.getFxImage(), Sprite.kondoria_left2.getFxImage(), Sprite.kondoria_left3.getFxImage()},
                 {Sprite.kondoria_right1.getFxImage(), Sprite.kondoria_right2.getFxImage(), Sprite.kondoria_right3.getFxImage()}
         };
-        canPassBomb = false;
+        canPassBomb = true;
         canPassBrick = true;
     }
 

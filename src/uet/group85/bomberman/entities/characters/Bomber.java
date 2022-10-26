@@ -214,7 +214,7 @@ public class Bomber extends Character {
             }
         } else {
             // Horizontal check
-            if ((hitBox.topY + 16) / Sprite.SCALED_SIZE == obstacle[0].getMapPos().y / Sprite.SCALED_SIZE) {
+            if ((hitBox.topY + 14) / Sprite.SCALED_SIZE == obstacle[0].getMapPos().y / Sprite.SCALED_SIZE) {
                 mapPos.y += (isBlocked[0] ? 0 : -1) * stepLength / 2;
             } else {
                 mapPos.y += (isBlocked[1] ? 0 : 1) * stepLength / 2;
@@ -231,7 +231,7 @@ public class Bomber extends Character {
             } else {
                 for (Bomb bomb : bombs) {
                     if (!bomb.isExist()) {
-                        Coordinate bomberUnitPos = this.mapPos.add(12, 16).divide(Sprite.SCALED_SIZE);
+                        Coordinate bomberUnitPos = this.mapPos.add(12, 14).divide(Sprite.SCALED_SIZE);
                         Grass grass = (Grass) GameManager.tiles.get(bomberUnitPos.y).get(bomberUnitPos.x);
                         if (!grass.hasOverlay()) {
                             bomb.create(grass.getMapPos(), grass.getScreenPos());

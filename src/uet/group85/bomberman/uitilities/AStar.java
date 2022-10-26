@@ -34,7 +34,7 @@ public class AStar {
         this.chaser = chaser;
 
         this.src = chaser.getMapPos().divide(Sprite.SCALED_SIZE);
-        this.dest = runner.getMapPos().divide(Sprite.SCALED_SIZE);
+        this.dest = runner.getMapPos().add(12, 14).divide(Sprite.SCALED_SIZE);
     }
 
     public Character.Direction findPath() {

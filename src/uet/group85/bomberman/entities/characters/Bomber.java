@@ -41,7 +41,7 @@ public class Bomber extends Character {
 
     public Bomber(Map<String, Integer> data) {
         super(new Coordinate(0, 0), new Coordinate(0, 0),
-                new Rectangle(0, 0, (Sprite.SCALED_SIZE * 3) / 4, Sprite.SCALED_SIZE),
+                new Rectangle(0, 2, (Sprite.SCALED_SIZE * 3) / 4, Sprite.SCALED_SIZE - 4),
                 2, 3, true);
         // Init sprites
         defaultFrame = new Image[]{
@@ -67,7 +67,7 @@ public class Bomber extends Character {
             bombs.add(new Bomb(data.get("Flame")));
         }
 
-        bonusSpeed = data.get("Speed") * 2;
+        bonusSpeed = data.get("Speed");
         stepLength += bonusSpeed;
         stepDuration += bonusSpeed;
 
@@ -247,7 +247,7 @@ public class Bomber extends Character {
     }
 
     public void increaseSpeed() {
-        bonusSpeed += 2;
+        bonusSpeed += 1;
         stepLength += bonusSpeed;
         stepDuration += bonusSpeed;
     }
@@ -273,7 +273,7 @@ public class Bomber extends Character {
     }
 
     public int getBonusSpeed() {
-        return bonusSpeed / 2;
+        return bonusSpeed;
     }
 
     public boolean hasDetonator() {

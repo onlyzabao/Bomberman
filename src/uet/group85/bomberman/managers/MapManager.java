@@ -1,14 +1,11 @@
 package uet.group85.bomberman.managers;
 
+import uet.group85.bomberman.entities.characters.*;
 import uet.group85.bomberman.uitilities.Coordinate;
 import uet.group85.bomberman.entities.blocks.*;
 import uet.group85.bomberman.entities.blocks.BombItem;
 import uet.group85.bomberman.entities.blocks.FlameItem;
 import uet.group85.bomberman.entities.blocks.SpeedItem;
-import uet.group85.bomberman.entities.characters.Balloon;
-import uet.group85.bomberman.entities.characters.Doll;
-import uet.group85.bomberman.entities.characters.Kondoria;
-import uet.group85.bomberman.entities.characters.Minvo;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Wall;
 import uet.group85.bomberman.graphics.Sprite;
@@ -77,6 +74,7 @@ public class MapManager {
     }
     private void initOneal(Coordinate mapPos) {
         initGrass(mapPos);
+        GameManager.enemies.add(new Oneal(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
 
     private void initBombItem(Coordinate mapPos) {
@@ -145,6 +143,7 @@ public class MapManager {
                     case '3' -> initKondoria(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '4' -> initDoll(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '5' -> initMinvo(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '6' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Blocks
                     case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));

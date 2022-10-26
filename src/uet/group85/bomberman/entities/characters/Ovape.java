@@ -3,20 +3,17 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.entities.tiles.Tile;
+import uet.group85.bomberman.uitilities.AStar;
 import uet.group85.bomberman.uitilities.Coordinate;
 import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.SoundManager;
 
-import java.util.*;
-
-
 public class Ovape extends Character {
 
     public Ovape(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 5, true);
+        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
 
         defaultFrame = new Image[]{
                 Sprite.ovape_dead.getFxImage()
@@ -34,24 +31,6 @@ public class Ovape extends Character {
         canPassBrick = true;
     }
 
-    private void chooseDirection(Tile[] tiles) {
-        int minDist = Integer.MAX_VALUE;
-        for (int i = 0; i < 4; i++) {
-            if (passableDirection[i]) {
-                minDist = Math.min(minDist, GameManager.bomber.getMapPos().manhattanDist(tiles[i].getMapPos()));
-            }
-        }
-        List<Direction> directionChoices = new ArrayList<>(5);
-        for (int i = 0; i < 4; i++) {
-            if (passableDirection[i]) {
-                if (GameManager.bomber.getMapPos().manhattanDist(tiles[i].getMapPos()) == minDist) {
-                    directionChoices.add(Direction.values()[i]);
-                }
-            }
-        }
-        stepDirection = directionChoices.get(new Random().nextInt(directionChoices.size()));
-    }
-
     private void updateMapPos() {
         if (++stepCounter == stepDuration) {
             this.hitBox.update(mapPos, solidArea);
@@ -59,8 +38,8 @@ public class Ovape extends Character {
                 GameManager.bomber.eliminateNow(GameManager.elapsedTime);
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
-                Tile[] tiles = checkDirection();
-                chooseDirection(tiles);
+                AStar aStar = new AStar(this, GameManager.bomber);
+                stepDirection = aStar.findPath();
             }
             step();
             stepCounter = 0;

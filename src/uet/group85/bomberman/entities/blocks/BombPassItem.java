@@ -2,6 +2,7 @@ package uet.group85.bomberman.entities.blocks;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.group85.bomberman.entities.characters.Minvo;
 import uet.group85.bomberman.uitilities.Coordinate;
 import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
@@ -32,7 +33,9 @@ public class BombPassItem extends Block implements Item {
 
     @Override
     public void spawnEnemy() {
-        // TODO: Spawn enemy
+        for (int i = 0; i < 3; i++) {
+            GameManager.enemies.add(new Minvo(new Coordinate(mapPos), new Coordinate(mapPos)));
+        }
         isExist = false;
     }
 }

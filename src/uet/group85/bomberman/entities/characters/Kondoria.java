@@ -32,7 +32,7 @@ public class Kondoria extends Character {
                 {Sprite.kondoria_left1.getFxImage(), Sprite.kondoria_left2.getFxImage(), Sprite.kondoria_left3.getFxImage()},
                 {Sprite.kondoria_right1.getFxImage(), Sprite.kondoria_right2.getFxImage(), Sprite.kondoria_right3.getFxImage()}
         };
-        canPassBomb = true;
+        canPassBomb = false;
         canPassBrick = true;
     }
 
@@ -88,7 +88,7 @@ public class Kondoria extends Character {
         if (!isDying) {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-            GameManager.score += 300;
+            GameManager.score += 500;
             isLiving = false;
         }
         updateScreenPos();

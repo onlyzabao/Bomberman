@@ -33,7 +33,7 @@ public class BombItem extends Block implements Item {
 
     @Override
     public void spawnEnemy() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             GameManager.enemies.add(new Balloon(new Coordinate(mapPos), new Coordinate(mapPos)));
         }
         isExist = false;

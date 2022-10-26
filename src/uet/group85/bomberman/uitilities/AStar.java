@@ -20,7 +20,7 @@ public class AStar {
     private Coordinate src;
     private final Coordinate dest;
 
-    public AStar(Character chase, Character run) {
+    public AStar(Character chaser, Character runner) {
         openNodes = new PriorityQueue<>(Comparator.comparingInt(pos -> nodes[pos.y][pos.x].f));
         closeNodes = new HashSet<>();
 
@@ -31,13 +31,13 @@ public class AStar {
             }
         }
 
-        this.chaser = chase;
+        this.chaser = chaser;
 
-        this.src = chase.getMapPos().divide(Sprite.SCALED_SIZE);
-        this.dest = run.getMapPos().divide(Sprite.SCALED_SIZE);
+        this.src = chaser.getMapPos().divide(Sprite.SCALED_SIZE);
+        this.dest = runner.getMapPos().divide(Sprite.SCALED_SIZE);
     }
 
-    public List<Character.Direction> findPath() {
+    public Character.Direction findPath() {
         nodes[src.y][src.x] = new Node(new Coordinate(src), 0, 0, 0);
         openNodes.add(src);
         while (!openNodes.isEmpty()) {
@@ -51,10 +51,10 @@ public class AStar {
             checkSuccessor(pos, new Coordinate(pos.x - 1, pos.y));
             checkSuccessor(pos, new Coordinate(pos.x + 1, pos.y ));
         }
-        return new ArrayList<>();
+        return Character.Direction.NONE;
     }
 
-    public List<Character.Direction> tracePath() {
+    public Character.Direction tracePath() {
         Stack<Coordinate> path = new Stack<>();
         Coordinate pos = new Coordinate(dest);
         while (!(nodes[pos.y][pos.x].parent.equals(pos))) {
@@ -64,21 +64,19 @@ public class AStar {
             pos.x = tmp_x;
             pos.y = tmp_y;
         }
-        List<Character.Direction> directions = new ArrayList<>();
-        while (!path.isEmpty()) {
+        if (!path.isEmpty()) {
             Coordinate pos_ = path.pop();
             if (pos_.x < src.x) {
-                directions.add(Character.Direction.LEFT);
+                return Character.Direction.LEFT;
             } else if (pos_.x > src.x) {
-                directions.add(Character.Direction.RIGHT);
+                return Character.Direction.RIGHT;
             } else if (pos_.y < src.y) {
-                directions.add(Character.Direction.UP);
+                return Character.Direction.UP;
             } else if (pos_.y > src.y) {
-                directions.add(Character.Direction.DOWN);
+                return Character.Direction.DOWN;
             }
-            src = pos_;
         }
-        return directions;
+        return Character.Direction.NONE;
     }
 
     private void checkSuccessor(Coordinate pos, Coordinate adjPos) {

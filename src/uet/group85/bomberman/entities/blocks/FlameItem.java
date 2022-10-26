@@ -2,6 +2,7 @@ package uet.group85.bomberman.entities.blocks;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.group85.bomberman.entities.characters.Oneal;
 import uet.group85.bomberman.uitilities.Coordinate;
 import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
@@ -32,7 +33,9 @@ public class FlameItem extends Block implements Item {
 
     @Override
     public void spawnEnemy() {
-        // TODO: spawn Onil
+        for (int i = 0; i < 3; i++) {
+            GameManager.enemies.add(new Oneal(new Coordinate(mapPos), new Coordinate(mapPos)));
+        }
         isExist = false;
     }
 }

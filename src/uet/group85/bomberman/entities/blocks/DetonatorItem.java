@@ -2,6 +2,7 @@ package uet.group85.bomberman.entities.blocks;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.group85.bomberman.entities.characters.Ovape;
 import uet.group85.bomberman.uitilities.Coordinate;
 import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.entities.characters.Kondoria;
@@ -33,7 +34,7 @@ public class DetonatorItem extends Block implements Item {
     @Override
     public void spawnEnemy() {
         for (int i = 0; i < 4; i++) {
-            GameManager.enemies.add(new Kondoria(new Coordinate(mapPos), new Coordinate(mapPos)));
+            GameManager.enemies.add(new Ovape(new Coordinate(mapPos), new Coordinate(mapPos)));
         }
         isExist = false;
     }

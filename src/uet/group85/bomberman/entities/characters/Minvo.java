@@ -3,7 +3,10 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.entities.tiles.Tile;
+import uet.group85.bomberman.entities.blocks.Block;
+import uet.group85.bomberman.entities.blocks.Bomb;
+import uet.group85.bomberman.entities.tiles.Grass;
+import uet.group85.bomberman.uitilities.AStar;
 import uet.group85.bomberman.uitilities.Coordinate;
 import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
@@ -15,6 +18,10 @@ import java.util.List;
 import java.util.Random;
 
 public class Minvo extends Character {
+    /*
+    Like Doll but will pursue Bomberman when they want to.
+     */
+    private int chaseTime;
     public Minvo(Coordinate mapPos, Coordinate screenPos) {
         super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
 
@@ -31,27 +38,34 @@ public class Minvo extends Character {
                 {Sprite.minvo_right1.getFxImage(), Sprite.minvo_right2.getFxImage(), Sprite.minvo_right3.getFxImage()}
         };
         canPassBomb = true;
-        canPassBrick = true;
+        canPassBrick = false;
+
+        chaseTime = new Random().nextInt(100);
     }
 
-    private void chooseDirection(Tile[] tiles) {
-        List<Integer> directionChoices = new ArrayList<>(4);
-        for (int i = 0; i < 4; i++) {
-            if (passableDirection[i]) {
-                directionChoices.add(i);
+    private void chooseDirection() {
+        if ((int) GameManager.elapsedTime > chaseTime) {
+            AStar aStar = new AStar(this, GameManager.bomber);
+            stepDirection = aStar.findPath();
+        } else {
+            List<Integer> directionChoices = new ArrayList<>(4);
+            for (int i = 0; i < 4; i++) {
+                if (passableDirection[i]) {
+                    directionChoices.add(i);
+                }
             }
-        }
-        if (directionChoices.isEmpty()) {
-            stepDirection = Direction.NONE;
-            return;
-        }
-        if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
-            if (directionChoices.size() < 3) {
+            if (directionChoices.isEmpty()) {
+                stepDirection = Direction.NONE;
                 return;
             }
+            if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
+                if (directionChoices.size() < 4) {
+                    return;
+                }
+            }
+            int randomDirection = new Random().nextInt(directionChoices.size());
+            stepDirection = Direction.values()[directionChoices.get(randomDirection)];
         }
-        int randomDirection = new Random().nextInt(directionChoices.size());
-        stepDirection = Direction.values()[directionChoices.get(randomDirection)];
     }
 
     private void updateMapPos() {
@@ -61,8 +75,18 @@ public class Minvo extends Character {
                 GameManager.bomber.eliminateNow(GameManager.elapsedTime);
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
-                Tile[] tiles = checkDirection();
-                chooseDirection(tiles);
+                // Eat bomb
+                Coordinate unitPos = this.mapPos.divide(Sprite.SCALED_SIZE);
+                Grass belowGrass = (Grass) GameManager.tiles.get(unitPos.y).get(unitPos.x);
+                if (belowGrass.hasOverlay()) {
+                    Block belowBlock = belowGrass.getTopLayer();
+                    if (belowBlock instanceof Bomb) {
+                        belowBlock.setExist(false);
+                    }
+                }
+                // Turn
+                checkDirection();
+                chooseDirection();
             }
             step();
             stepCounter = 0;
@@ -88,7 +112,7 @@ public class Minvo extends Character {
         if (!isDying) {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-            GameManager.score += 300;
+            GameManager.score += 400;
             isLiving = false;
         }
         updateScreenPos();

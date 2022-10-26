@@ -60,26 +60,32 @@ public class MapManager {
         initGrass(mapPos);
         GameManager.enemies.add(new Balloon(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
+
     private void initKondoria(Coordinate mapPos) {
         initGrass(mapPos);
         GameManager.enemies.add(new Kondoria(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
+
     private void initDoll(Coordinate mapPos) {
         initGrass(mapPos);
         GameManager.enemies.add(new Doll(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
+
     private void initMinvo(Coordinate mapPos) {
         initGrass(mapPos);
         GameManager.enemies.add(new Minvo(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
+
     private void initOneal(Coordinate mapPos) {
         initGrass(mapPos);
         GameManager.enemies.add(new Oneal(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
+
     private void initOvape(Coordinate mapPos) {
         initGrass(mapPos);
         GameManager.enemies.add(new Ovape(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
+
     private void initBombItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{
@@ -143,11 +149,10 @@ public class MapManager {
                     case 'p' -> initBomber(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '1' -> initBalloon(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '2' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case '3' -> initKondoria(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case '4' -> initDoll(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case '5' -> initMinvo(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case '6' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
-                    case '7' -> initOvape(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '3' -> initDoll(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '4' -> initMinvo(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '5' -> initKondoria(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '6' -> initOvape(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Blocks
                     case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));

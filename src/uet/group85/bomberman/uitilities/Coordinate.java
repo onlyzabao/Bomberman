@@ -1,5 +1,7 @@
 package uet.group85.bomberman.uitilities;
 
+import uet.group85.bomberman.graphics.Sprite;
+
 public class Coordinate {
     public int x;
     public int y;
@@ -38,7 +40,7 @@ public class Coordinate {
         return (this.x == other.x && this.y == other.y);
     }
 
-    public int distance(Coordinate other) {
+    public int manhattanDist(Coordinate other) {
         return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }
 }

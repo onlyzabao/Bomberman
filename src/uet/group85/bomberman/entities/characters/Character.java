@@ -88,7 +88,7 @@ public abstract class Character extends Entity {
         return false;
     }
 
-    public void checkDirection() {
+    public Tile[] checkDirection() {
         Coordinate unitPos = mapPos.divide(Sprite.SCALED_SIZE);
         Tile[] tile = new Tile[]{
                 GameManager.tiles.get(unitPos.y - 1).get(unitPos.x),
@@ -111,6 +111,7 @@ public abstract class Character extends Entity {
                 }
             }
         }
+        return tile;
     }
 
     public void eliminateNow(double deadTime) {

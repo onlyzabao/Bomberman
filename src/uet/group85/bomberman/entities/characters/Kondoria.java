@@ -3,8 +3,8 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.SoundManager;
@@ -14,8 +14,11 @@ import java.util.List;
 import java.util.Random;
 
 public class Kondoria extends Character {
+    /*
+    The slowest enemy in the game, it will pursue Bomberman and can travel through soft blocks.
+     */
     public Kondoria(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
+        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 5, true);
 
         defaultFrame = new Image[]{
                 Sprite.kondoria_dead.getFxImage()
@@ -60,7 +63,7 @@ public class Kondoria extends Character {
                 GameManager.bomber.eliminateNow(GameManager.elapsedTime);
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
-                checkDirection(GameManager.tiles);
+                checkDirection();
                 chooseDirection();
             }
             step();
@@ -87,8 +90,8 @@ public class Kondoria extends Character {
         if (!isDying) {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-            GameManager.score += 300;
-            isExist = false;
+            GameManager.score += 600;
+            isLiving = false;
         }
         updateScreenPos();
     }

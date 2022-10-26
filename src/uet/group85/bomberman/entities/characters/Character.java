@@ -2,9 +2,9 @@ package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxiliaries.Border;
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.uitilities.Border;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.blocks.Bomb;
@@ -12,8 +12,7 @@ import uet.group85.bomberman.entities.blocks.Brick;
 import uet.group85.bomberman.entities.tiles.Grass;
 import uet.group85.bomberman.entities.tiles.Tile;
 import uet.group85.bomberman.graphics.Sprite;
-
-import java.util.List;
+import uet.group85.bomberman.managers.GameManager;
 
 public abstract class Character extends Entity {
     public enum Direction {
@@ -22,38 +21,40 @@ public abstract class Character extends Entity {
     enum FrameType {
         MOVING, INJURED, DYING
     }
+    // --------------- Life ------------------
     protected final double DYING_PERIOD = 1.5;
-    protected boolean isDying;
     protected double deadTime;
+    protected boolean isDying;
+    protected boolean isLiving;
+    // -------------- Movement ---------------
     protected int stepLength;
     protected int stepDuration;
     protected int stepCounter;
     protected Direction stepDirection;
     protected boolean[] passableDirection;
+    // -------------- Animation ---------------
     protected Image[] defaultFrame;
     protected Image[][] movingFrame;
     protected Image[] dyingFrame;
     protected double[] frameDuration;
-    protected boolean isExist;
+    // ---------------- Abilities -------------
     protected boolean canPassBrick;
     protected boolean canPassBomb;
 
-    public Character(Coordinate mapPos, Coordinate screenPos,
-                     Rectangle solidArea,
-                     int stepLength, int stepDuration, boolean isExist) {
+    public Character(Coordinate mapPos, Coordinate screenPos, Rectangle solidArea,
+                     int stepLength, int stepDuration, boolean isLiving) {
         super(mapPos, screenPos, solidArea);
+
+        this.isLiving = isLiving;
+        isDying = false;
 
         this.stepLength = stepLength;
         this.stepDuration = stepDuration;
         this.stepCounter = 0;
         this.stepDirection = Direction.DOWN;
+        passableDirection = new boolean[Direction.TOTAL.ordinal()];
 
         frameDuration = new double[]{0.2, 0.3, 1.0};
-
-        passableDirection = new boolean[Direction.TOTAL.ordinal()];
-        isDying = false;
-
-        this.isExist = isExist;
     }
 
     public boolean isCollided(Block other) {
@@ -87,14 +88,14 @@ public abstract class Character extends Entity {
         return false;
     }
 
-    public Tile[] checkDirection(List<List<Tile>> tiles) {
+    public void checkDirection() {
         Coordinate unitPos = mapPos.divide(Sprite.SCALED_SIZE);
         Tile[] tile = new Tile[]{
-                tiles.get(unitPos.y - 1).get(unitPos.x),
-                tiles.get(unitPos.y + 1).get(unitPos.x),
-                tiles.get(unitPos.y).get(unitPos.x - 1),
-                tiles.get(unitPos.y).get(unitPos.x + 1),
-                tiles.get(unitPos.y).get(unitPos.x)
+                GameManager.tiles.get(unitPos.y - 1).get(unitPos.x),
+                GameManager.tiles.get(unitPos.y + 1).get(unitPos.x),
+                GameManager.tiles.get(unitPos.y).get(unitPos.x - 1),
+                GameManager.tiles.get(unitPos.y).get(unitPos.x + 1),
+                GameManager.tiles.get(unitPos.y).get(unitPos.x)
         };
         for (int i = 0; i < 5; i++) {
             // Check if direction are passable
@@ -110,7 +111,6 @@ public abstract class Character extends Entity {
                 }
             }
         }
-        return tile;
     }
 
     public void eliminateNow(double deadTime) {
@@ -130,7 +130,7 @@ public abstract class Character extends Entity {
         return frame[index];
     }
 
-    public boolean isExist() {
-        return isExist;
+    public boolean isLiving() {
+        return isLiving;
     }
 }

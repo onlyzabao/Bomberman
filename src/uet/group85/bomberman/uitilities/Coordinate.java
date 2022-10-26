@@ -1,4 +1,4 @@
-package uet.group85.bomberman.auxiliaries;
+package uet.group85.bomberman.uitilities;
 
 public class Coordinate {
     public int x;
@@ -38,7 +38,7 @@ public class Coordinate {
         return (this.x == other.x && this.y == other.y);
     }
 
-    public double distance(Coordinate other) {
-        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    public int distance(Coordinate other) {
+        return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }
 }

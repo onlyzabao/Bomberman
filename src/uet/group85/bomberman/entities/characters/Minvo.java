@@ -3,8 +3,9 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.entities.tiles.Tile;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.SoundManager;
@@ -33,7 +34,7 @@ public class Minvo extends Character {
         canPassBrick = true;
     }
 
-    private void chooseDirection() {
+    private void chooseDirection(Tile[] tiles) {
         List<Integer> directionChoices = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
             if (passableDirection[i]) {
@@ -60,8 +61,8 @@ public class Minvo extends Character {
                 GameManager.bomber.eliminateNow(GameManager.elapsedTime);
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
-                checkDirection(GameManager.tiles);
-                chooseDirection();
+                Tile[] tiles = checkDirection();
+                chooseDirection(tiles);
             }
             step();
             stepCounter = 0;
@@ -88,7 +89,7 @@ public class Minvo extends Character {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
             GameManager.score += 300;
-            isExist = false;
+            isLiving = false;
         }
         updateScreenPos();
     }

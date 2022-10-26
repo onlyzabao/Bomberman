@@ -29,7 +29,7 @@ public class Oneal extends Character {
                 {Sprite.oneal_left1.getFxImage(), Sprite.oneal_left2.getFxImage(), Sprite.oneal_left3.getFxImage()},
                 {Sprite.oneal_right1.getFxImage(), Sprite.oneal_right2.getFxImage(), Sprite.oneal_right3.getFxImage()}
         };
-        canPassBomb = true;
+        canPassBomb = false;
         canPassBrick = false;
     }
 

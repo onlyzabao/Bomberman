@@ -54,7 +54,7 @@ public class GameManager {
      */
     public static void update() {
         GameManager.bomber.update();
-        GameManager.enemies.removeIf(enemy -> !enemy.isExist());
+        GameManager.enemies.removeIf(enemy -> !enemy.isLiving());
         GameManager.enemies.forEach(Entity::update);
         GameManager.tiles.forEach(tile -> tile.forEach(Entity::update));
     }

@@ -3,8 +3,8 @@ package uet.group85.bomberman.entities.tiles;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.blocks.Brick;

@@ -3,19 +3,22 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.entities.tiles.Tile;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.SoundManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
 
 public class Kondoria extends Character {
+    /*
+    The slowest enemy in the game, it will pursue Bomberman and can travel through soft blocks.
+     */
     public Kondoria(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
+        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 5, true);
 
         defaultFrame = new Image[]{
                 Sprite.kondoria_dead.getFxImage()
@@ -33,24 +36,22 @@ public class Kondoria extends Character {
         canPassBrick = true;
     }
 
-    private void chooseDirection() {
-        List<Integer> directionChoices = new ArrayList<>(4);
+    private void chooseDirection(Tile[] tiles) {
+        int minDist = Integer.MAX_VALUE;
         for (int i = 0; i < 4; i++) {
             if (passableDirection[i]) {
-                directionChoices.add(i);
+                minDist = Math.min(minDist, GameManager.bomber.getMapPos().manhattanDist(tiles[i].getMapPos()));
             }
         }
-        if (directionChoices.isEmpty()) {
-            stepDirection = Direction.NONE;
-            return;
-        }
-        if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
-            if (directionChoices.size() < 3) {
-                return;
+        List<Direction> directionChoices = new ArrayList<>(5);
+        for (int i = 0; i < 4; i++) {
+            if (passableDirection[i]) {
+                if (GameManager.bomber.getMapPos().manhattanDist(tiles[i].getMapPos()) == minDist) {
+                    directionChoices.add(Direction.values()[i]);
+                }
             }
         }
-        int randomDirection = new Random().nextInt(directionChoices.size());
-        stepDirection = Direction.values()[directionChoices.get(randomDirection)];
+        stepDirection = directionChoices.get(new Random().nextInt(directionChoices.size()));
     }
 
     private void updateMapPos() {
@@ -60,8 +61,8 @@ public class Kondoria extends Character {
                 GameManager.bomber.eliminateNow(GameManager.elapsedTime);
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
-                checkDirection(GameManager.tiles);
-                chooseDirection();
+                Tile[] tiles = checkDirection();
+                chooseDirection(tiles);
             }
             step();
             stepCounter = 0;
@@ -87,8 +88,8 @@ public class Kondoria extends Character {
         if (!isDying) {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-            GameManager.score += 300;
-            isExist = false;
+            GameManager.score += 600;
+            isLiving = false;
         }
         updateScreenPos();
     }

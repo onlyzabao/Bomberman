@@ -3,8 +3,8 @@ package uet.group85.bomberman.entities.blocks;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.SoundManager;
@@ -30,7 +30,7 @@ public class Portal extends Block {
             return;
         }
         if (GameManager.bomber.isCollided(this)) {
-            if (GameManager.bomber.isExist() && GameManager.enemies.isEmpty()) {
+            if (GameManager.bomber.isLiving() && GameManager.enemies.isEmpty()) {
                 waitedTime = GameManager.elapsedTime;
                 SoundManager.playGameSound("Stage_finished", true);
                 isFinished = true;

@@ -3,9 +3,9 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxiliaries.Border;
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.uitilities.Border;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.blocks.Brick;
 import uet.group85.bomberman.entities.tiles.Grass;
@@ -297,7 +297,7 @@ public class Bomber extends Character {
 
     @Override
     public void update() {
-        if (!isExist) {
+        if (!isLiving) {
             if (GameManager.elapsedTime - deadTime > DYING_PERIOD + 2.0) {
                 GameManager.status = GameManager.Status.LOST;
             }
@@ -307,7 +307,7 @@ public class Bomber extends Character {
                 updateScreenPos();
                 updateBomb();
             } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-                isExist = false;
+                isLiving = false;
             } else {
                 SoundManager.playGameSound("Bomber_dead", true);
             }
@@ -316,7 +316,7 @@ public class Bomber extends Character {
 
     @Override
     public void render(GraphicsContext gc) {
-        if (!isExist) {
+        if (!isLiving) {
             return;
         }
         if (!isDying) {

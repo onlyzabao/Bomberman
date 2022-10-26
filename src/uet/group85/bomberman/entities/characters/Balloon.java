@@ -3,8 +3,8 @@ package uet.group85.bomberman.entities.characters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.graphics.Sprite;
 import uet.group85.bomberman.managers.GameManager;
 import uet.group85.bomberman.managers.SoundManager;
@@ -38,10 +38,10 @@ public class Balloon extends Character {
     }
 
     private void chooseDirection() {
-        List<Integer> directionChoices = new ArrayList<>(4);
+        List<Direction> directionChoices = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
             if (passableDirection[i]) {
-                directionChoices.add(i);
+                directionChoices.add(Direction.values()[i]);
             }
         }
         if (directionChoices.isEmpty()) {
@@ -49,16 +49,15 @@ public class Balloon extends Character {
             return;
         }
         if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
-            double disToBomber = GameManager.bomber.getMapPos().distance(this.mapPos);
-            if (disToBomber / Sprite.SCALED_SIZE > 5.0) {
+            double distToBomber = GameManager.bomber.getMapPos().manhattanDist(this.mapPos);
+            if (distToBomber / Sprite.SCALED_SIZE > 5) {
                 return;
             }
             if (directionChoices.size() < 3) {
                 return;
             }
         }
-        int randomDirection = new Random().nextInt(directionChoices.size());
-        stepDirection = Direction.values()[directionChoices.get(randomDirection)];
+        stepDirection = directionChoices.get(new Random().nextInt(directionChoices.size()));
     }
 
 
@@ -69,7 +68,7 @@ public class Balloon extends Character {
                 GameManager.bomber.eliminateNow(GameManager.elapsedTime);
             }
             if (mapPos.x % Sprite.SCALED_SIZE == 0 && mapPos.y % Sprite.SCALED_SIZE == 0) {
-                checkDirection(GameManager.tiles);
+                checkDirection();
                 chooseDirection();
             }
             step();
@@ -96,8 +95,8 @@ public class Balloon extends Character {
         if (!isDying) {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
-            GameManager.score += 200;
-            isExist = false;
+            GameManager.score += 100;
+            isLiving = false;
         }
         updateScreenPos();
     }

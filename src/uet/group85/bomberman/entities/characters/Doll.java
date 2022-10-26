@@ -2,8 +2,8 @@ package uet.group85.bomberman.entities.characters;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.blocks.Bomb;
 import uet.group85.bomberman.entities.tiles.Grass;
@@ -72,7 +72,7 @@ public class Doll extends Character {
                     }
                 }
                 // Turn
-                checkDirection(GameManager.tiles);
+                checkDirection();
                 chooseDirection();
             }
             step();
@@ -100,7 +100,7 @@ public class Doll extends Character {
             updateMapPos();
         } else if (GameManager.elapsedTime - deadTime > DYING_PERIOD) {
             GameManager.score += 300;
-            isExist = false;
+            isLiving = false;
         }
         updateScreenPos();
     }

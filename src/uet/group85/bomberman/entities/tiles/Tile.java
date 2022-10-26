@@ -1,7 +1,7 @@
 package uet.group85.bomberman.entities.tiles;
 
-import uet.group85.bomberman.auxiliaries.Coordinate;
-import uet.group85.bomberman.auxiliaries.Rectangle;
+import uet.group85.bomberman.uitilities.Coordinate;
+import uet.group85.bomberman.uitilities.Rectangle;
 import uet.group85.bomberman.entities.Entity;
 
 public abstract class Tile extends Entity {

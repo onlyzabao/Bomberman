@@ -1,4 +1,4 @@
-package uet.group85.bomberman.auxiliaries;
+package uet.group85.bomberman.uitilities;
 
 public class Border {
     public int topY;

@@ -76,7 +76,10 @@ public class MapManager {
         initGrass(mapPos);
         GameManager.enemies.add(new Oneal(new Coordinate(mapPos), new Coordinate(mapPos)));
     }
-
+    private void initOvape(Coordinate mapPos) {
+        initGrass(mapPos);
+        GameManager.enemies.add(new Ovape(new Coordinate(mapPos), new Coordinate(mapPos)));
+    }
     private void initBombItem(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
         initGrass(mapPos, screenPos, new Block[]{
@@ -144,6 +147,7 @@ public class MapManager {
                     case '4' -> initDoll(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '5' -> initMinvo(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '6' -> initOneal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
+                    case '7' -> initOvape(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     // Blocks
                     case 'x' -> initPortal(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));
                     case '*' -> initBrick(new Coordinate(i, j).multiply(Sprite.SCALED_SIZE));

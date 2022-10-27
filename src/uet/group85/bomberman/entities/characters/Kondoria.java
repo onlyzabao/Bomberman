@@ -32,7 +32,7 @@ public class Kondoria extends Character {
                 {Sprite.kondoria_left1.getFxImage(), Sprite.kondoria_left2.getFxImage(), Sprite.kondoria_left3.getFxImage()},
                 {Sprite.kondoria_right1.getFxImage(), Sprite.kondoria_right2.getFxImage(), Sprite.kondoria_right3.getFxImage()}
         };
-        canPassBomb = false;
+        canPassBomb = true;
         canPassBrick = true;
     }
 

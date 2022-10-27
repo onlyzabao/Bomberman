@@ -34,7 +34,7 @@ public class Doll extends Character {
                 {Sprite.doll_left1.getFxImage(), Sprite.doll_left2.getFxImage(), Sprite.doll_left3.getFxImage()},
                 {Sprite.doll_right1.getFxImage(), Sprite.doll_right2.getFxImage(), Sprite.doll_right3.getFxImage()}
         };
-        canPassBomb = true;
+        canPassBomb = false;
         canPassBrick = false;
     }
 

@@ -27,8 +27,11 @@ Các *Item* cũng được giấu phía sau Brick và chỉ hiện ra khi Brick 
 
 Có nhiều loại Enemy trong Bomberman, tuy nhiên trong phiên bản này chỉ yêu cầu cài đặt hai loại Enemy dưới đây (nếu cài đặt thêm các loại khác sẽ được cộng thêm điểm):
 - ![](res/sprites/balloom_left1.png)*Balloom* (100 điểm) là Enemy đơn giản nhất, di chuyển ngẫu nhiên với vận tốc cố định, chuyển hướng khi va chạm với vật cản
-- ![](res/sprites/doll_left1.png)*Doll*(200 điểm) là Enemy có khả năng di chuyển ngẫu nhiên với vận tốc cố định, chuyển hướng khi va chạm với vât cản và có thể đi xuyên qua *Bomb* mà không bị cản lại nhưng vẫn bị tiêu diệt bởi *Flame*
-- ![](res/sprites/kondoria_left1.png)*Kondoria* (200 điểm) là Enemy có khả năng di chuyển ngẫu nhiên với vận tốc cố định, chuyển hướng khi va chạm với vât cản và có thể đi xuyên qua *Brick* mà không bị cản lại nhưng không thể đi xuyên qua *Wall*
+- ![](res/sprites/oneal_left1.png)*Oneal* (200 điểm) là Enemy di chuyển ngẫu nhiên với vận tốc cố định, chuyển hướng khi va chạm với vật cản và theo đuổi *Bomber* khi ở gần.
+- ![](res/sprites/doll_left1.png)*Doll*(300 điểm) là Enemy có khả năng di chuyển ngẫu nhiên với vận tốc cố định, chuyển hướng khi va chạm với vât cản và có thể ăn *Bomb* mà không bị tiêu diệt nhưng vẫn bị tiêu diệt bởi *Flame*
+- ![](res/sprites/ovape_left1.png)*Ovape*(300 điểm) là Enemy có khả năng di chuyển ngẫu nhiên với vận tốc cố định, chuyển hướng khi va chạm với vât cản và có thể đi qua *Bomb* trước khi nổ mà không bị chặn lại
+- ![](res/sprites/minvo_left1.png)*Minvo* (400 điểm) là Enemy tượng tự như *Doll* nhưng có khả năng đuổi theo *Bomber* khi muốn và đi qua *Bomb* trước khi nổ mà không bị cản lại 
+- ![](res/sprites/kondoria_left1.png)*Kondoria* (500 điểm) là Enemy chậm nhất nhưng có thể đuổi theo *Bomber* và đi xuyên qua *Bomb* và *Brick* 
 ## Mô tả game play, xử lý va chạm và xử lý bom nổ
 - Trong một màn chơi, Bomber sẽ được người chơi di chuyển, đặt và kích hoạt Bomb với mục tiêu chính là tiêu diệt tất cả Enemy và tìm ra vị trí Portal để có thể qua màn mới
 - Bomber sẽ bị giết khi va chạm với Enemy hoặc thuộc phạm vi Bomb nổ. Lúc đấy trò chơi kết thúc.

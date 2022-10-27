@@ -248,8 +248,8 @@ public class Bomber extends Character {
 
     public void increaseSpeed() {
         bonusSpeed += 1;
-        stepLength += bonusSpeed;
-        stepDuration += bonusSpeed;
+        stepLength += 1;
+        stepDuration += 1;
     }
 
     public void increaseBomb() {

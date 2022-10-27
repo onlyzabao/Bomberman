@@ -17,7 +17,7 @@ public class AStar {
     private final Set<Coordinate> closeNodes;
     private Node[][] nodes;
     private final Character chaser;
-    private Coordinate src;
+    private final Coordinate src;
     private final Coordinate dest;
 
     public AStar(Character chaser, Character runner) {

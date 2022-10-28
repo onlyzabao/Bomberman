@@ -1,6 +1,7 @@
 package uet.group85.bomberman.managers;
 
 import uet.group85.bomberman.entities.Entity;
+import uet.group85.bomberman.entities.blocks.Block;
 import uet.group85.bomberman.entities.characters.Bomber;
 import uet.group85.bomberman.entities.characters.Character;
 import uet.group85.bomberman.entities.tiles.Tile;
@@ -23,6 +24,7 @@ public class GameManager {
     public static final List<Character> enemies = new ArrayList<>();
 
     public static Bomber bomber;
+    public static Block portal;
     // ------------------ Map --------------------------
     public static int mapCols;
     public static int mapRows;

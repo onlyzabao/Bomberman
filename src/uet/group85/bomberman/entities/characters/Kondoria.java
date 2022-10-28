@@ -37,21 +37,38 @@ public class Kondoria extends Character {
     }
 
     private void chooseDirection(Tile[] tiles) {
-        int minDist = Integer.MAX_VALUE;
-        for (int i = 0; i < 4; i++) {
-            if (passableDirection[i]) {
-                minDist = Math.min(minDist, GameManager.bomber.getMapPos().manhattanDist(tiles[i].getMapPos()));
+        Coordinate bomberUnitPos = GameManager.bomber.getMapPos().divide(Sprite.SCALED_SIZE);
+        Coordinate portalUnitPos = GameManager.portal.getMapPos().divide(Sprite.SCALED_SIZE);
+        if (bomberUnitPos.manhattanDist(portalUnitPos) < 10) {
+            int minDist = Integer.MAX_VALUE;
+            for (int i = 0; i < 4; i++) {
+                if (passableDirection[i]) {
+                    minDist = Math.min(minDist, GameManager.bomber.getMapPos().manhattanDist(tiles[i].getMapPos()));
+                }
             }
-        }
-        List<Direction> directionChoices = new ArrayList<>(5);
-        for (int i = 0; i < 4; i++) {
-            if (passableDirection[i]) {
-                if (GameManager.bomber.getMapPos().manhattanDist(tiles[i].getMapPos()) == minDist) {
+            List<Direction> directionChoices = new ArrayList<>(5);
+            for (int i = 0; i < 4; i++) {
+                if (passableDirection[i]) {
+                    if (GameManager.bomber.getMapPos().manhattanDist(tiles[i].getMapPos()) == minDist) {
+                        directionChoices.add(Direction.values()[i]);
+                    }
+                }
+            }
+            stepDirection = directionChoices.get(new Random().nextInt(directionChoices.size()));
+        } else {
+            List<Direction> directionChoices = new ArrayList<>(4);
+            for (int i = 0; i < 4; i++) {
+                if (passableDirection[i]) {
                     directionChoices.add(Direction.values()[i]);
                 }
             }
+            if (passableDirection[stepDirection.ordinal()] && passableDirection[Direction.NONE.ordinal()]) {
+                if (directionChoices.size() < 3) {
+                    return;
+                }
+            }
+            stepDirection = directionChoices.get(new Random().nextInt(directionChoices.size()));
         }
-        stepDirection = directionChoices.get(new Random().nextInt(directionChoices.size()));
     }
 
     private void updateMapPos() {

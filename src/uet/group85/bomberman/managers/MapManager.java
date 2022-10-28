@@ -44,8 +44,9 @@ public class MapManager {
 
     private void initPortal(Coordinate mapPos) {
         Coordinate screenPos = new Coordinate(mapPos);
+        GameManager.portal = new Portal(mapPos, screenPos);
         initGrass(mapPos, screenPos, new Block[]{
-                new Portal(mapPos, screenPos),
+                GameManager.portal,
                 new Brick(mapPos, screenPos)
         });
     }

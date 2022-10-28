@@ -18,7 +18,7 @@ public class Oneal extends Character {
     Faster than Balloon, Oneal move erratically and pursue Bomberman when Bomberman come close.
      */
     public Oneal(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
+        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 3, true);
 
         defaultFrame = new Image[]{
                 Sprite.oneal_dead.getFxImage()

@@ -20,7 +20,7 @@ public class Doll extends Character {
     Behaves will move erratically and eat bomb.
      */
     public Doll(Coordinate mapPos, Coordinate screenPos) {
-        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 4, true);
+        super(mapPos, screenPos, new Rectangle(8, 8, 16, 16), 2, 5, true);
 
         defaultFrame = new Image[]{
                 Sprite.doll_dead.getFxImage()

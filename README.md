@@ -1,9 +1,14 @@
 # Bomberman
 ## Thành viên
-- Nguyễn Trần Gia Bảo: https://github.com/onlyzabao
-- Phùng Huy Hoàng: https://github.com/Hoang-Phung
+- Nguyễn Trần Gia Bảo - 21020751: https://github.com/onlyzabao
+- Phùng Huy Hoàng - 21020763: https://github.com/Hoang-Phung
 ## Mô tả chung
 Tái hiện lại tựa game kinh điển Bomberman của NES cùng với một số chức năng tùy biến khác.
+Main menu                  | Setting menu 
+:-------------------------:|:-------------------------:
+![](res/textures/demo1.png)|![](res/textures/demo2.png)
+ Playground                | Pause menu                
+ ![](res/textures/demo3.png)|![](res/textures/demo4.png)
 ### Map
 - ![](res/sprites/grass.png) **Grass** là đối tượng mà **Bomber** và **Enemy** có thể di chuyển xuyên qua, và cho phép đặt **Bomb** lên vị trí của nó.
 - ![](res/sprites/wall.png) **Wall** là đối tượng cố định, không thể phá hủy bằng **Bomb** cũng như không thể đặt **Bomb** lên được, **Bomber** và **Enemy** không thể di chuyển qua đối tượng này.
@@ -35,6 +40,21 @@ Các **Item** cũng được giấu phía sau **Brick** và chỉ hiện ra khi 
 - **Enemy** bị tiêu diệt khi thuộc phạm vi Bomb nổ.
 ## Class Diagram
 ![](res/textures/Diagram.png)
+## Gói tính năng bắt buộc
+- Thiết kế cây thừa kế cho các đối tượng game.
+- Xây dựng bản đồ màn chơi từ tệp cấu hình.			
+- Di chuyển **Bomber** theo sự điều khiển từ người chơi.
+- Tự động di chuyển các **Enemy**.
+- Xử lý va chạm cho các đối tượng **Bomber**, **Enemy**, **Wall**, **Brick**, **Bomb**.
+- Xử lý **Bomb** nổ.
+- Xử lý khi **Bomber** sử dụng các **Item** và khi đi vào vị trí **Portal**.
+## Gói tính năng tùy chọn
+- Sử dụng Git trong nhóm.
+- Sử dụng thuật toán tìm đường AStar cho **Enemy**.
+- Cài đặt đa dạng **Enemy** và **Item**.
+- Xử lý hiệu ứng âm thanh.
+- Cài đặt Menu cho trò chơi.
+- Lưu điểm cao nhất của người chơi (thao tác với tệp).
 ## Các công nghệ sử dụng
 - Ngôn ngữ: Java (JDK17).
 - Framework: JavaFx.

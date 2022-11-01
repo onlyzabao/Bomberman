@@ -33,6 +33,8 @@ Các **Item** cũng được giấu phía sau **Brick** và chỉ hiện ra khi 
 - Trong một màn chơi, **Bomber** sẽ được người chơi di chuyển, đặt và kích hoạt **Bomb** với mục tiêu chính là tiêu diệt tất cả **Enemy** và tìm ra vị trí **Portal** để có thể qua màn chơi mới.
 - **Bomber** sẽ bị tiêu diệt khi va chạm với **Enemy** hoặc thuộc phạm vi **Bomb** nổ. Lúc đấy trò chơi kết thúc.
 - **Enemy** bị tiêu diệt khi thuộc phạm vi Bomb nổ.
+## Class Diagram
+![](res/textures/Diagram.png)
 ## Các công nghệ sử dụng
 - Ngôn ngữ: Java (JDK17).
 - Framework: JavaFx.
